@@ -41,6 +41,17 @@ npx shadcn@latest add tabs
  npm i react-redux    
 
  ----------
+PS C:\Users\HP\OneDrive\Desktop\AI\clones\buy books> git config user.name "RajkiranDev123"
+PS C:\Users\HP\OneDrive\Desktop\AI\clones\buy books> git config user.email "rajtech645@gmail.com"  
+
+If you want it for all repositories on your machine, use the --global flag:
+
+git config --global user.name "RajkiranDev123"
+
+
+----
+
+
 
  
 
