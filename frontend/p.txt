@@ -16,7 +16,7 @@ PS C:\Users\HP\OneDrive\Desktop\AI\clones\buy books\frontend> npx create-next-ap
 npx shadcn@latest init
 √ Which color would you like to use as the base color? » Neutral
 
-----
+------
 
 npx shadcn@latest add accordion
 npx shadcn@latest add avatar   
