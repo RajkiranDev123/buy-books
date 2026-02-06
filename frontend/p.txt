@@ -1,0 +1,51 @@
+PS C:\Users\HP\OneDrive\Desktop\AI\clones\buy books\frontend> npx create-next-app@latest
+√ What is your project named? ... ./
+√ Would you like to use the recommended Next.js defaults? » No, customize settings
+√ Would you like to use TypeScript? ... Yes
+√ Which linter would you like to use? » None
+√ Would you like to use React Compiler? ... Yes
+√ Would you like to use Tailwind CSS? ... Yes
+√ Would you like your code inside a `src/` directory? ... Yes
+√ Would you like to use App Router? (recommended) ...  Yes
+√ Would you like to customize the import alias (`@/*` by default)? ... Yes
+√ What import alias would you like configured? ... @/*
+
+--------------------------
+
+
+npx shadcn@latest init
+√ Which color would you like to use as the base color? » Neutral
+
+----
+
+npx shadcn@latest add accordion
+npx shadcn@latest add avatar   
+npx shadcn@latest add badge
+npx shadcn@latest add button   
+npx shadcn@latest add dropdown-menu
+npx shadcn@latest add input 
+npx shadcn@latest add form 
+npx shadcn@latest add radio-group
+npx shadcn@latest add scroll-area
+npx shadcn@latest add select 
+npx shadcn@latest add separator
+npx shadcn@latest add sheet  
+npx shadcn@latest add textarea
+npx shadcn@latest add tabs 
+
+
+--------
+
+ npm i @reduxjs/toolkit
+
+ npm i react-redux    
+
+ ----------
+
+ 
+
+
+
+
+
+
