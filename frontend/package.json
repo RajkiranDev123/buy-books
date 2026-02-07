@@ -17,6 +17,7 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-redux": "^9.2.0",
+    "redux-persist": "^6.0.0",
     "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
@@ -24,6 +25,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/redux-persist": "^4.0.0",
     "babel-plugin-react-compiler": "1.0.0",
     "shadcn": "^3.8.4",
     "tailwindcss": "^4",

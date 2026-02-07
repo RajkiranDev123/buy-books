@@ -51,7 +51,9 @@ git config --global user.name "RajkiranDev123"
 
 ----
 
+npm i redux-persist
 
+npm i --save-dev @types/redux-persist
 
  
 
