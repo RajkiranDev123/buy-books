@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React from "react";
 import { Toaster } from "react-hot-toast";
 import { Provider } from "react-redux";
@@ -10,7 +10,7 @@ const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
     <Provider store={store}>
       <PersistGate loading={<BookLoader />} persistor={persistor}>
-      <Toaster/>
+        <Toaster />
         {children}
       </PersistGate>
     </Provider>
