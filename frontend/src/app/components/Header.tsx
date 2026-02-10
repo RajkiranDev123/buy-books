@@ -1,3 +1,4 @@
+"use client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -6,11 +7,31 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { Lock, SearchIcon, User } from "lucide-react";
+import {
+  BookLock,
+  ChevronRight,
+  FileTerminal,
+  Heart,
+  HelpCircle,
+  Lock,
+  LogOut,
+  Package,
+  PiggyBank,
+  SearchIcon,
+  ShoppingCart,
+  User,
+  User2,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 
 const Header = () => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const router = useRouter();
+  const dispatch = useDispatch();
   const user = {
     profilePicture: "",
     name: "",
@@ -19,6 +40,14 @@ const Header = () => {
   const userPlaceholder = "";
 
   const handleLoginClick = () => {};
+  const handleLogout = () => {};
+
+  const handleProtectionNavigation = (href: string) => {
+    if (user) {
+      // router.push(href)
+      setIsDropdownOpen(false);
+    }
+  };
 
   const menuItems = [
     ...(user && user
@@ -45,33 +74,92 @@ const Header = () => {
         ]
       : [
           {
-            icon: <Lock className="h-5 w-5" />,
-            label: "Login/Signup",
-            onclick: handleLoginClick,
+            icon: <User className="h-5 w-5" />,
+            label: "My Profile",
+            onclick: () => handleProtectionNavigation("/account/profile"),
           },
         ]),
 
     {
-      icon: <Lock className="h-5 w-5" />,
-      label: "Login/Signup",
-      onclick: handleLoginClick,
+      icon: <Package className="h-5 w-5" />,
+      label: "My Orders",
+      onclick: () => handleProtectionNavigation("/account/orders"),
     },
     {
-      icon: <Lock className="h-5 w-5" />,
-      label: "Login/Signup",
-      onclick: handleLoginClick,
+      icon: <PiggyBank className="h-5 w-5" />,
+      label: "My Selling Orders",
+      onclick: () => handleProtectionNavigation("/account/selling-products"),
     },
     {
-      icon: <Lock className="h-5 w-5" />,
-      label: "Login/Signup",
-      onclick: handleLoginClick,
+      icon: <ShoppingCart className="h-5 w-5" />,
+      label: "Cart",
+      onclick: () => handleProtectionNavigation("/checkout/cart"),
     },
     {
-      icon: <Lock className="h-5 w-5" />,
-      label: "Login/Signup",
-      onclick: handleLoginClick,
+      icon: <Heart className="h-5 w-5" />,
+      label: "My Wishlist",
+      onclick: () => handleProtectionNavigation("account/wishlist"),
     },
+    {
+      icon: <User2 className="h-5 w-5" />,
+      label: "About Us",
+      href: "/about-us",
+    },
+    {
+      icon: <FileTerminal className="h-5 w-5" />,
+      label: "Terms & Use",
+      href: "/terms-of-use",
+    },
+    {
+      icon: <BookLock className="h-5 w-5" />,
+      label: "Privacy Policy",
+      href: "/privacy-policy",
+    },
+    {
+      icon: <HelpCircle className="h-5 w-5" />,
+      label: "Help",
+      href: "/how-it-works",
+    },
+    ...(user && [
+      {
+        icon: <LogOut className="h-5 w-5" />,
+        label: "Logout",
+        onclick: () => handleLogout,
+      },
+    ]),
   ];
+
+  const DisplayMenuItems = ({ className = "" }) => (
+    <div className={className}>
+      {menuItems?.map((item, index) =>
+        item?.href ? (
+          <Link
+            key={index}
+            href={item.href}
+            onClick={() => setIsDropdownOpen(false)}
+            className="flex items-center gap-3 px-4 py-3 text-sm  rounded-lg hover:bg-gray-200"
+          >
+            {item?.icon}
+            <span>{item?.label}</span>
+            {item?.content && <div className="mt-1">{item?.content}</div>}
+            <ChevronRight className="w-4 h-4 ml-auto" />
+          </Link>
+        ) : (
+          <button
+            key={index}
+            onClick={item?.onclick}
+            className="w-full flex items-center gap-3 px-4 py-3 text-sm  rounded-lg hover:bg-gray-200"
+          >
+            {item?.icon}
+            <span>{item?.label}</span>
+
+            <ChevronRight className="w-4 h-4 ml-auto" />
+          </button>
+        ),
+      )}
+    </div>
+  );
+
   return (
     <header className="border-b  sticky top-0 z-50">
       {/* desktop header */}
@@ -120,7 +208,7 @@ const Header = () => {
             </Button>
           </Link>
 
-          <DropdownMenu>
+          <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
             <DropdownMenuTrigger asChild>
               <Button variant={"ghost"}>
                 <Avatar className="w-8 h-8 rounded-full">
@@ -135,7 +223,9 @@ const Header = () => {
                 My Account
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent>jhg</DropdownMenuContent>
+            <DropdownMenuContent className="">
+              <DisplayMenuItems />
+            </DropdownMenuContent>
           </DropdownMenu>
         </div>
       </div>
