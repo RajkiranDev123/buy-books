@@ -1,6 +1,5 @@
 // This code creates a central API layer using RTK Query.
-// Instead of:
-// writing fetch / axios everywhere
+// Instead of: writing fetch / axios everywhere
 // manually handling loading, error, caching, refetching
 // RTK Query does all of that for you.
 

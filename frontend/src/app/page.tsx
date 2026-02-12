@@ -1,3 +1,4 @@
+"use client";
 import {
   BookOpen,
   Camera,
@@ -10,12 +11,14 @@ import {
   Wallet,
 } from "lucide-react";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 export default function Home() {
   const bannerImages = [
     "/images/book1.jpg",
     "/images/book2.jpg",
-    "/images/book3.jpg",
+    "/images/book1.jpg"
+
   ];
 
   const blogPosts = [
@@ -91,9 +94,44 @@ export default function Home() {
       icon: <Truck className="h-8 w-8 text-primary" />,
     },
   ];
+  const [currentImage, setCurrentImage] = useState(0);
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentImage((prev) => (prev + 1) % bannerImages.length);
+    }, 3000);
+    return () => clearInterval(timer);
+  }, []);
   return (
     <>
-      <main className="">hokjhgf iogfg; iughm</main>
+      <main className="bg-amber-100 min-h-screen">
+        <section className="relative bg-amber-400 h-[600px] overflow-hidden">
+          {bannerImages?.map((image, index) => (
+            <div
+              key={index}
+              className={`absolute inset-5 transition-opacity duration-1000 ${currentImage === index ? "opacity-100" : "opacity-0"} `}
+            >
+              <Image
+                src={image}
+                className="object-cover"
+                fill
+                alt="banner"
+                priority={index === 0}
+              />
+              <div className="absolute inset-0 bg-black/50" />
+            </div>
+          ))}
+
+          {/*  */}
+          <div className="">
+           <h1>
+            Buy & Sell Books Online in India.
+           </h1>
+                 <h1>
+            Buy & Sell Books Online in India.
+           </h1>
+          </div>
+        </section>
+      </main>
     </>
   );
 }
