@@ -162,7 +162,7 @@ const Header = () => {
             key={index}
             href={item.href}
             onClick={() => setIsDropdownOpen(false)}
-            className="flex items-center gap-3 px-4 py-3 text-sm  rounded-lg hover:bg-gray-200"
+            className="flex items-center gap-3 px-4 py-3 text-sm bg-yellow-100  rounded-lg hover:bg-gray-200"
           >
             {item?.icon}
             <span>{item?.label}</span>
@@ -173,7 +173,7 @@ const Header = () => {
           <button
             key={index}
             onClick={item?.onclick}
-            className="w-full flex items-center gap-3 px-4 py-3 text-sm  rounded-lg hover:bg-gray-200"
+            className="w-full flex items-center gap-3 px-4 py-3 text-sm bg-green-200 rounded-lg hover:bg-gray-200"
           >
             {item?.icon}
             <span>{item?.label}</span>
