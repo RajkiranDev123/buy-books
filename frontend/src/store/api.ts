@@ -5,6 +5,7 @@
 // RTK Query does all of that for you.
 
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+// @reduxjs/toolkit/query/react , React version , Adds React hooks like: useGetUsersQuery , useMutation. Built on top of the core version
 
 const Base_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
@@ -19,7 +20,5 @@ export const api = createApi({
     credentials: "include",
   }),
   tagTypes: ["user"],
-  endpoints: (builder) => ({
-    
-  }),
+  endpoints: (builder) => ({}),
 });

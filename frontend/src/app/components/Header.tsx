@@ -8,6 +8,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { toggleLoginDialog } from "@/store/slice/userSlice";
+import { RootState } from "@/store/store";
+import {
   BookLock,
   ChevronRight,
   FileTerminal,
@@ -15,6 +24,7 @@ import {
   HelpCircle,
   Lock,
   LogOut,
+  Menu,
   Package,
   PiggyBank,
   SearchIcon,
@@ -26,31 +36,41 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const router = useRouter();
   const dispatch = useDispatch();
+  const isLoginOpen = useSelector(
+    (state: RootState) => state.user.isLoginDialogOpen,
+  );
   const user = {
     profilePicture: "",
-    name: "",
-    email: "",
+    name: "raj",
+    email: "raj@gmail.com",
   };
-  const userPlaceholder = "";
+  // const user = "";
+  const userPlaceholder = "ra";
 
-  const handleLoginClick = () => {};
+  const handleLoginClick = () => {
+    dispatch(toggleLoginDialog());
+    setIsDropdownOpen(false);
+  };
   const handleLogout = () => {};
 
   const handleProtectionNavigation = (href: string) => {
     if (user) {
-      // router.push(href)
+      router.push(href);
+      setIsDropdownOpen(false);
+    } else {
+      dispatch(toggleLoginDialog());
       setIsDropdownOpen(false);
     }
   };
 
   const menuItems = [
-    ...(user && user
+    ...(user
       ? [
           {
             href: "account/profile",
@@ -74,11 +94,16 @@ const Header = () => {
         ]
       : [
           {
-            icon: <User className="h-5 w-5" />,
-            label: "My Profile",
-            onclick: () => handleProtectionNavigation("/account/profile"),
+            icon: <Lock className="h-5 w-5" />,
+            label: "Login / Sign up",
+            onclick: () => handleLoginClick(),
           },
         ]),
+    {
+      icon: <User className="h-5 w-5" />,
+      label: "My Profile",
+      onclick: () => handleProtectionNavigation("/account/profile"),
+    },
 
     {
       icon: <Package className="h-5 w-5" />,
@@ -207,7 +232,7 @@ const Header = () => {
               Sell Used Book
             </Button>
           </Link>
-
+          {/* dropdown */}
           <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
             <DropdownMenuTrigger asChild>
               <Button variant={"ghost"}>
@@ -227,10 +252,114 @@ const Header = () => {
               <DisplayMenuItems />
             </DropdownMenuContent>
           </DropdownMenu>
+          {/* dropdown ends */}
+          {/* cart starts */}
+          <Link href={"/checkout/cart"}>
+            <div className="relative">
+              <Button variant={"ghost"} className="relative">
+                <ShoppingCart className="h-5 w-5 mr-2" />
+                Cart
+              </Button>
+              {user && (
+                <span
+                  className="absolute top-2 left-5 translate translate-x-1/2 -translate-y-1/2 bg-red-500
+                text-white rounded-full px-1 text-xs"
+                >
+                  8
+                </span>
+              )}
+            </div>
+          </Link>
+          {/* cart ends */}
         </div>
       </div>
 
       {/* desktop header */}
+
+      {/* mobile starts*/}
+
+      <div className="container mx-auto flex lg:hidden items-center justify-between p-4">
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant={"ghost"} size={"icon"}>
+              <Menu className="h-5 w-6" />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left" className="w-80 p-0">
+            <SheetHeader>
+              <SheetTitle className="sr-only"></SheetTitle>
+            </SheetHeader>
+            <div className="border-b p-4">
+              <Link href={"/"}>
+                <Image
+                  src={"/images/book.png"}
+                  alt="logo"
+                  width={150}
+                  height={40}
+                  className="h-10 w-auto"
+                />
+              </Link>
+            </div>
+            <DisplayMenuItems className="py-2" />
+          </SheetContent>
+        </Sheet>
+        {/*  */}
+        {/* logo */}
+        <Link href={"/"} className="flex items-center">
+          <Image
+            src={"/images/book.png"}
+            alt="logo"
+            width={450}
+            height={100}
+            className="h-6 md:h-10 w-20 md:w-auto"
+          />
+        </Link>
+        {/* logo ends */}
+
+        {/* search */}
+        <div className="flex flex-1  items-center justify-center max-w-xl px-4">
+          <div className="relative w-full">
+            <Input
+              type="text"
+              // onChange={() => {}}
+              value={""}
+              className="w-full pr-10"
+              placeholder="Search Books..."
+            />
+            <Button
+              size={"icon"}
+              variant={"ghost"}
+              className="absolute right-0 top-0.4"
+            >
+              <SearchIcon className="w-5 h-5" />
+            </Button>
+          </div>
+        </div>
+        {/* search */}
+
+        {/* cart starts */}
+        <Link href={"/checkout/cart"}>
+          <div className="relative">
+            <Button variant={"ghost"} className="relative">
+              <ShoppingCart className="h-5 w-5 mr-2" />
+              {/* Cart */}
+            </Button>
+            {user && (
+              <span
+                className="absolute top-2 left-5 translate translate-x-1/2 -translate-y-1/2 bg-red-500
+                text-white rounded-full px-1 text-xs"
+              >
+                8
+              </span>
+            )}
+          </div>
+        </Link>
+        {/* cart ends */}
+
+        {/*  */}
+      </div>
+
+      {/* mobile ends*/}
     </header>
   );
 };
