@@ -3,6 +3,8 @@ import { books } from "@/lib/constant";
 import Link from "next/link";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const NewBooks = () => {
   const [currentBookSlide, setCurrentBookSlide] = useState(0);
@@ -16,7 +18,7 @@ const NewBooks = () => {
   //   You only need useRef if: You want to manually stop/start the interval outside useEffect
 
   const prevSlide = () => {
-    setCurrentBookSlide((prev) => (prev + 1 + 3) % 3);
+    setCurrentBookSlide((prev) => (prev - 1 + 3) % 3);
   };
   const nextSlide = () => {
     setCurrentBookSlide((prev) => (prev + 1) % 3);
@@ -65,8 +67,10 @@ const NewBooks = () => {
                                       book.price,
                                       book.finalPrice,
                                     ) > 0 && (
-                                      <span className="absolute left-0 top-2 rounded-r-lg py-1 text-xs
-                                       bg-red-500 font-medium text-white">
+                                      <span
+                                        className="absolute left-0 top-2 rounded-r-lg py-1 text-xs
+                                       bg-red-500 font-medium text-white"
+                                      >
                                         {calculateDiscount(
                                           book.price,
                                           book.finalPrice,
@@ -78,7 +82,29 @@ const NewBooks = () => {
                                   <h3 className="mb-2 line-clamp-2 text-sm font-medium">
                                     {book.title}
                                   </h3>
-                                  
+                                  <div className="flex items-center justify-between">
+                                    <div className="flex items-baseline gap-2">
+                                      <span className="text-lg font-bold">
+                                        ₹ {book.finalPrice}
+                                      </span>
+                                      {book.price && (
+                                        <span className="text-sm text-muted-foreground line-through">
+                                          ₹ {book.price}
+                                        </span>
+                                      )}
+                                    </div>
+                                    <div className="flex justify-between items-center text-xs text-zinc-400">
+                                      <span>{book.condition}</span>
+                                    </div>
+                                  </div>
+                                  <div className="mt-4">
+                                    <Button
+                                      className="flex float-end mb-2 bg-linear-to-r from-orange-400 to-orange-600 text-white hover:bg-gradient-to-r
+                                     hover:from-orange-600 hover:to-orange-500"
+                                    >
+                                      Buy Now
+                                    </Button>
+                                  </div>
                                 </Link>
                               </CardContent>
                             </Card>
@@ -88,9 +114,47 @@ const NewBooks = () => {
                   ))}
                 </div>
               </div>
+              {/* scroll */}
+
+              <button
+                onClick={prevSlide}
+                className="absolute left-0 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow-md"
+              >
+                <ChevronLeft className="h-6 w-6" />
+              </button>
+
+              {/* -translate-y-1/2 in Tailwind CSS means: */}
+
+              {/* Move the element up by 50% of its own height. */}
+
+              <button
+                onClick={nextSlide}
+                className="absolute right-0 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow-md"
+              >
+                <ChevronRight className="h-6 w-6" />
+              </button>
+
+
+
+              {/* scroll ends */}
+
+              {/* dot animation */}
+              <div className="mt-8 flex justify-center space-x-2 ">
+                {
+                  [0,1,2].map(dot=>(
+                    <button key={dot} onClick={()=>setCurrentBookSlide(dot)} 
+                    className={`h-3 w-3 rounded-full ${currentBookSlide===dot ?"bg-blue-600":"bg-gray-300"}`}>
+
+                    </button>
+                  ))
+                }
+
+              </div>
             </>
           ) : (
-            <></>
+            <>
+              <p className="text-center text-gray-500">No books to display</p>
+            </>
           )}
         </div>
       </div>

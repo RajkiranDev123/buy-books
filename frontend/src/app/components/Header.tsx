@@ -186,7 +186,7 @@ const Header = () => {
   );
 
   return (
-    <header className="border-b  sticky top-0 z-50">
+    <header className="border-b bg-white sticky top-0 z-70">
       {/* desktop header */}
       <div className="container   w-[80%] mx-auto hidden lg:flex items-center justify-between p-4">
         {/* logo */}
@@ -208,7 +208,7 @@ const Header = () => {
               type="text"
               // onChange={() => {}}
               value={""}
-              className="w-full pr-10"
+              className="w-full pr-10 outline-none focus-outline:none focus:ring-0 focus-visible:ring-0"
               placeholder="Book name | Author | Publisher | Subject"
             />
             <Button
