@@ -5,6 +5,7 @@ import cors from "cors";
 // import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import { connectDb } from "./config/dbConnect";
+import authRoutes from "./routes/authRouter";
 
 dotenv.config();
 
@@ -25,6 +26,8 @@ app.use(express.urlencoded({ extended: true }));
 // URL-encoded (form)	express.urlencoded({extended:true})	name=Alice&age=25	{ name: "Alice", age: "25" }
 // extended: true allows nested objects in form data & extended: false only allows flat key=value pairs
 app.use(cookieParser());
+
+app.use("/api/v1/auth", authRoutes);
 
 async function startServer() {
   try {

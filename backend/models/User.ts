@@ -34,6 +34,7 @@ const userSchema = new Schema<IUSER>(
   },
   { timestamps: true },
 );
+//userSchema Defines database fields only, not methods : comparePassword(candidatePassword: string): Promise<boolean>;
 
 userSchema.pre("save", async function () {
   // 'this' is the document
