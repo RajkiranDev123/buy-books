@@ -8,8 +8,6 @@ import { connectDb } from "./config/dbConnect";
 
 dotenv.config();
 
-connectDb();
-
 const PORT = process.env.PORT || 8080;
 
 const app = express();
@@ -28,6 +26,16 @@ app.use(express.urlencoded({ extended: true }));
 // extended: true allows nested objects in form data & extended: false only allows flat key=value pairs
 app.use(cookieParser());
 
-app.listen(PORT, () => {
-  console.log(`listening on port ${PORT}`);
-});
+async function startServer() {
+  try {
+    await connectDb(); // wait for DB connection
+    app.listen(PORT, () => {
+      console.log(`Server listening on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error("Failed to connect to DB", error);
+    process.exit(1);
+  }
+}
+
+startServer();
