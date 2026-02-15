@@ -1,0 +1,18 @@
+npm init -y
+
+npm i express mongoose dotenv body-parser cors typescript
+
+npm i nodemon
+
+npm i --save-dev @types/express
+npm i --save-dev @types/cors
+npm i cookie-parser
+npm i --save-dev @types/cookie-parser
+npm install --save-dev ts-node
+
+
+npm i bcryptjs jsonwebtoken
+
+
+
+npm uninstall moongose
