@@ -5,6 +5,9 @@ import { response } from "../utils/responseHandler";
 export const register = async (req: Request, res: Response) => {
   try {
     const { name, email, password, agreeTerms } = req.body;
+    if (!name || !email || !password || !agreeTerms) {
+      return response(res, 400, "All fields are required.");
+    }
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return response(res, 400, "User already exists.");
@@ -24,8 +27,16 @@ export const register = async (req: Request, res: Response) => {
     // );
     // console.log(result)
 
-    return response(res, 200, "Registration done, Plz check email to verify!");
+    return response(
+      res,
+      200,
+      "Registration done, Plz check your email to verify!",
+    );
   } catch (error) {
     return response(res, 500, "Internal Server Error");
   }
 };
+
+//////////////////////////////////////////////////////////////
+
+
