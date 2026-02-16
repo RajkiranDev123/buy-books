@@ -6,7 +6,7 @@ export const response = (
   message: string,
   data?: any,
 ) => {
-  res.status(statusCode).json({
+  return res.status(statusCode).json({
     success: statusCode >= 200 && statusCode < 300,
     message,
     data: data || null,

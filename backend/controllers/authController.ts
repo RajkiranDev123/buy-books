@@ -4,5 +4,28 @@ import crypto from "crypto";
 import { response } from "../utils/responseHandler";
 export const register = async (req: Request, res: Response) => {
   try {
-  } catch (error) {}
+    const { name, email, password, agreeTerms } = req.body;
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return response(res, 400, "User already exists.");
+    }
+    const verificationToken = crypto.randomBytes(10).toString("hex");
+    const user = new User({
+      name,
+      email,
+      password,
+      agreeTerms,
+      verificationToken,
+    });
+    await user.save();
+    // const result = await sendVeerificationToEmail(
+    //   user.email,
+    //   verificationToken,
+    // );
+    // console.log(result)
+
+    return response(res, 200, "Registration done, Plz check email to verify!");
+  } catch (error) {
+    return response(res, 500, "Internal Server Error");
+  }
 };
