@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import User from "../models/User";
 import crypto from "crypto";
 import { response } from "../utils/responseHandler";
+import { sendVerificationToEmail } from "../config/emailConfig";
 export const register = async (req: Request, res: Response) => {
   try {
     const { name, email, password, agreeTerms } = req.body;
@@ -21,11 +22,8 @@ export const register = async (req: Request, res: Response) => {
       verificationToken,
     });
     await user.save();
-    // const result = await sendVeerificationToEmail(
-    //   user.email,
-    //   verificationToken,
-    // );
-    // console.log(result)
+    const result = await sendVerificationToEmail(user.email, verificationToken);
+    console.log(22,result?.response);
 
     return response(
       res,
@@ -38,5 +36,3 @@ export const register = async (req: Request, res: Response) => {
 };
 
 //////////////////////////////////////////////////////////////
-
-
