@@ -188,7 +188,7 @@ const Header = () => {
   return (
     <header className="border-b bg-white sticky top-0 z-70">
       {/* desktop header */}
-      <div className="container   w-[80%] mx-auto hidden lg:flex items-center justify-between p-4">
+      <div className="container w-[80%] mx-auto hidden lg:flex items-center justify-between p-4">
         {/* logo */}
         <Link href={"/"} className="flex items-center">
           <Image
@@ -202,13 +202,15 @@ const Header = () => {
         {/* logo ends */}
 
         {/* search */}
-        <div className="flex flex-1  items-center justify-center max-w-xl px-4">
-          <div className="relative w-full">
+        {/* [Logo]   [Search Bar]   [Buttons / Cart / Account] ====> thats why flex-1 */}
+        {/* xs sm md lg xl 2xl : max-w-xl => 36rem 576px */}
+        <div className="flex-1 max-w-xl px-4">
+          <div className="relative">
             <Input
               type="text"
               // onChange={() => {}}
               value={""}
-              className="w-full pr-10 outline-none focus-outline:none focus:ring-0 focus-visible:ring-0"
+              className=" pr-10 outline-none focus-outline:none focus:ring-0 focus-visible:ring-0"
               placeholder="Book name | Author | Publisher | Subject"
             />
             <Button
@@ -222,7 +224,7 @@ const Header = () => {
         </div>
         {/* search */}
 
-        {/* sell button, my account */}
+        {/* sell button, my account and cart*/}
         <div className="flex items-center gap-4">
           <Link href={"/book-self"}>
             <Button
@@ -276,7 +278,7 @@ const Header = () => {
 
       {/* desktop header */}
 
-      {/* mobile starts*/}
+      {/* mobile header starts*/}
 
       <div className="container mx-auto flex lg:hidden items-center justify-between p-4">
         <Sheet>
@@ -359,7 +361,7 @@ const Header = () => {
         {/*  */}
       </div>
 
-      {/* mobile ends*/}
+      {/* mobile header ends*/}
     </header>
   );
 };
