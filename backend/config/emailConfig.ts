@@ -41,7 +41,7 @@ export const sendVerificationToEmail = async (to: string, token: string) => {
   return res
 };
 
-const sendResetPasswordLinkToEmail = async (to: string, token: string) => {
+export const sendResetPasswordLinkToEmail = async (to: string, token: string) => {
   const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${token}`;
   const html = `
   <h1>Welcome to your Buy Books! Reset your Password.</h1>

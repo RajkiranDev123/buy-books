@@ -16,11 +16,12 @@ export interface IUSER extends Document {
   addresses: mongoose.Types.ObjectId[];
   comparePassword(candidatePassword: string): Promise<boolean>;
 }
+// Promise<boolean> → Returns a Promise that resolves to: true or false
 
 const userSchema = new Schema<IUSER>(
   {
     name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
+    email: { type: String, required: true, unique: true, index: true },
     password: { type: String },
     googleId: { type: String },
     profilePicture: { type: String, default: null },
@@ -28,8 +29,9 @@ const userSchema = new Schema<IUSER>(
     isVerified: { type: Boolean, default: false },
     agreeTerms: { type: Boolean, default: false },
     verificationToken: { type: String, default: null },
-    resetPasswordExpires: { type: Date, default: null },
+
     resetPasswordToken: { type: String, default: null },
+    resetPasswordExpires: { type: Date, default: null },
     addresses: [{ type: Schema.Types.ObjectId, ref: "Address" }],
   },
   { timestamps: true },
@@ -52,6 +54,10 @@ userSchema.methods.comparePassword = async function (
 ): Promise<boolean> {
   return bcrypt.compare(candidatePassword, this.password);
 };
+
+// user is an instance of your Mongoose model (a document from the User collection).
+
+// The comparePassword method is called on this instance, so this inside the method refers to that particular user document.
 
 export default mongoose.model<IUSER>("User", userSchema);
 
