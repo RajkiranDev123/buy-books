@@ -19,10 +19,11 @@ const corsOption = {
 };
 
 app.use(cors(corsOption));
-// express.json() parses JSON into a JavaScript object and then it stores it on req.body.
+// express.json() parses JSON payload into a JavaScript object and then it stores it on req.body.
 app.use(express.json());
 // app.use(bodyParser.json()) ==> Since Express v4.16+ , app.use(express.json()) replaces bodyParser.json()
 app.use(express.urlencoded({ extended: true }));
+// Parses URL-encoded bodies (like form submissions).
 // URL-encoded (form)	express.urlencoded({extended:true})	name=Alice&age=25	{ name: "Alice", age: "25" }
 // extended: true allows nested objects in form data & extended: false only allows flat key=value pairs
 app.use(cookieParser());
