@@ -204,8 +204,8 @@ const Header = () => {
         {/* search */}
         {/* [Logo]   [Search Bar]   [Buttons / Cart / Account] ====> thats why flex-1 */}
         {/* xs sm md lg xl 2xl : max-w-xl => 36rem 576px */}
-        <div className="flex-1 max-w-xl px-4">
-          <div className="relative">
+        <div className="flex-1 max-w-xl px-4 ">
+          <div className="relative ">
             <Input
               type="text"
               // onChange={() => {}}
@@ -213,10 +213,13 @@ const Header = () => {
               className=" pr-10 outline-none focus-outline:none focus:ring-0 focus-visible:ring-0"
               placeholder="Book name | Author | Publisher | Subject"
             />
+            {/* Ring doesn’t technically remove the outline, but it usually covers it visually.
+            Use focus:outline-none if you want the ring only. 
+            Tailwind’s ring visually overwrites the native browser outline*/}
             <Button
               size={"icon"}
               variant={"ghost"}
-              className="absolute right-0 top-0.4"
+              className="absolute bg-amber-100 right-0  "
             >
               <SearchIcon className="w-5 h-5" />
             </Button>
@@ -226,6 +229,8 @@ const Header = () => {
 
         {/* sell button, my account and cart*/}
         <div className="flex items-center gap-4">
+
+          {/* button */}
           <Link href={"/book-self"}>
             <Button
               variant={"secondary"}
@@ -234,6 +239,7 @@ const Header = () => {
               Sell Used Book
             </Button>
           </Link>
+          {/* button */}
           {/* dropdown */}
           <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
             <DropdownMenuTrigger asChild>
