@@ -1,5 +1,14 @@
 "use client";
-import { Facebook, Instagram, Shield, Twitter, Youtube } from "lucide-react";
+import {
+  Clock,
+  Facebook,
+  HeadphonesIcon,
+  Instagram,
+  Shield,
+  Twitter,
+  Youtube,
+} from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
@@ -108,10 +117,71 @@ const Footer = () => {
                 </div>
               </div>
               {/* 1 */}
+              {/* 2 */}
+              <div className="flex items-center gap-4 rounded-xl p-6 shadow-lg hover:shadow-sm">
+                <div className="rounded-full p-3">
+                  <Clock className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="font-semibold">Buy Books Trust</h3>
+                  <p className="text-sm text-gray-500">
+                    Money transfered safely after confirmation
+                  </p>
+                </div>
+              </div>
+              {/* 2 */}
+              {/* 3 */}
+              <div className="flex items-center gap-4 rounded-xl p-6 shadow-lg hover:shadow-sm">
+                <div className="rounded-full p-3">
+                  <HeadphonesIcon className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="font-semibold">Customer Support</h3>
+                  <p className="text-sm text-gray-500">
+                    Friendly Customer Support
+                  </p>
+                </div>
+              </div>
+              {/* 3 */}
             </div>
           </div>
         </section>
         {/* feature section */}
+
+        {/*  */}
+        <div className="mt-12 border-t border-gray-700 pt-8 flex flex-col md:flex-row gap-4 md:gap-0 justify-between items-center">
+          <p className="text-sm text-gray-400">
+            &copy; : {new Date().getFullYear()} Buy Books. All rights reserved.
+          </p>
+          <div className="flex items-center space-x-4">
+            <Image
+              src={"/icons/visa.svg"}
+              alt="visa"
+              height={30}
+              width={50}
+              className=" brightness-10 invert"
+            />
+            {/* brightness-100 1.0 Normal */}
+            {/* brightness-10 0.1 Almost black */}
+            <Image
+              src={"/icons/rupay.svg"}
+              alt="visa"
+              height={30}
+              width={50}
+              className="filter brightness-20 invert"
+            />
+            <Image src={"/icons/paytm.svg"} alt="visa" height={30} width={50} />
+            <Image
+              src={"/icons/upi.svg"}
+              alt="visa"
+              height={30}
+              width={50}
+              className="filter brightness-20 invert"
+            />
+          </div>
+        </div>
+
+        {/*  */}
       </div>
     </footer>
   );

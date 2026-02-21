@@ -33,6 +33,7 @@ npx shadcn@latest add sheet
 npx shadcn@latest add textarea
 npx shadcn@latest add tabs 
 npx shadcn@latest  add card
+npx shadcn@latest add checkbox
 
 
 --------
@@ -56,7 +57,11 @@ npm i redux-persist
 
 npm i --save-dev @types/redux-persist
 
- npm i react-hot-toast
+npm i react-hot-toast
+npm i date-fns
+npx shadcn@latest add select  
+npm i framer-motion
+npx shadcn@latest add badge
 
 
 
