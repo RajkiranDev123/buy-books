@@ -24,6 +24,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Heart } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import Pagination from "../components/Pagination";
 
 const page = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -264,13 +265,33 @@ const page = () => {
                                     {book.title}
                                   </h3>
                                 </div>
+                                <p className="text-sm text-zinc-400">
+                                  {book.author}
+                                </p>
+                                <div className="flex items-baseline gap-2">
+                                  <span className="text-2xl font-bold text-black ">
+                                    ₹ {book.finalPrice}
+                                  </span>
+                                  {book.price && (
+                                    <span className="text-sm text-zinc-500 line-through">
+                                      ₹ {book.price}
+                                    </span>
+                                  )}
+                                </div>
+                                <div className="flex justify-between text-center text-xs text-zinc-400">
+                                  <span>{formatDate(book.createdAt)}</span>
+                                  <span>{book.condition}</span>
+                                </div>
                               </div>
                             </Link>
                           </CardContent>
+                          <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-orange-500/10 blur-2xl" />
+                          <div className="absolute -bottom-8 -left-8 h-24 w-24 rounded-full bg-orange-500/10 blur-2xl" />
                         </Card>
                       </motion.div>
                     ))}
                   </div>
+                  <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange}/>
                 </>
               ) : (
                 <></>
