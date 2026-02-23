@@ -25,6 +25,8 @@ import { Button } from "@/components/ui/button";
 import { Heart } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import Pagination from "../components/Pagination";
+import NoData from "../components/NoData";
+import { useRouter } from "next/navigation";
 
 const page = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -33,6 +35,9 @@ const page = () => {
   const [selectedType, setSelectedType] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  //
+  const router=useRouter()
 
   //
   const [sortOption, setSortOption] = useState<string>("newest");
@@ -294,7 +299,14 @@ const page = () => {
                   <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange}/>
                 </>
               ) : (
-                <></>
+                <NoData
+                
+                imageUrl="/images/no-book.jpg"
+                message="No Books available please try again"
+                description="Try adjusting your filters or search criteria to find what tyou are looking for"
+                onClick={()=>router.push("/book-sell")}
+                ButtonText="Sell your first book"
+                />
               )}
             </div>
             {/*  */}
