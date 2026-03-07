@@ -63,7 +63,8 @@ npx shadcn@latest add select
 npm i framer-motion
 npx shadcn@latest add badge
 
-
+ npx shadcn@latest add dialog
+npx shadcn@latest add tabs  
 
 
 

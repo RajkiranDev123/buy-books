@@ -37,6 +37,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import AuthPage from "./AuthPage";
 
 const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -45,12 +46,12 @@ const Header = () => {
   const isLoginOpen = useSelector(
     (state: RootState) => state.user.isLoginDialogOpen,
   );
-  const user = {
-    profilePicture: "",
-    name: "raj",
-    email: "raj@gmail.com",
-  };
-  // const user = "";
+  // const user = {
+  //   profilePicture: "",
+  //   name: "raj",
+  //   email: "raj@gmail.com",
+  // };
+  const user = "";
   const userPlaceholder = "ra";
 
   const handleLoginClick = () => {
@@ -368,6 +369,7 @@ const Header = () => {
       </div>
 
       {/* mobile header ends*/}
+      <AuthPage isLoginOpen={isLoginOpen} setIsLoginOpen={handleLoginClick}/>
     </header>
   );
 };
