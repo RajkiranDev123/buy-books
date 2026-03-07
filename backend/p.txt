@@ -18,3 +18,7 @@ npm i bcryptjs jsonwebtoken
 npm uninstall moongose : un install
 npm i nodemailer
 npm i --save-dev @types/nodemailer
+
+npm i multer
+npm i cloudinary
+npm i --save-dev @types/multer

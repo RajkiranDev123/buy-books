@@ -1,0 +1,11 @@
+import { Router } from "express";
+import * as cartController from "../controllers/cartController";
+import { auth } from "../middleware/authMiddleware";
+
+const router = Router();
+
+router.post("/add", auth, cartController.addToCart);
+router.delete("/remove/:productId", auth, cartController.removeFromCart);
+router.get("/:userId", auth, cartController.removeFromCart);
+
+export default router;
