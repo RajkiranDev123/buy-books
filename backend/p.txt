@@ -1,24 +1,18 @@
+
 npm init -y
 
-npm i express mongoose dotenv body-parser cors typescript
+npm i express mongoose dotenv body-parser cors typescript multer cloudinary nodemailer bcryptjs jsonwebtoken cookie-parser
 
 npm i nodemon
 
+sd21:
+
 npm i --save-dev @types/express
 npm i --save-dev @types/cors
-npm i cookie-parser
 npm i --save-dev @types/cookie-parser
+
 npm install --save-dev ts-node
-
-
-npm i bcryptjs jsonwebtoken
-
-
-
 npm uninstall moongose : un install
-npm i nodemailer
-npm i --save-dev @types/nodemailer
 
-npm i multer
-npm i cloudinary
+npm i --save-dev @types/nodemailer
 npm i --save-dev @types/multer
