@@ -8,6 +8,7 @@ import { connectDb } from "./config/dbConnect";
 import authRoutes from "./routes/authRouter";
 import productRoutes from "./routes/productRouter";
 import cardRoutes from "./routes/cartRouter";
+import wishListRoutes from "./routes/wishListRouter";
 
 dotenv.config();
 
@@ -33,6 +34,7 @@ app.use(cookieParser());
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/product", productRoutes);
 app.use("/api/v1/cart", cardRoutes);
+app.use("/api/v1/wishList", wishListRoutes);
 
 async function startServer() {
   try {

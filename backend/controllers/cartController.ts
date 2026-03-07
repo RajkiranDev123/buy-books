@@ -35,7 +35,7 @@ export const addToCart = async (req: Request, res: Response) => {
       cart.items.push(newItem as ICartItem);
     }
     await cart.save();
-    return response(res, 200, "Item added to cart");
+    return response(res, 200, "Item added to cart",cart);
   } catch (error) {
     return response(res, 500, "Internal Server Error");
   }
