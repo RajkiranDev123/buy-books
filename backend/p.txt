@@ -10,6 +10,7 @@ sd21:
 npm i --save-dev @types/express
 npm i --save-dev @types/cors
 npm i --save-dev @types/cookie-parser
+npm i --save-dev @types/jsonwebtoken
 
 npm install --save-dev ts-node
 npm uninstall moongose : un install
