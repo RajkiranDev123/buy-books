@@ -66,6 +66,9 @@ npx shadcn@latest add badge
  npx shadcn@latest add dialog
 npx shadcn@latest add tabs  
 
+  npm i react-form-hook
+   npm i react-hook-form
+
 
 
 
