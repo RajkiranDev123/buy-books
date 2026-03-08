@@ -1,0 +1,7 @@
+ docker build -t backend-app .    
+ docker run -p 8000:5000 --name bc  backend-app 
+ --------------------------------
+
+
+
+ 
