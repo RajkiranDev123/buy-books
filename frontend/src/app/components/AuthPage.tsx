@@ -74,7 +74,7 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setIsLoginOpen }) => {
       <DialogContent className="sm:max-w-[425px] p-6">
         <DialogHeader>
           <DialogTitle className="text-center text-2xl font-bold mb-4">
-            Welcome to Buy Buy
+            Welcome to Buy Books
           </DialogTitle>
           <Tabs
             value={currentTab}

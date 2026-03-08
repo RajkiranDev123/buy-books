@@ -1,0 +1,58 @@
+WORKDIR /app :
+
+/
+├── bin
+├── etc
+├── home
+├── usr   : is a Linux directory that stores installed software and libraries.
+├── var
+└── app   ← your folder
+
+it is directly under root /
+
+/
+└── app
+     ├── package.json
+     ├── node_modules
+     ├── pages
+     └── components
+
+------------------------------------------------------------------------
+FROM node:18 ==>
+
+Linux OS                :  / , /usr , /etc , /var => The Linux operating system files are spread across many folders:
+Node.js runtime         : /usr/local/bin/node
+npm                     : /usr/local/bin/npm
+basic system tools (ls) : /bin and /usr/bin
+
+---------------------------------------------------------------------------
+
+PS C:\Users\HP\OneDrive\Desktop\AI\clones\buy books\frontend> docker build -t frontend-app .
+
+PS C:\Users\HP\OneDrive\Desktop\AI\clones\buy books\frontend> docker run -p 3000:3000 frontend-app
+
+You can run the same commands from Windows Command Prompt (cmd) 👍 :
+cd "C:\Users\HP\OneDrive\Desktop\AI\clones\buy books\frontend"
+............ run ....................
+
+
+-------------------------------------------------------------------------------------------------------------
+docker run [OPTIONS] IMAGE [COMMAND] [ARG...]
+
+OPTIONS :
+
+docker run -p 3000:3000 frontend-app
+
+What exactly is 3000:3000 : It is the value (argument) of the -p option.
+
+-p HOST_PORT:CONTAINER_PORT
+
+Option WITHOUT argument/value : -d , -it , --rm
+Option WITH argument/value : --name ==> docker run -p 3000:3000 --name fc  frontend-app
+-------------------------------------------------------------------------
+
+Short options (-d) → convenient, quick
+Long options (--rm) → descriptive, readable
+Both exist to balance speed vs clarity
+
+--------------------------------------------------

@@ -1,0 +1,42 @@
+version: "3.9"
+
+services:
+
+  # ------------------------
+  # Backend (Express API)
+  # ------------------------
+  backend:
+    build: ./backend             # build image using backend Dockerfile
+
+    container_name: express_api  # name of container
+
+    ports:
+      - "5000:5000"              # host:container port
+
+    volumes:
+      - ./backend:/app           # mount backend code into container
+      - /app/node_modules        # keep container node_modules safe
+
+    env_file:
+      - .env                     # load environment variables
+
+  # ------------------------
+  # Frontend (Next.js)
+  # ------------------------
+  frontend:
+    build: ./frontend            # build image using frontend Dockerfile
+
+    container_name: next_app
+
+    ports:
+      - "3000:3000"
+
+    volumes:
+      - ./frontend:/app          # enable hot reload
+      - /app/node_modules
+
+    env_file:
+      - .env
+
+    depends_on:
+      - backend                  # start backend first
