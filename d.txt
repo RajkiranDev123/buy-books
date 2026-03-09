@@ -1,0 +1,8 @@
+
+
+From your project root (where docker-compose.yml is): docker-compose build
+
+docker-compose up
+docker-compose up -d
+
+Stops and removes containers, networks, and default volumes : docker-compose down

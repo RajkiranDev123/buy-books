@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Tell Docker this container uses port 5000
-EXPOSE 5000
+EXPOSE 8000
 
 # Start backend in development mode
 CMD ["npm", "run", "dev"]
