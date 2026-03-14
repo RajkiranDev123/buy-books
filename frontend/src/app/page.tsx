@@ -109,25 +109,26 @@ export default function Home() {
   return (
     <>
       <main className="bg-amber-100 min-h-screen">
-        <section className="relative bg-amber-400 h-[600px] overflow-hidden">
+        {/* section 1 */}
+        <section className="relative  h-[600px] overflow-hidden rounded-xs">
           {bannerImages?.map((image, index) => (
             <div
               key={index}
-              className={`absolute inset-5 transition-opacity duration-1000 ${currentImage === index ? "opacity-100" : "opacity-0"} `}
+              className={`absolute inset-5 rounded-xs transition-opacity duration-1000 ${currentImage === index ? "opacity-100" : "opacity-0"} `}
             >
               <Image
                 src={image}
-                className="object-cover"
+                className="object-cover rounded-sm"
                 fill
                 alt="banner"
                 priority={index === 0}
               />
-              <div className="absolute inset-0 bg-black/50" />
+              <div className="absolute inset-0 bg-black/50 rounded-xs" />
             </div>
           ))}
 
           {/*  */}
-          <div className="relative mx-auto container px-4 h-full justify-center items-center text-center text-white flex flex-col">
+          <div className="relative  mx-auto container px-4 h-full justify-center items-center text-center text-white flex flex-col">
             <h1 className="text-4xl md:text-6xl font-bold mb-8">
               Buy & Sell Books Online in India.
             </h1>
@@ -171,8 +172,9 @@ export default function Home() {
             </div>
           </div>
         </section>
+        {/* section 1 ends */}
 
-        {/* section 2 */}
+        {/* section 2 starts*/}
 
         <section>
           <NewBooks />
@@ -190,6 +192,7 @@ export default function Home() {
         {/* section 2 ends*/}
 
         {/* section 3 : how to sell */}
+
         <section className="py-16 bg-amber-50">
           <div className="container mx-auto px-4">
             <div className="text-center  mb-4">
@@ -230,7 +233,7 @@ export default function Home() {
         </section>
         {/* section 3 : how to sell ends*/}
 
-        {/*how to buy  */}
+        {/*how to buy  : section 4 */}
 
         <section className="py-16 bg-gradient-to-b from-gray-50 to-white">
           <div className="container mx-auto px-4">
@@ -271,9 +274,9 @@ export default function Home() {
           </div>
         </section>
 
-        {/*how to buy ends  */}
+        {/*how to buy ends : section 4 */}
 
-        {/* blog post */}
+        {/* blog post : section 5*/}
         <section className="py-16 bg-[rgb(223,234,254)]">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold text-center mb-12">
@@ -318,7 +321,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/*  */}
+        {/* blog post : section 5*/}
       </main>
     </>
   );
