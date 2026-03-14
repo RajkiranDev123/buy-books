@@ -37,7 +37,7 @@ const page = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   //
-  const router=useRouter()
+  const router = useRouter();
 
   //
   const [sortOption, setSortOption] = useState<string>("newest");
@@ -45,41 +45,45 @@ const page = () => {
 
   const toggleFilter = (section: string, item: string) => {
     const updateFilter = (prev: string[]) => {
-      prev.includes(item) ? prev.filter((i) => i !== item) : [...prev, item];
+      return prev.includes(item)
+        ? prev.filter((i) => i !== item)
+        : [...prev, item];
     };
+
     switch (section) {
       case "condition":
-        setSelectedCondition(updateFilter());
+        setSelectedCondition((prev) => updateFilter(prev));
         break;
 
       case "classType":
-        setSelectedType(updateFilter());
+        setSelectedType((prev) => updateFilter(prev));
         break;
 
       case "category":
-        setSelectedCategory(updateFilter());
+        setSelectedCategory((prev) => updateFilter(prev));
         break;
     }
+
     setCurrentPage(1);
   };
 
   const filterBooks = books.filter((book) => {
     const conditionMatch =
       selectedCondition.length === 0 ||
-      selectedCondition.map((cond) =>
-        cond.toLocaleLowerCase().includes(book.condition.toLocaleLowerCase()),
+      selectedCondition.some(
+        (cond) => cond.toLowerCase() === book.condition.toLowerCase(),
       );
-    //
+
     const typeMatch =
       selectedType.length === 0 ||
-      selectedType.map((cond) =>
-        cond.toLocaleLowerCase().includes(book.classType.toLocaleLowerCase()),
+      selectedType.some(
+        (type) => type.toLowerCase() === book.classType.toLowerCase(),
       );
-    //
+
     const categoryMatch =
       selectedCategory.length === 0 ||
-      selectedCategory.map((cond) =>
-        cond.toLocaleLowerCase().includes(book.category.toLocaleLowerCase()),
+      selectedCategory.some(
+        (cat) => cat.toLowerCase() === book.category.toLowerCase(),
       );
 
     return conditionMatch && typeMatch && categoryMatch;
@@ -259,7 +263,7 @@ const page = () => {
                                   variant={"ghost"}
                                   className="absolute right-2 top-2 h-8 w-8 rounded-full
                                   bg-white/80 backdrop-blur-sm transition-opacity duration-300
-                                   hover:bg-white group-hover:opcity-100"
+                                   hover:bg-white group-hover:opacity-100"
                                 >
                                   <Heart className="h-4 w-4 text-red-500" />
                                 </Button>
@@ -296,16 +300,19 @@ const page = () => {
                       </motion.div>
                     ))}
                   </div>
-                  <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange}/>
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                  />
                 </>
               ) : (
                 <NoData
-                
-                imageUrl="/images/no-book.jpg"
-                message="No Books available please try again"
-                description="Try adjusting your filters or search criteria to find what tyou are looking for"
-                onClick={()=>router.push("/book-sell")}
-                ButtonText="Sell your first book"
+                  imageUrl="/images/no-book.jpg"
+                  message="No Books available please try again"
+                  description="Try adjusting your filters or search criteria to find what tyou are looking for"
+                  onClick={() => router.push("/book-sell")}
+                  ButtonText="Sell your first book"
                 />
               )}
             </div>
