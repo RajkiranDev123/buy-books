@@ -2,19 +2,19 @@ import { Card, CardContent } from "@/components/ui/card";
 import { books } from "@/lib/constant";
 import Link from "next/link";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const NewBooks = () => {
   const [currentBookSlide, setCurrentBookSlide] = useState(0);
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentBookSlide((prev) => (prev + 1) % 3);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, []);
+  // useEffect(() => {
+  //   const timer = setInterval(() => {
+  //     setCurrentBookSlide((prev) => (prev + 1) % 3);
+  //   }, 5000);
+  //   return () => clearInterval(timer);
+  // }, []);
   //   You only need useRef if: You want to manually stop/start the interval outside useEffect
 
   const prevSlide = () => {
@@ -31,15 +31,15 @@ const NewBooks = () => {
     return 0;
   };
   return (
-    <section className="py-16  bg-gray-50">
-      <div className="container mx-auto px-4">
+    <section className="py-16 bg-gray-50">
+      <div className="container  px-4">
         <h2 className="text-3xl font-bold text-center mb-12">
           Newly Added Books
         </h2>
         <div className="relative">
           {books.length > 0 ? (
             <>
-              <div className="overflow-hidden ">
+              <div className="overflow-hidden">
                 <div
                   className="flex transition-transform duration-500 ease-in-out"
                   style={{
@@ -114,7 +114,8 @@ const NewBooks = () => {
                   ))}
                 </div>
               </div>
-              {/* scroll */}
+
+              {/* scroll starts*/}
 
               <button
                 onClick={prevSlide}
@@ -123,10 +124,6 @@ const NewBooks = () => {
                 <ChevronLeft className="h-6 w-6" />
               </button>
 
-              {/* -translate-y-1/2 in Tailwind CSS means: */}
-
-              {/* Move the element up by 50% of its own height. */}
-
               <button
                 onClick={nextSlide}
                 className="absolute right-0 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow-md"
@@ -134,22 +131,19 @@ const NewBooks = () => {
                 <ChevronRight className="h-6 w-6" />
               </button>
 
-
-
               {/* scroll ends */}
 
-              {/* dot animation */}
+              {/* dot animation starts*/}
               <div className="mt-8 flex justify-center space-x-2 ">
-                {
-                  [0,1,2].map(dot=>(
-                    <button key={dot} onClick={()=>setCurrentBookSlide(dot)} 
-                    className={`h-3 w-3 rounded-full ${currentBookSlide===dot ?"bg-blue-600":"bg-gray-300"}`}>
-
-                    </button>
-                  ))
-                }
-
+                {[0, 1, 2].map((dot) => (
+                  <button
+                    key={dot}
+                    onClick={() => setCurrentBookSlide(dot)}
+                    className={`h-3 w-3 rounded-full ${currentBookSlide === dot ? "bg-blue-600" : "bg-gray-300"}`}
+                  />
+                ))}
               </div>
+              {/* dot animation ends*/}
             </>
           ) : (
             <>

@@ -108,13 +108,13 @@ export default function Home() {
   }, []);
   return (
     <>
-      <main className="bg-amber-100 min-h-screen">
+      <main className="min-h-screen">
         {/* section 1 */}
         <section className="relative  h-[600px] overflow-hidden rounded-xs">
           {bannerImages?.map((image, index) => (
             <div
               key={index}
-              className={`absolute inset-5 rounded-xs transition-opacity duration-1000 ${currentImage === index ? "opacity-100" : "opacity-0"} `}
+              className={`absolute inset-0 rounded-xs transition-opacity duration-1000 ${currentImage === index ? "opacity-100" : "opacity-0"} `}
             >
               <Image
                 src={image}
@@ -174,14 +174,26 @@ export default function Home() {
         </section>
         {/* section 1 ends */}
 
-        {/* section 2 starts*/}
+        {/* section 2 starts : newly added books and explore all books button*/}
 
         <section>
           <NewBooks />
 
+          {/* mb-10 → pushes next element down
+             mt-10 → pushes the element itself down */}
+
+          {/* Box 1
+                       <-- 40px space above Box 2 from mt-10
+                 Box 2
+                 Box 3 */}
+
+          {/* Box 1
+              Box 2
+                   <-- 40px space from mb-10
+              Box 3 */}
+
           <Button
-            size={"lg"}
-            className="flex mt-10 mb-10 mx-auto bg-yellow-500 px-8 py-6 rounded-xl"
+            className="flex mt-10 mb-10 mx-auto bg-yellow-500 px-8 py-6 rounded-xl cursor-pointer"
           >
             <Link href={"/books"}>
               <div className="text-sm"> Explore All Books</div>
@@ -189,7 +201,7 @@ export default function Home() {
           </Button>
         </section>
 
-        {/* section 2 ends*/}
+        {/* section 2 starts : newly added books and explore all books button*/}
 
         {/* section 3 : how to sell */}
 
@@ -235,28 +247,34 @@ export default function Home() {
 
         {/*how to buy  : section 4 */}
 
-        <section className="py-16 bg-gradient-to-b from-gray-50 to-white">
-          <div className="container mx-auto px-4">
+        <section className="py-16 bg-linear-to-r from-gray-200 to-white">
+          <div className="container  px-4">
             <div className="text-center  mb-4">
               <h2 className="text-3xl font-bold mb-4">
                 How to buy old books online!
               </h2>
+              {/* mx-auto : It centers the element itself, not the text. */}
               <p className="text-gray-600 max-w-2xl mx-auto ">
                 Saving some good amount of money by buying used books is just 3
                 steps away from you!
               </p>
             </div>
+            {/* grid */}
             <div className="grid md:grid-cols-3 gap-8 relative">
               <div
-                className="hidden md:block bg-amber-800 absolute top-1/2
-               left-1/4 right-1/4 h-0.5 b0rder-t-2 border-dashed border-gray-300 "
+                className="hidden md:block bg-amber-800 absolute top-1/2 
+                h-0.5  border-dashed border-gray-300  left-1/4 right-1/4"
               />
+              {/* Stacking in HTML/CSS means which element appears on top when elements overlap. */}
+              {/* Later element in HTML Appears on top */}
+
               {buySteps?.map((step, index) => (
-                <div key={index} className=" relative flex flex-col h-full">
-                  <div className="bg-yellow-400 rounded-xl p-8 shadow-lg text-center flex-grow flex flex-col">
+                // h-full : when parent has height
+                <div key={index} className=" relative flex flex-col ">
+                  <div className="bg-yellow-400 rounded-xl p-8 shadow-lg text-center grow flex flex-col">
                     <div
                       className="absolute top-2 left-14 -translate-x-1/2 bg-white
-                       text-gray-900 px-4 py-1 rounded-full text-sm font-medium z-10"
+                       text-gray-900 px-4 py-1 rounded-full text-sm font-medium"
                     >
                       {step.step}
                     </div>
@@ -264,13 +282,14 @@ export default function Home() {
                       {step.icon}
                     </div>
                     <h3 className="font-semibold mb-2">{step.title}</h3>
-                    <p className="text-gray-600 text-sm flex-grow">
+                    <p className="text-gray-600 text-sm grow">
                       {step.description}
                     </p>
                   </div>
                 </div>
               ))}
             </div>
+            {/* grid ends */}
           </div>
         </section>
 
@@ -278,38 +297,48 @@ export default function Home() {
 
         {/* blog post : section 5*/}
         <section className="py-16 bg-[rgb(223,234,254)]">
-          <div className="container mx-auto px-4">
+          <div className="container px-4 ">
             <h2 className="text-3xl font-bold text-center mb-12">
               Read from our <span className="text-primary">Blog</span>
             </h2>
             <div className="grid md:grid-cols-3 gap-8">
               {blogPosts.map((post, index) => (
-                <Card
-                  key={index}
-                  className="h-full flex flex-col overflow-hidden transition-all duration-300 hover:shadow-lg"
-                >
-                  <CardContent className="p-0 flex flex-col h-full">
-                    <div className="relative h-48 overflow-hidden">
+                <Card key={index} className="hover:shadow-lg p-0 rounded-md">
+                  <CardContent className="p-0 flex flex-col ">
+                    {/* image */}
+                    <div className="relative h-50 overflow-hidden">
+                      {/* layout="fill" automatically makes the <Image> absolute ,  make parent relative! */}
                       <Image
                         src={post.imageSrc}
                         alt={post.title}
-                        fill
+                        layout="fill"
+                        objectFit="cover"
                         className="object-cover transition-transform duration-300 hover:scale-105"
                       />
+                      {/*cover : Fill the box, even if I cut some parts off” 
+                         contain : Fit the whole image inside the box, maybe some gaps/empty space*/}
+
+                      {/* transition : Both background color (bg-red-500 → bg-blue-500) and transform (scale-105) will animate smoothly over 0.3s. */}
+                      {/* transition-transform : Applies transition only to transform-related changes (scale, rotate, translate, skew). */}
                     </div>
-                    <div className="p-6 flex flex-col flex-grow">
-                      <h3 className="text-xl font-semibold mb-2 flex items-center gap-2">
+                    {/* image ends */}
+                    {/*  */}
+                    <div className="p-6 flex h-60 flex-col ">
+                      {/* grow   : only grows to fill extra space in its parent. Doesn’t shrink.
+                          flex-1 : Grow + shrink
+                      */}
+                      <h3 className="text-xl font-semibold mb-2 flex items-center gap-2 ">
                         <div className="bg=primary/10 p-2 rounded-full ">
                           {post.icon}
                         </div>
-                        <span className="flex-grow ">{post.title}</span>
+                        <span className="">{post.title}</span>
                       </h3>
-                      <p className="text-gray-600 text-sm flex-grow">
+                      <p className="text-gray-600 text-sm grow">
                         {post.description}
                       </p>
                       <Button
                         variant={"link"}
-                        className="mt-4 p-0 flex items-center text-primary"
+                        className="flex items-center text-primary grow"
                       >
                         Read more <ArrowRight className="w-4 h-4" />
                       </Button>
@@ -321,7 +350,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* blog post : section 5*/}
+        {/* blog post ends: section 5*/}
       </main>
     </>
   );
