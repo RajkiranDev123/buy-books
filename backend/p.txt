@@ -17,3 +17,9 @@ npm uninstall moongose : un install
 
 npm i --save-dev @types/nodemailer
 npm i --save-dev @types/multer
+
+ npm i passport
+npm install passport-google-oauth20
+
+npm i --save-dev @types/passport
+npm i --save-dev @types/passport-google-oauth20
