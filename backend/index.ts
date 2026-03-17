@@ -10,6 +10,7 @@ import productRoutes from "./routes/productRouter";
 import cardRoutes from "./routes/cartRouter";
 import wishListRoutes from "./routes/wishListRouter";
 import addressRoutes from "./routes/addressRouter";
+import userRoutes from "./routes/userRouter";
 
 dotenv.config();
 const PORT = process.env.PORT || 8080;
@@ -34,7 +35,7 @@ app.use("/api/v1/product", productRoutes);
 app.use("/api/v1/cart", cardRoutes);
 app.use("/api/v1/wishList", wishListRoutes);
 app.use("/api/v1/user/address", addressRoutes);
-
+app.use("/api/v1/user", userRoutes);
 
 async function startServer() {
   try {
