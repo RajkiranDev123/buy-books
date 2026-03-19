@@ -15,7 +15,7 @@ export const createOrUpdateOrder = async (req: Request, res: Response) => {
     } = req.body;
 
     const cart = await CartItems.findOne({ user: userId }).populate(
-      "Items.product",
+      "items.product",
     );
     if (!cart || cart.items.length === 0) {
       return response(res, 400, "cart is empty");
@@ -50,7 +50,7 @@ export const createOrUpdateOrder = async (req: Request, res: Response) => {
         { $set: { items: [] } },
       );
     }
-    return response(res, 200, "order created/updated successfully");
+    return response(res, 200, "order created/updated successfully",order);
   } catch (error) {
     return response(res, 500, "Internal Server Error");
   }

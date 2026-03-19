@@ -47,7 +47,7 @@ const OrderSchema = new Schema<IOrder>(
     status: {
       type: String,
       enum: ["processing", "shipped", "delivered", "cancelled"],
-      default: "processing",
+      default: null,
     },
   },
   { timestamps: true },
