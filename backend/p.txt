@@ -23,3 +23,5 @@ npm install passport-google-oauth20
 
 npm i --save-dev @types/passport
 npm i --save-dev @types/passport-google-oauth20
+
+npm i razorpay

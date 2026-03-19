@@ -2,6 +2,12 @@ import { Request, Response } from "express";
 import CartItems from "../models/CartItems";
 import { response } from "../utils/responseHandler";
 import Order from "../models/Order";
+import Razorpay from "razorpay";
+
+const razorpay=new Razorpay({
+  key_id:process.env.RAZORPAY_KEY_ID as string,
+  key_secret:process.env.RAZORPAY_KEY_SECRET as string,
+})
 
 export const createOrUpdateOrder = async (req: Request, res: Response) => {
   try {
@@ -94,3 +100,4 @@ export const getOrderById = async (req: Request, res: Response) => {
     return response(res, 500, "Internal Server Error");
   }
 };
+
