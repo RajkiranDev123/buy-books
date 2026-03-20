@@ -1,23 +1,162 @@
-// This code creates a central API layer using RTK Query.
-// Instead of: writing fetch / axios everywhere
-// manually handling loading, error, caching, refetching
-// RTK Query does all of that for you.
-
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-// @reduxjs/toolkit/query/react , React version , Adds React hooks like: useGetUsersQuery , useMutation. Built on top of the core version
 
-const Base_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const Base_URL = process.env.NEXT_PUBLIC_API_URL;
 
-// createApi → creates an API slice
+const API_URLS = {
+  // auth
+  REGISTER: `${Base_URL}/auth/register`,
+  LOGIN: `${Base_URL}/auth/login`,
+  VERIFY_EMAIL: (token: string) => `${Base_URL}/auth/verify-email/${token}`,
+  FORGOT_PASSWORD: `${Base_URL}/auth/forgot-password`,
+  RESET_PASSWORD: (token: string) => `${Base_URL}/auth/reset-password/${token}`,
+  VERIFY_AUTH: `${Base_URL}/auth/verify-auth`,
+  LOGOUT: `${Base_URL}/auth/logout`,
+  UPDATE_USER_PROFILE: (userId: string) =>
+    `${Base_URL}/user/profile/update/${userId}`,
 
-// fetchBaseQuery → a tiny wrapper around fetch
-// similar to axios
-// handles headers, base URL, credentials, etc.
+  // product
+  PRODUCTS: `${Base_URL}/products`,
+  PRODUCT_BY_ID: (id: string) => `${Base_URL}/products/${id}`,
+  GET_PRODUCT_BY_SELLER_ID: (sellerId: string) =>
+    `${Base_URL}/products/seller/${sellerId}`,
+  DELETE_PRODUCT_BY_PRODUCT_ID: (productId: string) =>
+    `${Base_URL}/products/seller/${productId}`,
+
+  //cart
+  CART: (userId: string) => `${Base_URL}/cart/${userId}`,
+  ADD_TO_CART: `${Base_URL}/cart/add`,
+  REMOVE_FROM_CART: (productId: string) =>
+    `${Base_URL}/cart/remove/${productId}`,
+
+  //wishlist
+  WISHLIST: (userId: string) => `${Base_URL}/wishlist/${userId}`,
+  ADD_TO_WISHLIST: `${Base_URL}/wishlist/add`,
+  REMOVE_FROM_WISHLIST: (productId: string) =>
+    `${Base_URL}/wishlist/remove/${productId}`,
+
+  //order
+  ORDERS: `${Base_URL}/order`,
+  ORDER_BY_ID: (orderId: string) => `${Base_URL}/order/${orderId}`,
+  CREATE_RAZORPAY_PAYMENT: `${Base_URL}/order/payment-razorpay`,
+
+  //address
+  GET_ADDRESS: `${Base_URL}/user/address`,
+  ADD_OR_UPDATE_ADDRESS: `${Base_URL}/user/address/create-or-update`,
+};
+
 export const api = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: Base_URL,
     credentials: "include",
   }),
-  tagTypes: ["user"],
-  endpoints: (builder) => ({}),
+  tagTypes: ["User", "Product", "Cart", "Wishlist", "Order", "Address"],
+  endpoints: (builder) => ({
+    //user endpoints
+    register: builder.mutation({
+      query: (userData) => ({
+        url: API_URLS.REGISTER,
+        method: "POST",
+        body: userData,
+      }),
+    }),
+    login: builder.mutation({
+      query: (userData) => ({
+        url: API_URLS.LOGIN,
+        method: "POST",
+        body: userData,
+      }),
+    }),
+    verifyEmail: builder.mutation({
+      query: (token) => ({
+        url: API_URLS.VERIFY_EMAIL(token),
+        method: "GET",
+      }),
+    }),
+    forgotPassword: builder.mutation({
+      query: (email) => ({
+        url: API_URLS.FORGOT_PASSWORD,
+        method: "POST",
+        body: email,
+      }),
+    }),
+    resetPassword: builder.mutation({
+      query: ({ token, newPassword }) => ({
+        url: API_URLS.RESET_PASSWORD(token),
+        method: "POST",
+        body: newPassword,
+      }),
+    }),
+    verifyAuth: builder.mutation({
+      query: () => ({
+        url: API_URLS.VERIFY_AUTH,
+        method: "GET",
+      }),
+    }),
+    logout: builder.mutation({
+      query: () => ({
+        url: API_URLS.LOGOUT,
+        method: "GET",
+      }),
+    }),
+    updateUser: builder.mutation({
+      query: ({ userId, userData }) => ({
+        url: API_URLS.UPDATE_USER_PROFILE(userId),
+        method: "PUT",
+        body: userData,
+      }),
+    }),
+    //product endpoints
+    addProducts: builder.mutation({
+      query: (productData) => ({
+        url: API_URLS.PRODUCTS,
+        method: "POST",
+        body: productData,
+      }),
+      invalidatesTags: ["Product"],
+    }),
+    getProducts: builder.query({
+      query: () => API_URLS.PRODUCTS,
+      providesTags: ["Product"],
+    }),
+    getProductById: builder.query({
+      query: (id) => API_URLS.PRODUCT_BY_ID(id),
+      providesTags: ["Product"],
+    }),
+    getProductBySellerId: builder.query({
+      query: (sellerId) => API_URLS.GET_PRODUCT_BY_SELLER_ID(sellerId),
+      providesTags: ["Product"],
+    }),
+    deleteProductById: builder.mutation({
+      query: (productId) => ({
+        url: API_URLS.DELETE_PRODUCT_BY_PRODUCT_ID(productId),
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Product"],
+    }),
+    // cart
+    addTocart: builder.mutation({
+      query: (productData) => ({
+        url: API_URLS.ADD_TO_CART,
+        method: "POST",
+        body: productData,
+      }),
+      invalidatesTags: ["Cart"],
+    }),
+    removeFromCart: builder.mutation({
+      query: (productId) => ({
+        url: API_URLS.REMOVE_FROM_CART(productId),
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Cart"],
+    }),
+    getCart: builder.query({
+      query: (userId) => API_URLS.CART(userId),
+      providesTags: ["Cart"],
+    }),
+
+    // wishlist endpoints
+
+    
+
+  }),
 });
