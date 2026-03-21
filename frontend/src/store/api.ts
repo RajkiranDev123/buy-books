@@ -155,8 +155,89 @@ export const api = createApi({
     }),
 
     // wishlist endpoints
-
-    
-
+    addToWishlist: builder.mutation({
+      query: (productId) => ({
+        url: API_URLS.ADD_TO_WISHLIST,
+        method: "POST",
+        body: productId,
+      }),
+      invalidatesTags: ["Wishlist"],
+    }),
+    removeFromWishlist: builder.mutation({
+      query: (productId) => ({
+        url: API_URLS.REMOVE_FROM_WISHLIST(productId),
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Wishlist"],
+    }),
+    getWishlist: builder.query({
+      query: (userId) => API_URLS.WISHLIST(userId),
+      providesTags: ["Wishlist"],
+    }),
+    // order
+    getUserOrders: builder.query({
+      query: () => API_URLS.ORDERS,
+      providesTags: ["Order"],
+    }),
+    getOrderById: builder.query({
+      query: (orderId) => API_URLS.ORDER_BY_ID(orderId),
+      providesTags: ["Order"],
+    }),
+    createOrUpdateOrder: builder.mutation({
+      query: ({ orderId, orderData }) => ({
+        url: API_URLS.ORDERS,
+        method: orderId ? "PATCH" : "POST",
+        body: orderData,
+      }),
+      invalidatesTags: ["Order"],
+    }),
+    createRazorpayPayment: builder.mutation({
+      query: (orderId) => ({
+        url: API_URLS.CREATE_RAZORPAY_PAYMENT,
+        method: "POST",
+        body: { orderId },
+      }),
+    }),
+    //address
+    getAddress: builder.query<any[], void>({
+      query: () => API_URLS.GET_ADDRESS,
+      providesTags: ["Address"],
+    }),
+    addOrUpdateAddress: builder.mutation<any, any>({
+      query: (address) => ({
+        url: API_URLS.ADD_OR_UPDATE_ADDRESS,
+        method: "POST",
+        body: address,
+      }),
+      invalidatesTags: ["Address"],
+    }),
   }),
 });
+
+export const {
+  useRegisterMutation,
+  useLoginMutation,
+  useVerifyEmailMutation,
+  useForgotPasswordMutation,
+  useResetPasswordMutation,
+  useVerifyAuthMutation,
+  useLogoutMutation,
+  useUpdateUserMutation,
+  useAddProductsMutation,
+  useGetProductsQuery,
+  useGetProductByIdQuery,
+  useGetProductBySellerIdQuery,
+  useDeleteProductByIdMutation,
+  useGetCartQuery,
+  useAddTocartMutation,
+  useRemoveFromCartMutation,
+  useGetWishlistQuery,
+  useAddToWishlistMutation,
+  useRemoveFromWishlistMutation,
+  useGetUserOrdersQuery,
+  useGetOrderByIdQuery,
+  useCreateOrUpdateOrderMutation,
+  useCreateRazorpayPaymentMutation,
+  useAddOrUpdateAddressMutation,
+  useGetAddressQuery,
+} = api;
