@@ -40,12 +40,12 @@ const Header = () => {
   const isLoginOpen = useSelector(
     (state: RootState) => state.user.isLoginDialogOpen,
   );
-  const user = {
-    profilePicture: "",
-    name: "raj",
-    email: "raj@gmail.com",
-  };
-  // const user = "";
+  // const user = {
+  //   profilePicture: "",
+  //   name: "raj",
+  //   email: "raj@gmail.com",
+  // };
+  const user = "";
   const userPlaceholder = "ra";
 
   const handleLoginClick = () => {
