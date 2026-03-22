@@ -2,7 +2,14 @@ import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query/react";
 import storage from "redux-persist/lib/storage";
 import {
-  persistReducer,persistStore,FLUSH,REHYDRATE,PAUSE,PURGE,PERSIST,REGISTER,
+  persistReducer,
+  persistStore,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PURGE,
+  PERSIST,
+  REGISTER,
 } from "redux-persist";
 import userReducer from "./slice/userSlice";
 import { api } from "./api";

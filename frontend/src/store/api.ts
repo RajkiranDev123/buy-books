@@ -59,6 +59,7 @@ export const api = createApi({
         body: userData,
       }),
     }),
+    // login
     login: builder.mutation({
       query: (userData) => ({
         url: API_URLS.LOGIN,
@@ -66,6 +67,7 @@ export const api = createApi({
         body: userData,
       }),
     }),
+    //login ends
     verifyEmail: builder.mutation({
       query: (token) => ({
         url: API_URLS.VERIFY_EMAIL(token),

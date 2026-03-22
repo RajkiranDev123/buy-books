@@ -8,10 +8,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useLoginMutation, useRegisterMutation } from "@/store/api";
-import { toggleLoginDialog } from "@/store/slice/userSlice";
+import { authStatus, toggleLoginDialog } from "@/store/slice/userSlice";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   CheckCircle,
+  Copy,
   Eye,
   EyeOff,
   Loader2,
@@ -82,19 +83,38 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setIsLoginOpen }) => {
       const { email, password, name } = data;
       const result = await register({ email, password, name }).unwrap();
       if (result.success) {
-        toast.success("verification link sent to email, plz verify your email");
+        toast.success(
+          "Verification link sent to your email, please verify your email.",
+        );
         dispatch(toggleLoginDialog());
       }
-    } catch (error) {
-      toast.error("Email already registered");
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Something went wrong");
     } finally {
       setSignupLoading(false);
+    }
+  };
+  const onSubmitLogin = async (data: LoginFormData) => {
+    setLoginLoading(true);
+    try {
+      const result = await login(data).unwrap();
+
+      if (result.success) {
+        toast.success(result?.message);
+        dispatch(toggleLoginDialog());
+        dispatch(authStatus());
+        window.location.reload();
+      }
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Something went wrong");
+    } finally {
+      setLoginLoading(false);
     }
   };
 
   return (
     <Dialog open={isLoginOpen} onOpenChange={setIsLoginOpen}>
-      <DialogContent className="sm:max-w-[425px] p-6">
+      <DialogContent className="sm:max-w-[425px] p-6  mt-8">
         <DialogHeader>
           <DialogTitle className="text-center text-2xl font-bold mb-4">
             Welcome to Buy Books
@@ -123,7 +143,21 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setIsLoginOpen }) => {
             >
               {/* login tab */}
               <TabsContent value="login" className="space-y-4">
-                <form className="space-y-4">
+                <form
+                  onSubmit={handleLoginSubmit(onSubmitLogin)}
+                  className="space-y-4"
+                >
+                  <div className="flex gap-4 items-center">
+                    Test Email{" "}
+                    <Copy
+                      onClick={() => {
+                        navigator.clipboard.writeText("rajtech645@gmail.com"); // ✅ fixed email
+                        toast.success("Email copied!");
+                      }}
+                      className="cursor-pointer animate-pulse"
+                      size={18}
+                    />
+                  </div>
                   <div className="relative">
                     <Input
                       {...registerLogin("email", {
@@ -144,6 +178,17 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setIsLoginOpen }) => {
                     </p>
                   )}
                   {/* passowrd */}
+                  <div className="flex gap-4 items-center">
+                    Test Password{" "}
+                    <Copy
+                      onClick={() => {
+                        navigator.clipboard.writeText("raj"); // ✅ fixed email
+                        toast.success("Password copied!");
+                      }}
+                      className="cursor-pointer animate-pulse"
+                      size={18}
+                    />
+                  </div>
                   <div className="relative">
                     <Input
                       {...registerLogin("password", {
@@ -293,7 +338,7 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setIsLoginOpen }) => {
                       className="mr-2"
                       type="checkbox"
                       {...registerSignup("agreeTerms", {
-                        required: "You must agree to the terms & conditions",
+                        required: "You must agree to the terms & conditions.",
                       })}
                     />
                     <label className="text-sm text-gray-700">
