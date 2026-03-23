@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useLoginMutation, useRegisterMutation } from "@/store/api";
+import { Base_URL, useLoginMutation, useRegisterMutation } from "@/store/api";
 import { authStatus, toggleLoginDialog } from "@/store/slice/userSlice";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -58,6 +59,7 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setIsLoginOpen }) => {
 
   const [register] = useRegisterMutation();
   const [login] = useLoginMutation();
+  const router = useRouter();
 
   const {
     register: registerLogin,
@@ -109,6 +111,24 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setIsLoginOpen }) => {
       toast.error(error?.data?.message || "Something went wrong");
     } finally {
       setLoginLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    setGoogleLoading(true);
+    try {
+      router.push(`${Base_URL}/auth/google`);
+      dispatch(authStatus());
+      dispatch(toggleLoginDialog());
+
+      setTimeout(() => {
+        toast.success("Google login done.");
+        setIsLoginOpen(false);
+      }, 3000);
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Something went wrong");
+    } finally {
+      setGoogleLoading(false);
     }
   };
 
@@ -236,6 +256,7 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setIsLoginOpen }) => {
                 </div>
 
                 <Button
+                  onClick={handleGoogleLogin}
                   className="w-full flex items-center justify-center gap-2 bg-white text-gray-700 border
                    border-gray-300 hover:bg-gray-50"
                 >

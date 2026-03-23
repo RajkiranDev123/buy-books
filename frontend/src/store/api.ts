@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-const Base_URL = process.env.NEXT_PUBLIC_API_URL;
+export const Base_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const API_URLS = {
   // auth
