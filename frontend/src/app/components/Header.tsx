@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { toggleLoginDialog } from "@/store/slice/userSlice";
+import { logout, toggleLoginDialog } from "@/store/slice/userSlice";
 import { RootState } from "@/store/store";
 import {
   BookLock,
@@ -32,8 +32,11 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import AuthPage from "./AuthPage";
+import { useLogoutMutation } from "@/store/api";
+import toast from "react-hot-toast";
 
 const Header = () => {
+  const[logoutMutation]=useLogoutMutation()
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const router = useRouter();
   const dispatch = useDispatch();
@@ -45,14 +48,27 @@ const Header = () => {
   //   name: "raj",
   //   email: "raj@gmail.com",
   // };
-  const user = "";
-  const userPlaceholder = "ra";
+  // const user = "";
+  const user = useSelector((state: RootState) => state.user.user);
+  console.log(user)
+
+  const userPlaceholder = user?.name?.split(" ").map((name:string)=>name[0]).join("");
 
   const handleLoginClick = () => {
     dispatch(toggleLoginDialog());
     setIsDropdownOpen(false);
   };
-  const handleLogout = () => {};
+  const handleLogout = async() => {
+    try {
+      await logoutMutation({}).unwrap()
+      dispatch(logout())
+      toast.success("Logout done.")
+      setIsDropdownOpen(false)
+      
+    } catch (error) {
+      toast.error("Failed to logout.")
+    }
+  };
 
   const handleProtectionNavigation = (href: string) => {
     if (user) {
@@ -140,13 +156,15 @@ const Header = () => {
       label: "Help",
       href: "/how-it-works",
     },
-    ...(user && [
-      {
-        icon: <LogOut className="h-5 w-5" />,
-        label: "Logout",
-        onclick: () => handleLogout(),
-      },
-    ]),
+    ...(user && user
+      ? [
+          {
+            icon: <LogOut className="h-5 w-5" />,
+            label: "Logout",
+            onclick: () => handleLogout(),
+          },
+        ]
+      : []),
   ];
 
   // menu have two types of items
