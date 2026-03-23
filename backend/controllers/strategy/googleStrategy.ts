@@ -1,6 +1,6 @@
 import passport from "passport";
 
-import { Strategy as GoggleStrategy, Profile } from "passport-google-oauth20";
+import { Strategy as GoggleStrategy } from "passport-google-oauth20";
 
 import dotenv from "dotenv";
 import { Request } from "express";
@@ -39,7 +39,7 @@ passport.use(
           name: displayName,
           email: emails?.[0]?.value,
           profilePicture: photos?.[0]?.value,
-          isVerified: true,
+          isVerified: emails?.[0]?.verified,
           agreeTerms: true,
         });
 
@@ -50,3 +50,5 @@ passport.use(
     },
   ),
 );
+
+export default passport;

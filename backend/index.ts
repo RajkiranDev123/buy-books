@@ -12,6 +12,7 @@ import wishListRoutes from "./routes/wishListRouter";
 import addressRoutes from "./routes/addressRouter";
 import userRoutes from "./routes/userRouter";
 import orderRoutes from "./routes/orderRouter";
+import passport from "./controllers/strategy/googleStrategy";
 
 dotenv.config();
 const PORT = process.env.PORT || 8080;
@@ -29,6 +30,7 @@ app.use(express.urlencoded({ extended: true }));
 // When a form is submitted, the browser sends data using the format:application/x-www-form-urlencoded vs application/json
 // If a form sends data like ==> name=raj&age=20, it converts it into a JavaScript object ==> req.body = { name: "Raj", age: "20"}
 // extended: true allows nested objects in form data & extended: false only allows flat key=value pairs
+app.use(passport.initialize());
 app.use(cookieParser()); //Cookie: user=raj; theme=dark to req.cookies = {user: "raj",theme: "dark"}
 
 app.use("/api/v1/auth", authRoutes);

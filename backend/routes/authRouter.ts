@@ -16,6 +16,7 @@ router.post("/reset-password/:token", authController.resetPassword);
 router.get("/logout", authController.logout);
 router.get("/verify-auth", auth, authController.checkUserAuth);
 
+///auth/google route just redirects the user to Google for authentication.
 router.get(
   "/google",
   passport.authenticate("google", {
