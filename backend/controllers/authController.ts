@@ -159,7 +159,7 @@ export const resetPassword = async (req: Request, res: Response) => {
 
 export const logout = async (req: Request, res: Response) => {
   try {
-    res.clearCookie("access-token", {
+    res.clearCookie("access_token", {
       httpOnly: true,
     });
     return response(res, 200, "logout done");
@@ -180,9 +180,13 @@ export const checkUserAuth = async (req: Request, res: Response) => {
     );
     if (!user) {
       return response(res, 403, "User not found.");
+      // 403 : the server understood the request but refuses to authorize it, indicating a lack of proper permissions.
     }
-    return response(res, 200, "User retrived successfully");
+    return response(res, 200, "User retreived successfully",user);
   } catch (error) {
     return response(res, 500, "Internal Server Error");
   }
 };
+
+//Port 443 : Default port for HTTPS (secure web)
+//Port 8000 : Common port for development servers
