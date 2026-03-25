@@ -39,7 +39,7 @@ export default function AuthCheck({ children }: { children: React.ReactNode }) {
     // if (!user && isLoggedIn) {
     //   checkAuth();
     // }
-  }, []);
+  }, [verifyAuth,dispatch,user]);
 
   if (isLoading || isCheckingAuth) {
     return <BookLoader />;

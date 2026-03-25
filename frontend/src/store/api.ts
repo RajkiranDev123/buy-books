@@ -78,7 +78,7 @@ export const api = createApi({
       query: (email) => ({
         url: API_URLS.FORGOT_PASSWORD,
         method: "POST",
-        body: email,
+        body: {email},
       }),
     }),
     resetPassword: builder.mutation({

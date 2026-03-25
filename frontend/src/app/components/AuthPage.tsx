@@ -7,7 +7,12 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Base_URL, useLoginMutation, useRegisterMutation } from "@/store/api";
+import {
+  Base_URL,
+  useForgotPasswordMutation,
+  useLoginMutation,
+  useRegisterMutation,
+} from "@/store/api";
 import { authStatus, toggleLoginDialog } from "@/store/slice/userSlice";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -42,7 +47,7 @@ interface SignupFormData {
   password: string;
   agreeTerms: boolean;
 }
-interface ForgetPasswordFormData {
+interface ForgotPasswordFormData {
   email: string;
 }
 const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setIsLoginOpen }) => {
@@ -59,6 +64,7 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setIsLoginOpen }) => {
 
   const [register] = useRegisterMutation();
   const [login] = useLoginMutation();
+  const [forgotPassword] = useForgotPasswordMutation();
   const router = useRouter();
 
   const {
@@ -77,7 +83,7 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setIsLoginOpen }) => {
     register: registerForgotPassword,
     handleSubmit: handleForgotPasswordSubmit,
     formState: { errors: forgotPasswordError },
-  } = useForm<ForgetPasswordFormData>();
+  } = useForm<ForgotPasswordFormData>();
 
   const onSubmitSignUp = async (data: SignupFormData) => {
     setSignupLoading(true);
@@ -111,6 +117,22 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setIsLoginOpen }) => {
       toast.error(error?.data?.message || "Something went wrong");
     } finally {
       setLoginLoading(false);
+    }
+  };
+
+  const onSubmitForgotPassword = async (data: ForgotPasswordFormData) => {
+    setForgotPasswordLoading(true);
+    try {
+      const result = await forgotPassword(data.email).unwrap();
+
+      if (result.success) {
+        toast.success(result?.message);
+        setForgotPasswordSuccess(true);
+      }
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Something went wrong");
+    } finally {
+      setForgotPasswordLoading(false);
     }
   };
 
@@ -388,7 +410,10 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setIsLoginOpen }) => {
 
               <TabsContent value="forgot" className="space-y-4">
                 {!forgotPasswordSuccess ? (
-                  <form className="space-y-4">
+                  <form
+                    className="space-y-4"
+                    onClick={handleForgotPasswordSubmit(onSubmitForgotPassword)}
+                  >
                     <div className="relative">
                       <Input
                         {...registerForgotPassword("email", {
