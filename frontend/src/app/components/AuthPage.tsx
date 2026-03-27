@@ -95,6 +95,8 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setIsLoginOpen }) => {
           "Verification link sent to your email, please verify your email.",
         );
         dispatch(toggleLoginDialog());
+        router.push("/")
+
       }
     } catch (error: any) {
       toast.error(error?.data?.message || "Something went wrong");
@@ -111,6 +113,8 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setIsLoginOpen }) => {
         toast.success(result?.message);
         dispatch(toggleLoginDialog());
         dispatch(authStatus());
+        router.push("/")
+
         window.location.reload();
       }
     } catch (error: any) {
@@ -146,6 +150,7 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setIsLoginOpen }) => {
       setTimeout(() => {
         toast.success("Google login done.");
         setIsLoginOpen(false);
+        router.push("/")
       }, 3000);
     } catch (error: any) {
       toast.error(error?.data?.message || "Something went wrong");
