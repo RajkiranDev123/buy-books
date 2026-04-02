@@ -255,7 +255,7 @@ const Header = () => {
         {/* sell used book button , my account dropdown and cart*/}
         <div className="flex items-center gap-4">
           {/*sell button starts*/}
-          <Link href={"/book-self"}>
+          <Link href={"/book-sell"}>
             <Button
               variant={"secondary"} // light gray background
               className="bg-yellow-400 text-gray-700 hover:bg-yellow-500"

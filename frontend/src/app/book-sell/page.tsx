@@ -1,9 +1,86 @@
-import React from 'react'
+"use client";
+import { BookDetails } from "@/lib/types/type";
+import { useAddProductsMutation } from "@/store/api";
+import { RootState } from "@/store/store";
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
 
 const page = () => {
-  return (
-    <div>page</div>
-  )
-}
+  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
+  const [addProducts] = useAddProductsMutation();
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const user = useSelector((state: RootState) => state.user.user);
 
-export default page
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    reset,
+    formState: { errors },
+  } = useForm<BookDetails>({
+    defaultValues: {
+      images: [],
+    },
+  });
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      const newFiles = Array.from(files);
+      const currentFiles = watch("images") || [];
+      setUploadedImages((prevImage) =>
+        [
+          ...prevImage,
+          ...newFiles.map((file) => URL.createObjectURL(file)),
+        ].slice(0, 4),
+      );
+
+      setValue(
+        "images",
+        [...currentFiles, ...newFiles].slice(0, 4) as string[],
+      );
+    }
+  };
+
+  const onSubmit = async (data: BookDetails) => {
+    try {
+      const formData = new FormData();
+      Object.entries(data).forEach(([key, value]) => {
+        if (key !== "images") {
+          formData.append(key, value as string);
+        }
+      });
+      if (data.paymentMode === "UPI") {
+        formData.set(
+          "paymentDetails",
+          JSON.stringify({ upiID: data.paymentDetails.upiId }),
+        );
+      } else if (data.paymentMode === "Bank Account") {
+        formData.set(
+          "paymentDetails",
+          JSON.stringify({ bankDetails: data.paymentDetails.bankDetails }),
+        );
+      }
+      if (Array.isArray(data.images) && data.images.length > 0) {
+        data.images.forEach((image) => formData.append("images", image));
+      }
+      const result = await addProducts(formData).unwrap();
+      if (result.success) {
+        router.push(`books/${result.data._id}`);
+        toast.success("books added successfully!");
+        reset();
+      }
+    } catch (error) {
+      toast.error("Failed to add the book ! please try again later.");
+    }
+  };
+
+  return <div></div>;
+};
+
+export default page;
