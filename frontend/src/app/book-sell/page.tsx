@@ -1,12 +1,14 @@
 "use client";
 import { BookDetails } from "@/lib/types/type";
 import { useAddProductsMutation } from "@/store/api";
+import { toggleLoginDialog } from "@/store/slice/userSlice";
 import { RootState } from "@/store/store";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
+import NoData from "../components/NoData";
 
 const page = () => {
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
@@ -47,6 +49,13 @@ const page = () => {
     }
   };
 
+  const removeImage = (index: number) => {
+    setUploadedImages((prev) => prev.filter((_, i) => i !== index));
+    const currentFiles = watch("images") || [];
+    const uploadFiles = currentFiles.filter((_, i) => i !== index);
+    setValue("images", uploadFiles);
+  };
+
   const onSubmit = async (data: BookDetails) => {
     try {
       const formData = new FormData();
@@ -80,7 +89,29 @@ const page = () => {
     }
   };
 
-  return <div></div>;
+  const paymentMode = watch("paymentMode");
+
+  const handleOpenLogin = () => {
+    dispatch(toggleLoginDialog());
+  };
+  if (!user) {
+    return (
+      <>
+        <NoData
+          message="Please log in to access!"
+          description="You need to be logged in to add books"
+          ButtonText="Login"
+          imageUrl="/images/login.jpg"
+          onClick={handleOpenLogin}
+        />
+      </>
+    );
+  }
+
+  return <div>
+
+    
+  </div>;
 };
 
 export default page;

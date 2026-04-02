@@ -1,4 +1,4 @@
-"use  client";
+"use client";
 import { useVerifyEmailMutation } from "@/store/api";
 import { authStatus, setEmailVerified } from "@/store/slice/userSlice";
 import { RootState } from "@/store/store";
