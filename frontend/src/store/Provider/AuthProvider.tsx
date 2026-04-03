@@ -20,7 +20,7 @@ export default function AuthCheck({ children }: { children: React.ReactNode }) {
   const checkAuth = async () => {
     try {
       const response = await verifyAuth({}).unwrap();
-      console.log(77,response)
+      console.log(77, response);
       if (response.success) {
         dispatch(setUser(response.data));
         dispatch(setEmailVerified(response.data.isVerified));
@@ -39,7 +39,9 @@ export default function AuthCheck({ children }: { children: React.ReactNode }) {
     // if (!user && isLoggedIn) {
     //   checkAuth();
     // }
-  }, [verifyAuth,dispatch,user]);
+  }, [verifyAuth, dispatch]);
+
+  //[verifyAuth,dispatch,user] ==> the user state changes → useEffect runs again → checkAuth() runs again → another API call.
 
   if (isLoading || isCheckingAuth) {
     return <BookLoader />;
