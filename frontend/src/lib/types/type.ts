@@ -7,7 +7,7 @@ export interface BookDetails {
   condition: string;
   classType: string;
   price: number;
-  author: string;
+  author?: string;
   edition?: string;
   description?: string;
   finalPrice: number;
