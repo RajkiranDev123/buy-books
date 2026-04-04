@@ -627,9 +627,9 @@ const page = () => {
 
           {/* bank details  */}
 
-          <Card className="shadow-lg border-t-4 border-t-blue-500 ">
+          <Card className="shadow-lg border-t-4 border-t-blue-500  p-0">
             <CardHeader className="bg-linear-to-r from-blue-50 to-indigo-50">
-              <CardTitle className="text-2xl text-yellow-600 items-center">
+              <CardTitle className="text-2xl flex items-center text-yellow-600 items-center">
                 <CreditCard className="mr-2 h-6 w-6" />
                 Bank Details
               </CardTitle>
@@ -813,6 +813,7 @@ const page = () => {
 
           {/* bank details  */}
 
+          {/* button  */}
           <Button
             type="submit"
             disabled={isLoading}
