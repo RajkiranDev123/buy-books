@@ -14,8 +14,10 @@ import {
   Book,
   Camera,
   ChevronRight,
+  CreditCard,
   DollarSign,
   HelpCircle,
+  Loader2,
   X,
 } from "lucide-react";
 import {
@@ -49,7 +51,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 const page = () => {
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
-  const [addProducts] = useAddProductsMutation();
+  const [addProducts, { isLoading }] = useAddProductsMutation();
   const router = useRouter();
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user.user);
@@ -627,65 +629,52 @@ const page = () => {
 
           <Card className="shadow-lg border-t-4 border-t-blue-500 ">
             <CardHeader className="bg-linear-to-r from-blue-50 to-indigo-50">
-              <CardTitle className="text-2xl text-blue-700 items-center">
-                <Book className="mr-2 h-6 w-6" />
+              <CardTitle className="text-2xl text-yellow-600 items-center">
+                <CreditCard className="mr-2 h-6 w-6" />
                 Bank Details
               </CardTitle>
             </CardHeader>
 
             <CardContent className="space-y-6 pt-6">
-              {/* title */}
-              <div className="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-4">
-                <Label
-                  htmlFor="title"
-                  className="md:w-1/4 font-medium text-gray-700   "
-                >
-                  Ad Title
-                </Label>
-                <div className="md:w-3/4 ">
-                  <Input
-                    {...register("title", { required: "Title is required" })}
-                    placeholder="Title "
-                    type="text"
-                  />
-
-                  {errors.title && (
-                    <p className="text-red-500 text-sm">
-                      {errors.title.message}
-                    </p>
-                  )}
-                </div>
-              </div>
-
               {/* book type */}
               <div className="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-4">
-                <Label
-                  htmlFor="category"
-                  className="md:w-1/4 font-medium text-gray-700   "
-                >
-                  Book Type
+                <Label className="md:w-1/4 font-medium text-gray-700   ">
+                  Payment Mode
                 </Label>
-                <div className="md:w-3/4">
+                <div className="md:w-3/4 space-y-2">
+                  <p className="text-sm text-muted-foreground mb-2">
+                    After your book is sold , in what mode would you like to
+                    receive the payment
+                  </p>
                   <Controller
-                    name="category"
+                    name="paymentMode"
                     control={control}
-                    rules={{ required: "Book Type is required" }}
+                    rules={{ required: "Payment Mode is required" }}
                     render={({ field }) => (
-                      <Select
+                      <RadioGroup
                         onValueChange={field.onChange}
                         value={field.value}
+                        className="flex space-x-4"
                       >
-                        <SelectTrigger>
-                          <SelectValue>Please select book type</SelectValue>
-                        </SelectTrigger>
-                        <SelectContent>
-                          {filters.category.map((category) => (
-                            <SelectItem key={category} value={category}>
-                              {category}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem
+                            value="UPI"
+                            id="upi"
+                            {...register("paymentMode")}
+                          >
+                            <Label htmlFor="upi">UPI ID/Number</Label>
+                          </RadioGroupItem>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem
+                            value="Bank Account"
+                            id="bank account"
+                            {...register("paymentMode")}
+                          >
+                            <Label htmlFor="bank account">Bank Account</Label>
+                          </RadioGroupItem>
+                        </div>
+                      </RadioGroup>
                     )}
                   />
                   {errors.category && (
@@ -696,166 +685,169 @@ const page = () => {
                 </div>
               </div>
 
-              {/* condition */}
+              {paymentMode === "UPI" && (
+                <div className="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-4">
+                  <Label
+                    htmlFor="upiId"
+                    className="md:w-1/4 font-medium text-gray-700   "
+                  >
+                    UPI ID
+                  </Label>
 
-              <div className="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-4">
-                <Label
-                  htmlFor="condition"
-                  className="md:w-1/4 font-medium text-gray-700   "
-                >
-                  Book Condition
-                </Label>
-                <div className="md:w-3/4 ">
-                  <Controller
-                    name="condition"
-                    control={control}
-                    rules={{ required: "Book condition is required" }}
-                    render={({ field }) => (
-                      <RadioGroup
-                        onValueChange={field.onChange}
-                        value={field.value}
-                        className="flex space-x-4 "
-                      >
-                        {filters.condition.map((condition) => (
-                          <div
-                            key={condition}
-                            className="flex items-center space-x-2"
-                          >
-                            <RadioGroupItem
-                              value={condition.toLocaleLowerCase()}
-                              id={condition.toLocaleLowerCase()}
-                            />
-
-                            <Label htmlFor={condition.toLocaleLowerCase()}>
-                              {condition}
-                            </Label>
-                          </div>
-                        ))}
-                      </RadioGroup>
-                    )}
-                  />
-                  {errors.condition && (
-                    <p className="text-red-500 text-sm mt-1 ">
-                      {errors.condition.message}
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              {/* class type */}
-              <div className="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-4">
-                <Label
-                  htmlFor="classType"
-                  className="md:w-1/4 font-medium text-gray-700   "
-                >
-                  Class Type
-                </Label>
-                <div className="md:w-3/4">
-                  <Controller
-                    name="classType"
-                    control={control}
-                    rules={{ required: "Class Type is required" }}
-                    render={({ field }) => (
-                      <Select
-                        onValueChange={field.onChange}
-                        value={field.value}
-                      >
-                        <SelectTrigger className="w-full">
-                          <SelectValue>Please select book type</SelectValue>
-                        </SelectTrigger>
-                        <SelectContent>
-                          {filters.classType.map((category) => (
-                            <SelectItem key={category} value={category}>
-                              {category}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    )}
-                  />
-                  {errors.classType && (
-                    <p className="text-red-500 text-sm mt-1 ">
-                      {errors.classType.message}
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              {/* subject */}
-
-              <div className="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-4">
-                <Label
-                  htmlFor="subject"
-                  className="md:w-1/4 font-medium text-gray-700   "
-                >
-                  Book Subject
-                </Label>
-                <div className="md:w-3/4 ">
                   <Input
-                    {...register("subject", {
-                      required: "Subject is required",
+                    {...register("paymentDetails.upiId", {
+                      required: "UPI ID is required",
+                      pattern: {
+                        value: /[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z]{2,64}/,
+                        message: "Invalid UPI ID format",
+                      },
                     })}
-                    placeholder="Subject "
+                    placeholder="UPI ID "
                     type="text"
                   />
 
-                  {errors.subject && (
+                  {errors.paymentDetails?.upiId && (
                     <p className="text-red-500 text-sm">
-                      {errors.subject.message}
+                      {errors.paymentDetails.upiId.message}
                     </p>
                   )}
                 </div>
-              </div>
-              {/* photo */}
-              <div className="space-y-2">
-                <Label className="block mb-2 font-medium text-gray-700">
-                  Upload Photos
-                </Label>
-                <div className="border-2 border-dashed border-blue-300 rounded-lg p-4 bg-blue-50">
-                  <div className="flex flex-col items-center gap-2">
-                    <Camera className="h-8 w-8 text-blue-500" />
+              )}
+
+              {/*  */}
+
+              {paymentMode === "Bank Account" && (
+                <>
+                  <div className="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-4">
                     <Label
-                      htmlFor="images"
-                      className="cursor-pointer text-sm font-medium text-blue-600 hover:underline"
+                      htmlFor="accountNumber"
+                      className="md:w-1/4 font-medium text-gray-700   "
                     >
-                      Click here to upload upto 4 images (size : 15mb max, each)
+                      Account Number
                     </Label>
+
                     <Input
-                      onChange={handleImageUpload}
-                      id="images"
-                      type="file"
-                      className="hidden"
-                      accept="images/"
-                      multiple
+                      {...register("paymentDetails.bankDetails.accountNumber", {
+                        required: "Account Number is required",
+                        pattern: {
+                          value: /^[0-9]{9,18}$/,
+                          message: "Invalid Bank Account Number",
+                        },
+                      })}
+                      placeholder="Account Number "
+                      type="text"
                     />
+
+                    {errors.paymentDetails?.bankDetails?.accountNumber && (
+                      <p className="text-red-500 text-sm">
+                        {
+                          errors.paymentDetails?.bankDetails?.accountNumber
+                            .message
+                        }
+                      </p>
+                    )}
                   </div>
-                  {uploadedImages.length > 0 && (
-                    <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
-                      {uploadedImages.map((image, index) => (
-                        <div className="relative" key={index}>
-                          <Image
-                            src={image}
-                            alt="book image"
-                            width={200}
-                            height={200}
-                            className="rounded-lg object-cover w-full h-32 border border-gray-200"
-                          />
-                          <Button
-                            onClick={() => removeImage(index)}
-                            size={"icon"}
-                            className="absolute -right-2 -top-2"
-                            variant={"destructive"}
-                          >
-                            <X className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
+
+                  {/* ifsc */}
+
+                  <div className="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-4">
+                    <Label
+                      htmlFor="ifscCode"
+                      className="md:w-1/4 font-medium text-gray-700   "
+                    >
+                      IFSC Code
+                    </Label>
+
+                    <Input
+                      {...register("paymentDetails.bankDetails.ifscCode", {
+                        required: "IFSC Code is required",
+                        pattern: {
+                          value: /^[A-Z]{4}0[A-Z0-9]{6}$/,
+                          message: "Invalid IFSC Code",
+                        },
+                      })}
+                      placeholder="IFSC Code "
+                      type="text"
+                    />
+
+                    {errors.paymentDetails?.bankDetails?.ifscCode && (
+                      <p className="text-red-500 text-sm">
+                        {errors.paymentDetails?.bankDetails?.ifscCode.message}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* ifsc ends */}
+
+                  {/* bank name */}
+                  <div className="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-4">
+                    <Label
+                      htmlFor="bankName"
+                      className="md:w-1/4 font-medium text-gray-700   "
+                    >
+                      Bank Name
+                    </Label>
+
+                    <Input
+                      {...register("paymentDetails.bankDetails.bankName", {
+                        required: "Bank Name  is required",
+                      })}
+                      placeholder="Bank Name "
+                      type="text"
+                    />
+
+                    {errors.paymentDetails?.bankDetails?.bankName && (
+                      <p className="text-red-500 text-sm">
+                        {errors.paymentDetails?.bankDetails?.bankName.message}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* bank name */}
+                </>
+              )}
+
+              {/*  */}
             </CardContent>
           </Card>
+
+          {/* bank details  */}
+
+          <Button
+            type="submit"
+            disabled={isLoading}
+            className="w-60 text-md text-white bg-linear-to-r from-blue-500 to-indigo-600 
+          hover:from-orange-600 hover:to-orange-700 font-semibold py-6 shadow-lg rounded-lg
+          transition duration-300 ease-in-out transform hover:scale-105"
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="animate-spin mr-2 " size={20} />
+                Saving...
+              </>
+            ) : (
+              <>"Post your Book"</>
+            )}
+          </Button>
+
+          {/* privacy policy etc starts */}
+          <p className="text-sm mt-2 text-center text-gray-600">
+            By Clicking 'Post your book' , you agree to our{" "}
+            <Link
+              href={"/terms-of-use"}
+              className="text-blue-500 hover:underline"
+            >
+              Terms of Use ,
+            </Link>
+            <Link
+              href={"/privacy-policy"}
+              className="text-blue-500 hover:underline"
+            >
+              {" "}
+              Privacy Policy
+            </Link>
+          </p>
+          {/* privacy policy etc starts */}
 
           {/* bank details ends */}
         </form>
