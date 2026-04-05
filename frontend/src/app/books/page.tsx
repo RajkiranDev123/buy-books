@@ -14,10 +14,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import BookLoader from "@/lib/BookLoader";
-import { books, filters } from "@/lib/constant";
+import {  filters } from "@/lib/constant";
 import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
@@ -27,6 +27,8 @@ import { Badge } from "@/components/ui/badge";
 import Pagination from "../components/Pagination";
 import NoData from "../components/NoData";
 import { useRouter } from "next/navigation";
+import { useGetProductsQuery } from "@/store/api";
+import { BookDetails } from "@/lib/types/type";
 
 const page = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -34,10 +36,17 @@ const page = () => {
   const [selectedCondition, setSelectedCondition] = useState<string[]>([]);
   const [selectedType, setSelectedType] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  // const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // const {}
+  const { data: apiResponse = {}, isLoading } = useGetProductsQuery({});
 
+  const [books, setBooks] = useState<BookDetails[]>([]);
+
+  useEffect(() => {
+    if(apiResponse.success){
+      setBooks(apiResponse.data)
+    }
+  }, [apiResponse]);
   //
   const router = useRouter();
 
