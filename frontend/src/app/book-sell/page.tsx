@@ -121,11 +121,11 @@ const page = () => {
       const result = await addProducts(formData).unwrap();
       if (result.success) {
         router.push(`books/${result.data._id}`);
-        toast.success("books added successfully!");
+        toast.success("Book added successfully!");
         reset();
       }
     } catch (error) {
-      toast.error("Failed to add the book ! please try again later.");
+      toast.error("Failed to add the book,Please try again later.");
     }
   };
 
@@ -187,7 +187,7 @@ const page = () => {
                   htmlFor="title"
                   className="md:w-1/4 font-medium text-gray-700   "
                 >
-                  Ad Title
+                  Title
                 </Label>
                 <div className="md:w-3/4 ">
                   <Input
@@ -204,13 +204,13 @@ const page = () => {
                 </div>
               </div>
 
-              {/* book type */}
+              {/* Category */}
               <div className="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-4">
                 <Label
                   htmlFor="category"
                   className="md:w-1/4 font-medium text-gray-700   "
                 >
-                  Book Type
+                  Category
                 </Label>
                 <div className="md:w-3/4">
                   <Controller
@@ -629,7 +629,7 @@ const page = () => {
 
           <Card className="shadow-lg border-t-4 border-t-blue-500  p-0">
             <CardHeader className="bg-linear-to-r from-blue-50 to-indigo-50">
-              <CardTitle className="text-2xl flex items-center text-yellow-600 items-center">
+              <CardTitle className="text-2xl flex  text-yellow-600 items-center">
                 <CreditCard className="mr-2 h-6 w-6" />
                 Bank Details
               </CardTitle>

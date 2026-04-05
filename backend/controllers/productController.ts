@@ -7,7 +7,6 @@ export const createProduct = async (req: Request, res: Response) => {
   try {
     const {
       title,
-
       subject,
       category,
       condition,
@@ -31,10 +30,12 @@ export const createProduct = async (req: Request, res: Response) => {
     }
 
     let parsedPaymentDetails = JSON.parse(paymentDetails);
+    console.log(77,parsedPaymentDetails)
+    console.log(78,paymentMode)
 
     if (
       paymentMode === "UPI" &&
-      (!parsedPaymentDetails || !parsedPaymentDetails.upiId)
+      (!parsedPaymentDetails || !parsedPaymentDetails.upiID)
     ) {
       return response(res, 400, "UPI ID is required.");
     }
@@ -145,5 +146,3 @@ export const getProductBySellerId = async (req: Request, res: Response) => {
     return response(res, 500, "Internal Server Error");
   }
 };
-
-

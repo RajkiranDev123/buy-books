@@ -36,6 +36,8 @@ const page = () => {
   const [selectedCategory, setSelectedCategory] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  // const {}
+
   //
   const router = useRouter();
 
