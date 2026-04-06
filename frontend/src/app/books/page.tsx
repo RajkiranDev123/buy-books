@@ -17,7 +17,7 @@ import BookLoader from "@/lib/BookLoader";
 import {  filters } from "@/lib/constant";
 import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
@@ -22,39 +22,30 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { BookDetails } from "@/lib/types/type";
+import { useGetProductByIdQuery } from "@/store/api";
+import BookLoader from "@/lib/BookLoader";
+import NoData from "@/app/components/NoData";
 
 const page = () => {
   const params = useParams();
   const id = params.id;
-  const [selectedImage, setSelectedImage] = useState(1);
+  const [selectedImage, setSelectedImage] = useState(0);
   const router = useRouter();
   const [isAddToCart, setISAddToCart] = useState(false);
 
-  const book = {
-    _id: "1",
-    images: [
-      "https://media.istockphoto.com/id/910384920/photo/kid-reading-near-locked-door.webp?a=1&b=1&s=612x612&w=0&k=20&c=J3FL4ZVORItw_bkLzlVo4WO-xUy22S7Qqbuq2xusNnc=",
-      "https://images.unsplash.com/photo-1604866830893-c13cafa515d5?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8b25saW5lJTIwc2VsbCUyMGJvb2tzfGVufDB8fDB8fHww",
-    ],
-    title: "The Alchemist",
-    category: "Reading Books (Novels)",
-    condition: "Excellent",
-    classType: "B.Com",
-    subject: "Fiction",
-    price: 300,
-    author: "Paulo Coelho",
-    edition: "25th Anniversary Edition",
-    description:
-      "A philosophical book about a shepherd's journey to realize his dreams.",
-    finalPrice: 250,
-    shippingCharge: 50,
-    paymentMode: "UPI",
-    paymentDetails: {
-      upiId: "example@upi",
-    },
-    createdAt: new Date("2024-01-01"),
-    seller: { name: "John Doe", phoneNumber: "1234567890" },
-  };
+  const [book, setBook] = useState<BookDetails | null>(null);
+  const {
+    data: apiResponse = {},
+    isLoading,
+    isError,
+  } = useGetProductByIdQuery(id);
+
+  useEffect(() => {
+    if (apiResponse.success) {
+      setBook(apiResponse.data);
+    }
+  }, [apiResponse]);
 
   const handleAddToCart = (productId: string) => {};
   const handleAddToWishList = (productId: string) => {};
@@ -71,6 +62,23 @@ const page = () => {
     const date = new Date(dateString);
     return formatDistanceToNow(date, { addSuffix: true });
   };
+
+  if (isLoading) {
+    return <BookLoader />;
+  }
+  if (!book || isError) {
+    return (
+      <div className="my-10 max-w-3xl justify-center mx-auto">
+        <NoData
+          imageUrl="/images/no-book.jpg"
+          message="Loading..."
+          description="Wait,we are fetching book details"
+          onClick={() => router.push("/book-sell")}
+          ButtonText="Sell your first book"
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -103,7 +111,7 @@ const page = () => {
                   className=" absolute left-0 top-2 rounded-r-lg px-2 py-1 text-xs font-medium
                  bg-orange-600/90 text-white hover:bg-orange-700"
                 >
-                  {calculateDiscount(book.price, book.finalPrice)}% off
+                  {calculateDiscount(book.price, book.finalPrice)}% off 
                 </span>
               )}
             </div>
