@@ -111,7 +111,7 @@ const page = () => {
                   className=" absolute left-0 top-2 rounded-r-lg px-2 py-1 text-xs font-medium
                  bg-orange-600/90 text-white hover:bg-orange-700"
                 >
-                  {calculateDiscount(book.price, book.finalPrice)}% off 
+                  {calculateDiscount(book.price, book.finalPrice)}% off
                 </span>
               )}
             </div>
@@ -277,7 +277,9 @@ const page = () => {
 
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <MapPin className="h-4 w-4" />
-                      Mirjapur UP
+                      {book.seller?.addresses?.[0]?.city
+                        ? `${book.seller?.addresses?.[0]?.city}, ${book.seller?.addresses?.[0].state}`
+                        : "Location not specified"}
                     </div>
                   </div>
                 </div>
