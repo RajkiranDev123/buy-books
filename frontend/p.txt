@@ -70,6 +70,7 @@ npx shadcn@latest add tabs
 
   npm i react-form-hook
    npm i react-hook-form
+    npm i react-web-share
 
 
 
