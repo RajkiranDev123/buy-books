@@ -91,9 +91,9 @@ const page = () => {
   const handleAddToWishList = async (productId: string) => {
     try {
       const isWishlist = wishlist.some((item) =>
-        item.products.includes(productId),
+        item.products.includes(productId)
       );
-      if (wishlist) {
+      if (isWishlist) {
         const result = await removeWishlistMutation(productId).unwrap();
         if (result.success) {
           dispatch(removeFromWishListAction(productId));
@@ -112,7 +112,7 @@ const page = () => {
       }
     } catch (error: any) {
       const errormessage = error?.data?.message;
-      toast.error(errormessage);
+      toast.error(errormessage || "Failed to add/remove wishlist");
     }
   };
 
@@ -220,7 +220,11 @@ const page = () => {
                   <Heart
                     className={`h-4 w-4 mr-1 ${wishlist.some((w) => w.products.includes(book._id)) ? "fill-red-500" : ""}`}
                   />
-                  <span className="hidden md:inline">Add</span>
+                  <span className="hidden md:inline">
+                    {wishlist.some((w) => w.products.includes(book._id))
+                      ? "Remove"
+                      : "Add"}
+                  </span>
                 </Button>
               </div>
             </div>
