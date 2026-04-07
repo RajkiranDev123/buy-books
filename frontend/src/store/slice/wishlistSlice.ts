@@ -23,8 +23,26 @@ const wishlistSlice = createSlice({
     clearWishlist: (state) => {
       state.items = [];
     },
-    addToWishlistAction: (state, action: PayloadAction<WishlistItem>) => {},
-    removeFromWishListAction: (state, action: PayloadAction<string>) => {},
+    addToWishlistAction: (state, action: PayloadAction<WishlistItem>) => {
+      const existingItemIndex = state.items.findIndex(
+        (item) => item._id === action.payload._id,
+      );
+      if (existingItemIndex !== -1) {
+        state.items[existingItemIndex] = action.payload;
+      } else {
+        state.items.push(action.payload);
+      }
+    },
+    removeFromWishListAction: (state, action: PayloadAction<string>) => {
+      state.items = state.items
+        .map((item) => ({
+          ...item,
+          products: item.products.filter(
+            (productId) => productId !== action.payload,
+          ),
+        }))
+        .filter((item) => item.products.length > 0);
+    },
   },
 });
 

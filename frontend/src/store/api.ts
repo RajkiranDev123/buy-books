@@ -136,7 +136,7 @@ export const api = createApi({
       invalidatesTags: ["Product"],
     }),
     // cart
-    addTocart: builder.mutation({
+    addToCart: builder.mutation({
       query: (productData) => ({
         url: API_URLS.ADD_TO_CART,
         method: "POST",
@@ -231,7 +231,7 @@ export const {
   useGetProductBySellerIdQuery,
   useDeleteProductByIdMutation,
   useGetCartQuery,
-  useAddTocartMutation,
+  useAddToCartMutation,
   useRemoveFromCartMutation,
   useGetWishlistQuery,
   useAddToWishlistMutation,

@@ -23,9 +23,22 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { BookDetails } from "@/lib/types/type";
-import { useGetProductByIdQuery } from "@/store/api";
+import {
+  useAddToCartMutation,
+  useAddToWishlistMutation,
+  useGetProductByIdQuery,
+  useRemoveFromWishlistMutation,
+} from "@/store/api";
 import BookLoader from "@/lib/BookLoader";
 import NoData from "@/app/components/NoData";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { addToCart } from "@/store/slice/cartSlice";
+import toast from "react-hot-toast";
+import {
+  addToWishlistAction,
+  removeFromWishListAction,
+} from "@/store/slice/wishlistSlice";
 
 const page = () => {
   const params = useParams();
@@ -33,8 +46,14 @@ const page = () => {
   const [selectedImage, setSelectedImage] = useState(0);
   const router = useRouter();
   const [isAddToCart, setISAddToCart] = useState(false);
+  const dispatch = useDispatch();
 
   const [book, setBook] = useState<BookDetails | null>(null);
+  const [addToCartMutation] = useAddToCartMutation();
+  const [addToWishlistMutation] = useAddToWishlistMutation();
+  const [removeWishlistMutation] = useRemoveFromWishlistMutation();
+  const wishlist = useSelector((state: RootState) => state.wishlist.items);
+
   const {
     data: apiResponse = {},
     isLoading,
@@ -47,8 +66,55 @@ const page = () => {
     }
   }, [apiResponse]);
 
-  const handleAddToCart = (productId: string) => {};
-  const handleAddToWishList = (productId: string) => {};
+  const handleAddToCart = async () => {
+    if (book) {
+      setISAddToCart(true);
+      try {
+        const result = await addToCartMutation({
+          productId: book?._id,
+          quantity: 1,
+        }).unwrap();
+        if (result.success || result.data) {
+          dispatch(addToCart(result.data));
+          toast.success(result.message || "Added to cart ");
+        } else {
+          throw new Error(result.message || "Failed to add to cart");
+        }
+      } catch (error: any) {
+        const errormessage = error?.data?.message;
+        toast.error(errormessage);
+      } finally {
+        setISAddToCart(false);
+      }
+    }
+  };
+  const handleAddToWishList = async (productId: string) => {
+    try {
+      const isWishlist = wishlist.some((item) =>
+        item.products.includes(productId),
+      );
+      if (wishlist) {
+        const result = await removeWishlistMutation(productId).unwrap();
+        if (result.success) {
+          dispatch(removeFromWishListAction(productId));
+          toast.success(result.message || "Removed from wishlist");
+        } else {
+          throw new Error(result.message || "Failed to remove from wishlist");
+        }
+      } else {
+        const result = await addToWishlistMutation(productId).unwrap();
+        if (result.success) {
+          dispatch(addToWishlistAction(result.data));
+          toast.success(result.message || "Added to wishlist");
+        } else {
+          throw new Error(result.message || "Failed to remove from wishlist");
+        }
+      }
+    } catch (error: any) {
+      const errormessage = error?.data?.message;
+      toast.error(errormessage);
+    }
+  };
 
   const bookImages = book?.images || [];
   const calculateDiscount = (price: number, finalPrice: number): number => {
@@ -151,7 +217,9 @@ const page = () => {
                   size={"sm"}
                   onClick={() => handleAddToWishList(book._id)}
                 >
-                  <Heart className={`h-4 w-4 mr-1 fill-red-500`} />
+                  <Heart
+                    className={`h-4 w-4 mr-1 ${wishlist.some((w) => w.products.includes(book._id)) ? "fill-red-500" : ""}`}
+                  />
                   <span className="hidden md:inline">Add</span>
                 </Button>
               </div>
@@ -171,7 +239,11 @@ const page = () => {
                   Shipping Available
                 </Badge>
               </div>
-              <Button className="w-60 py-6 bg-blue-700">
+              <Button
+                className="w-60 py-6 bg-blue-700"
+                onClick={handleAddToCart}
+                disabled={isAddToCart}
+              >
                 {isAddToCart ? (
                   <>
                     <Loader2 className="animate-spin mr-2" size={20} /> Adding
