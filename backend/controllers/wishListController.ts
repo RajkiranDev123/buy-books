@@ -27,6 +27,7 @@ export const addToWishList = async (req: Request, res: Response) => {
 
     return response(res, 200, "Product added to wishList", wishList);
   } catch (error) {
+    console.log(error)
     return response(res, 500, "Internal Server Error");
   }
 };
