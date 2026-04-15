@@ -1,21 +1,31 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { books } from "@/lib/constant";
+
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useGetProductsQuery } from "@/store/api";
+import { BookDetails } from "@/lib/types/type";
 
 const NewBooks = () => {
   const [currentBookSlide, setCurrentBookSlide] = useState(0);
+  const { data: apiResponse = {}, isLoading } = useGetProductsQuery({});
+  const [books, setBooks] = useState<BookDetails[]>([]);
 
-  // useEffect(() => {
-  //   const timer = setInterval(() => {
-  //     setCurrentBookSlide((prev) => (prev + 1) % 3);
-  //   }, 5000);
-  //   return () => clearInterval(timer);
-  // }, []);
-  //   You only need useRef if: You want to manually stop/start the interval outside useEffect
+  useEffect(() => {
+    if (apiResponse.success) {
+      setBooks(apiResponse.data);
+    }
+  }, [apiResponse]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentBookSlide((prev) => (prev + 1) % 3);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
+  // You only need useRef if: You want to manually stop/start the interval outside useEffect
 
   const prevSlide = () => {
     setCurrentBookSlide((prev) => (prev - 1 + 3) % 3);

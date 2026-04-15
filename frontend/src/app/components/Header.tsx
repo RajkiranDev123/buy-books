@@ -29,14 +29,15 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import AuthPage from "./AuthPage";
-import { useLogoutMutation } from "@/store/api";
+import { useGetCartQuery, useLogoutMutation } from "@/store/api";
 import toast from "react-hot-toast";
+import { setCart } from "@/store/slice/cartSlice";
 
 const Header = () => {
-  const[logoutMutation]=useLogoutMutation()
+  const [logoutMutation] = useLogoutMutation();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const router = useRouter();
   const dispatch = useDispatch();
@@ -50,23 +51,43 @@ const Header = () => {
   // };
   // const user = "";
   const user = useSelector((state: RootState) => state.user.user);
-  console.log(user)
+  console.log(user);
 
-  const userPlaceholder = user?.name?.split(" ").map((name:string)=>name[0]).join("");
+  const userPlaceholder = user?.name
+    ?.split(" ")
+    .map((name: string) => name[0])
+    .join("");
+
+  const cartItemCount = useSelector(
+    (state: RootState) => state.cart.items.length,
+  );
+  console.log(cartItemCount);
+
+  const { data: cartData } = useGetCartQuery(user?._id, { skip: !user });
+  const [searchTerms, setSearchTerms] = useState("");
+
+  const handleSearch = () => {
+    router.push(`/books?search=${encodeURIComponent(searchTerms)}`);
+  };
+
+  useEffect(() => {
+    if (cartData?.success && cartData?.data) {
+      dispatch(setCart(cartData.data));
+    }
+  }, [cartData, dispatch]);
 
   const handleLoginClick = () => {
     dispatch(toggleLoginDialog());
     setIsDropdownOpen(false);
   };
-  const handleLogout = async() => {
+  const handleLogout = async () => {
     try {
-      await logoutMutation({}).unwrap()
-      dispatch(logout())
-      toast.success("Logout done.")
-      setIsDropdownOpen(false)
-      
+      await logoutMutation({}).unwrap();
+      dispatch(logout());
+      toast.success("Logout done.");
+      setIsDropdownOpen(false);
     } catch (error) {
-      toast.error("Failed to logout.")
+      toast.error("Failed to logout.");
     }
   };
 
@@ -89,7 +110,10 @@ const Header = () => {
               <div className="flex space-x-4 items-center p-2 border-b">
                 <Avatar className="w-12 h-12 -ml-2 rounded-full">
                   {user?.profilePicture ? (
-                    <AvatarImage src={user?.profilePicture} alt="user_image"></AvatarImage>
+                    <AvatarImage
+                      src={user?.profilePicture}
+                      alt="user_image"
+                    ></AvatarImage>
                   ) : (
                     <AvatarFallback>{userPlaceholder}</AvatarFallback>
                   )}
@@ -233,8 +257,10 @@ const Header = () => {
           <div className="relative">
             <Input
               type="text"
-              // onChange={() => {}}
-              value={""}
+              onChange={(e) => {
+                setSearchTerms(e.target.value);
+              }}
+              value={searchTerms}
               className="pr-5 border border-r-0   outline-none focus:outline-none focus:ring-0 focus-visible:ring-0"
               placeholder="Book name | Author | Publisher | Subject"
             />
@@ -242,6 +268,7 @@ const Header = () => {
             Use focus:outline-none if you want the ring only. 
             Tailwind’s ring visually overwrites the native browser outline*/}
             <Button
+              onClick={handleSearch}
               size={"icon"} //The button becomes square and small, designed for icons only, equal width and height , small padding
               variant={"ghost"} //No background , No border , light background appears on hover otherwise black (default) in shadcn/ui.
               className="absolute bg-amber-100 right-px"
@@ -276,7 +303,10 @@ const Header = () => {
               >
                 <Avatar className="w-8 h-8 rounded-full">
                   {user?.profilePicture ? (
-                    <AvatarImage src={user?.profilePicture} alt="user_image"></AvatarImage>
+                    <AvatarImage
+                      src={user?.profilePicture}
+                      alt="user_image"
+                    ></AvatarImage>
                   ) : userPlaceholder ? (
                     <AvatarFallback>{userPlaceholder}</AvatarFallback>
                   ) : (
@@ -318,13 +348,21 @@ const Header = () => {
                    -translate-y-1/2 = move up 50% of 40px (move up from bottom)
                   "of its own height” means the movement is based on the element’s own size
                   */}
-                  {/* In Tailwind v3+ no need translate */}8
+                  {/* In Tailwind v3+ no need translate */}
                 </span>
               )}
               <Button variant={"ghost"} className="relative ">
                 <ShoppingCart className="h-5 w-5 mr-2" />
                 Cart
               </Button>
+              {user && cartItemCount > 0 && (
+                <span
+                  className="absolute top-2 left-5 translate translate-x-1/2 -translate-y-1/2 bg-red-500
+                text-white rounded-full px-1 text-xs"
+                >
+                  {cartItemCount}
+                </span>
+              )}
             </div>
           </Link>
           {/* cart ends */}
@@ -392,12 +430,12 @@ const Header = () => {
               <ShoppingCart className="h-5 w-5 mr-2" />
               {/* Cart */}
             </Button>
-            {user && (
+            {user && cartItemCount > 0 && (
               <span
                 className="absolute top-2 left-5 translate translate-x-1/2 -translate-y-1/2 bg-red-500
                 text-white rounded-full px-1 text-xs"
               >
-                8
+                {cartItemCount}
               </span>
             )}
           </div>

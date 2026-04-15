@@ -14,10 +14,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import BookLoader from "@/lib/BookLoader";
-import {  filters } from "@/lib/constant";
+import { filters } from "@/lib/constant";
 import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
@@ -42,9 +42,13 @@ const page = () => {
 
   const [books, setBooks] = useState<BookDetails[]>([]);
 
+  const searchTerms = new URLSearchParams(window.location.search).get("search") || "";
+
+    console.log(707,searchTerms)
+
   useEffect(() => {
-    if(apiResponse.success){
-      setBooks(apiResponse.data)
+    if (apiResponse.success) {
+      setBooks(apiResponse.data);
     }
   }, [apiResponse]);
   //
@@ -97,7 +101,12 @@ const page = () => {
         (cat) => cat.toLowerCase() === book.category.toLowerCase(),
       );
 
-    return conditionMatch && typeMatch && categoryMatch;
+      const searchMatch=searchTerms?book.title.toLowerCase().includes(searchTerms.toLowerCase())
+  || book.author?.toLowerCase().includes(searchTerms.toLowerCase())
+  || book.author?.toLowerCase().includes(searchTerms.toLowerCase())
+  || book.subject?.toLowerCase().includes(searchTerms.toLowerCase())
+  :true
+    return conditionMatch && typeMatch && categoryMatch && searchMatch
   });
 
   //date

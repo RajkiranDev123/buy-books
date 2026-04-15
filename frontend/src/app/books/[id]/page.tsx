@@ -39,6 +39,7 @@ import {
   addToWishlistAction,
   removeFromWishListAction,
 } from "@/store/slice/wishlistSlice";
+import ShareButton from "@/app/components/Share";
 
 const page = () => {
   const params = useParams();
@@ -91,7 +92,7 @@ const page = () => {
   const handleAddToWishList = async (productId: string) => {
     try {
       const isWishlist = wishlist.some((item) =>
-        item.products.includes(productId)
+        item.products.includes(productId),
       );
       if (isWishlist) {
         const result = await removeWishlistMutation(productId).unwrap();
@@ -211,7 +212,11 @@ const page = () => {
                 </p>
               </div>
               <div className="flex gap-2">
-                <Button variant={"outline"}>Share</Button>
+                <ShareButton
+                  url={`${window.location.origin}/books/${book._id}`}
+                  title={`check out this book : ${book.title}`}
+                  text={`I found this interesting book on Buy book : ${book.title}`}
+                />
                 <Button
                   variant={"outline"}
                   size={"sm"}
@@ -399,7 +404,7 @@ const page = () => {
                 image: { src: "/icons/fast-delivery.png", alt: "Shipping" },
               },
             ].map((item, index) => (
-              <Card className="bg-gradient-to-r from-amber-50 to-amber-100 border-none">
+              <Card key={index} className="bg-gradient-to-r from-amber-50 to-amber-100 border-none">
                 <CardHeader>
                   <Badge className="w-fit mb-2">{item.step}</Badge>
                   <CardTitle className="text-lg ">{item.title}</CardTitle>
