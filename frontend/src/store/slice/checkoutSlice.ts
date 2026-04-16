@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface checkoutState {
-  step: "cart" | "addresses" | "payment";
+  step: "cart" | "address" | "payment";
   orderId: string | null;
   orderAmount: number | null;
 }
@@ -18,8 +18,9 @@ const checkoutSlice = createSlice({
   reducers: {
     setCheckoutStep: (
       state,
-      action: PayloadAction<"cart" | "addresses" | "payment">,
+      action: PayloadAction<"cart" | "address" | "payment">,
     ) => {
+      console.log("action of setCheckoutStep ==>", action);
       state.step = action.payload;
     },
     setOrderId: (state, action: PayloadAction<string | null>) => {
@@ -30,11 +31,11 @@ const checkoutSlice = createSlice({
     //   type: string;
     //   payload: T;
     // };
-    // Its Generic type alias
+    // It is known as Generic type alias , type: string;
     //////////////////////////////////////
     // dispatch(setOrderId("ORD123")) , setOrderId("ORD123") is Action creator and then returns object ==>
     // {
-    //   type: "checkout/setOrderId",
+    //   type: "checkout/setOrderId", == > slice name + reducer name , Redux Toolkit generates it for you
     //   payload: "ORD123"
     // }
     // then Dispatch sends it to Redux store , Store forwards action to reducers and Reducer updates state (new state)
@@ -51,3 +52,14 @@ const checkoutSlice = createSlice({
 export const { setCheckoutStep, setOrderAmount, setOrderId, resetCheckout } =
   checkoutSlice.actions;
 export default checkoutSlice.reducer;
+
+// type PayloadAction<T> = {
+//   type: string;
+//   payload: T;
+// };
+
+// const action1: PayloadAction<number> = {
+//   type: "increment",
+//   payload: 5,
+// };
+

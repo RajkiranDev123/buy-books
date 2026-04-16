@@ -161,7 +161,7 @@ export const api = createApi({
       query: (productId) => ({
         url: API_URLS.ADD_TO_WISHLIST,
         method: "POST",
-        body: productId,
+        body:{ productId},
       }),
       invalidatesTags: ["Wishlist"],
     }),

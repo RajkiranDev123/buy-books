@@ -1,13 +1,15 @@
 import { Request, Response } from "express";
 import Products from "../models/Products";
 import { response } from "../utils/responseHandler";
-import CartItems, { ICartItem } from "../models/CartItems";
+
 import WishList from "../models/WishList";
 
 export const addToWishList = async (req: Request, res: Response) => {
   try {
     const userId = req.id;
+
     const { productId } = req.body;
+
 
     const product = await Products.findById(productId);
     if (!product) {
@@ -35,7 +37,9 @@ export const addToWishList = async (req: Request, res: Response) => {
 export const removeFromWishList = async (req: Request, res: Response) => {
   try {
     const userId = req.id;
+ 
     const { productId } = req.params;
+  
     let wishList = await WishList.findOne({ user: userId });
 
     if (!wishList) {

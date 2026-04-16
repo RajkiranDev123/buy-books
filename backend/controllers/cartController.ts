@@ -37,6 +37,7 @@ export const addToCart = async (req: Request, res: Response) => {
     await cart.save();
     return response(res, 200, "Item added to cart",cart);
   } catch (error) {
+    console.log(error)
     return response(res, 500, "Internal Server Error");
   }
 };
@@ -65,7 +66,8 @@ export const getCartByUser = async (req: Request, res: Response) => {
   try {
     const userId = req.params.userId;
 
-    let cart = await CartItems.findOne({ user: userId });
+    let cart = await CartItems.findOne({ user: userId }).populate("items.product");
+    // console.log(78,cart)
 
     if (!cart) {
       return response(res, 404, "Cart is Empty",{items:[]});
