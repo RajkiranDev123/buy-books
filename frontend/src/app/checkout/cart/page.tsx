@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   useAddToWishlistMutation,
   useCreateOrUpdateOrderMutation,
+  useCreateRazorpayPaymentMutation,
   useGetCartQuery,
   useGetOrderByIdQuery,
   useRemoveFromCartMutation,
@@ -16,7 +17,7 @@ import {
   removeFromWishListAction,
 } from "@/store/slice/wishlistSlice";
 import toast from "react-hot-toast";
-import { setCart } from "@/store/slice/cartSlice";
+import { clearCart, setCart } from "@/store/slice/cartSlice";
 import NoData from "@/app/components/NoData";
 import { toggleLoginDialog } from "@/store/slice/userSlice";
 import { ChevronRight, CreditCard, MapPin, ShoppingCart } from "lucide-react";
@@ -29,6 +30,20 @@ import {
 } from "@/components/ui/card";
 import CartItems from "@/app/components/CartItems";
 import PriceDetails from "@/app/components/PriceDetails";
+import { Address } from "@/lib/types/type";
+import {
+  resetCheckout,
+  setCheckoutStep,
+  setOrderId,
+} from "@/store/slice/checkoutSlice";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import CheckoutAddress from "@/app/components/CheckoutAddress";
 
 const page = () => {
   const router = useRouter();
@@ -41,19 +56,28 @@ const page = () => {
   const [showAddressDialog, setShowAddressDialog] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const { data: cartData, isLoading: isCartLoading } = useGetCartQuery(
-    user?._id
+    user?._id,
   );
 
-  const [createOrUpdateOrder]=useCreateOrUpdateOrderMutation()
-  const {data:orderData,isLoading:isOrderLoading}=useGetOrderByIdQuery(orderId || "")
+  const [createOrUpdateOrder] = useCreateOrUpdateOrderMutation();
+  const { data: orderData, isLoading: isOrderLoading } = useGetOrderByIdQuery(
+    orderId || "",
+  );
 
-  
+  const [createRazorPayPayment] = useCreateRazorpayPaymentMutation();
+  const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
 
+  useEffect(() => {
+    if (orderData && orderData.shippingAddress) {
+      setSelectedAddress(orderData.shippingAddress);
+    }
+  }, [orderData]);
 
-
-
-
-
+  useEffect(() => {
+    if (step === "address" && !selectedAddress) {
+      setShowAddressDialog(true);
+    }
+  }, [step, selectedAddress]);
 
   const [removeCartMutation] = useRemoveFromCartMutation();
   const [addWishlistMutation] = useAddToWishlistMutation();
@@ -68,7 +92,7 @@ const page = () => {
   const handleRemoveItem = async (productId: string) => {
     try {
       const result = await removeCartMutation(productId).unwrap();
-      if (result.success && result.data) {
+      if (result.success) {
         dispatch(setCart(result.data));
         toast.success(result.message || "Item removed successfully");
       }
@@ -79,14 +103,12 @@ const page = () => {
   };
 
   const handleAddToWishList = async (productId: string) => {
-  
     try {
       const isWishlist = wishlist.some((item) =>
         item.products.includes(productId),
       );
-      console.log("wlkjhgf",wishlist)
+      console.log("wlkjhgf", wishlist);
       if (isWishlist) {
-      
         const result = await removeWishlistMutation(productId).unwrap();
         if (result.success) {
           dispatch(removeFromWishListAction(productId));
@@ -95,9 +117,8 @@ const page = () => {
           throw new Error(result.message || "Failed to remove from wishlist");
         }
       } else {
-   
         const result = await addWishlistMutation(productId).unwrap();
-  
+
         if (result.success) {
           dispatch(addToWishlistAction(result.data));
           toast.success(result.message || "Added to wishlist");
@@ -115,10 +136,120 @@ const page = () => {
     dispatch(toggleLoginDialog());
   };
 
-  
+  const totalAmount = cart.items.reduce(
+    (acc, item) => acc + item.product.finalPrice * item.quantity,
+    0,
+  );
+  const totalOriginalAmount = cart.items.reduce(
+    (acc, item) => acc + item.product.price * item.quantity,
+    0,
+  );
+  const totalDiscount = totalOriginalAmount - totalAmount;
 
+  const shippingCharge = cart.items.map((item) =>
+    item.product.shippingCharge.toLowerCase() === "Free"
+      ? 0
+      : parseFloat(item.product.shippingCharge) || 0,
+  );
 
+  const maximumShippingCharge = Math.max(...shippingCharge, 0);
+  const finalAmount = totalAmount - maximumShippingCharge;
 
+  const handleProceedToCheckout = async () => {
+    if (step === "cart") {
+      try {
+        let g = {
+          data: { items: cart.items, totalAmount: finalAmount },
+        };
+        console.log(g);
+
+        const result = await createOrUpdateOrder({
+          orderData: { items: cart.items, totalAmount: totalAmount },
+        }).unwrap();
+
+        if (result.success) {
+          toast.success("Order created successfully");
+          dispatch(setOrderId(result.data._id));
+          dispatch(setCheckoutStep("address"));
+        } else {
+          throw new Error(result.message);
+        }
+      } catch (error) {
+        toast.error("Failed to create order");
+      }
+    } else if (step === "address") {
+      if (selectedAddress) {
+        dispatch(setCheckoutStep("payment"));
+      } else {
+        setShowAddressDialog(true);
+      }
+    } else if (step === "payment") {
+      handlePayment();
+    }
+  };
+
+  const handlePayment = async () => {
+    if (!orderId) {
+      toast.error("No rorder id found ");
+      return;
+    }
+    setIsProcessing(true);
+    try {
+      const { data, error } = await createRazorPayPayment(orderId);
+      if (error) {
+        throw new Error("failed to create razor pay order");
+      }
+      const razorpayOrder = data.data.order;
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY,
+        amount: razorpayOrder.amount,
+        currency: razorpayOrder.currency,
+        name: "buy books",
+        description: "Book Purchase",
+        order_id: razorpayOrder.id,
+        handler: async function (response: any) {
+          try {
+            const result = await createOrUpdateOrder({
+              updates: {
+                orderId,
+                paymentDetails: {
+                  razorpay_order_id: response.razorpay_order_id,
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_signature: response.razorpay_signature,
+                },
+              },
+            }).unwrap();
+
+            if (result.success) {
+              dispatch(clearCart());
+              dispatch(resetCheckout());
+              toast.success("Paymenr done");
+              router.push(`/checkout/payment-success?orderId=${orderId}`);
+            } else {
+              throw new Error(result.message);
+            }
+          } catch (error) {
+            console.log(error);
+          }
+        },
+      };
+    } catch (error) {}
+  };
+
+  const handleSelectAddress = async (address: Address) => {
+    setSelectedAddress(address);
+    setShowAddressDialog(false);
+    if (orderId) {
+      try {
+        await createOrUpdateOrder({
+          updates: { orderId, shippingAddress: address },
+        }).unwrap();
+        toast.success("address updated successfully");
+      } catch (error) {
+        toast.error("failed to update address");
+      }
+    }
+  };
 
   if (!user) {
     return (
@@ -214,12 +345,74 @@ const page = () => {
           {/*  */}
           <div>
             <PriceDetails
-            
+              totalOriginalAmount={totalOriginalAmount}
+              totalAmount={finalAmount}
+              shippingCharge={maximumShippingCharge}
+              totalDiscount={totalDiscount}
+              itemCount={cart.items.length}
+              isProcessing={isProcessing}
+              step={step}
+              onProceed={handleProceedToCheckout}
+              onBack={() =>
+                dispatch(
+                  setCheckoutStep(step === "address" ? "cart" : "address"),
+                )
+              }
             />
+            {/* address */}
+
+            {selectedAddress && (
+              <Card className="mt-6 mb-6 shadow-lg">
+                <CardHeader>
+                  <CardTitle className="text-xl">Delivery Address</CardTitle>
+                </CardHeader>
+
+                <CardContent>
+                  <div className="space-y-1">
+                    <p>{selectedAddress?.addressLine1}</p>
+                    {selectedAddress?.addressLine2 && (
+                      <p>{selectedAddress?.addressLine2}</p>
+                    )}
+
+                    <p>
+                      {selectedAddress.city} , {selectedAddress?.state}{" "}
+                      {selectedAddress?.pincode}
+                    </p>
+
+                    <p>Phone : {selectedAddress?.phoneNumber}</p>
+                  </div>
+                  <Button
+                    className="mt-4"
+                    variant={"outline"}
+                    onClick={() => setShowAddressDialog(true)}
+                  >
+                    <MapPin className="mr-2 w-4 h-4" /> Change Address
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* address */}
           </div>
 
           {/*  */}
         </div>
+
+        {/* dialog */}
+
+        <Dialog open={showAddressDialog} onOpenChange={setShowAddressDialog}>
+          <DialogContent className="sm:max-w-[600px]">
+            <DialogHeader>
+              <DialogTitle>Select or Add Delivery Address</DialogTitle>
+            </DialogHeader>
+            <CheckoutAddress
+              onAddressSelect={handleSelectAddress}
+              selectedAddressId={selectedAddress?._id}
+            />
+          </DialogContent>
+        </Dialog>
+
+        {/* dialog */}
 
         {/*  */}
       </div>

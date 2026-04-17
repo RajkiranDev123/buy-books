@@ -75,4 +75,6 @@ npx shadcn@latest add tabs
 
 
 
+  npm i @hookform/resolvers
 
+  npx shadcn@latest add form   

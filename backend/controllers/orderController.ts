@@ -12,6 +12,7 @@ const razorpay = new Razorpay({
 
 export const createOrUpdateOrder = async (req: Request, res: Response) => {
   try {
+    console.log(876756453,req.body)
     const userId = req.id;
     const {
       orderId,
@@ -59,6 +60,7 @@ export const createOrUpdateOrder = async (req: Request, res: Response) => {
     }
     return response(res, 200, "order created/updated successfully", order);
   } catch (error) {
+    console.log(error)
     return response(res, 500, "Internal Server Error");
   }
 };
