@@ -77,6 +77,7 @@ export const createOrUpdateAddressByUserId = async (
       return response(res, 200, "User address created.", newAddress);
     }
   } catch (error) {
+    console.log(error)
     return response(res, 500, "Internal Server Error");
   }
 };
@@ -87,13 +88,14 @@ export const getUserAddressByUserId = async (req: Request, res: Response) => {
     if (!userId) {
       return response(res, 400, "user not found, plz provide valid id.");
     }
-    const address = await User.findById(userId).populate("address");
+    const address = await User.findById(userId).populate("addresses");
 
     if (!address) {
       return response(res, 400, "user address not found");
     }
     return response(res, 200, "user address", address);
   } catch (error) {
+    console.log(777777,error)
     return response(res, 500, "Internal Server Error");
   }
 };

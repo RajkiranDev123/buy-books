@@ -44,6 +44,14 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import CheckoutAddress from "@/app/components/CheckoutAddress";
+import BookLoader from "@/lib/BookLoader";
+import Script from "next/script";
+
+declare global {
+  interface Window {
+    Razorpay: any;
+  }
+}
 
 const page = () => {
   const router = useRouter();
@@ -94,6 +102,7 @@ const page = () => {
       const result = await removeCartMutation(productId).unwrap();
       if (result.success) {
         dispatch(setCart(result.data));
+        // dispatch(resetCheckout())
         toast.success(result.message || "Item removed successfully");
       }
     } catch (error) {
@@ -158,13 +167,10 @@ const page = () => {
   const handleProceedToCheckout = async () => {
     if (step === "cart") {
       try {
-        let g = {
-          data: { items: cart.items, totalAmount: finalAmount },
-        };
-        console.log(g);
+     
 
         const result = await createOrUpdateOrder({
-          orderData: { items: cart.items, totalAmount: totalAmount },
+          updates: {  totalAmount: totalAmount },
         }).unwrap();
 
         if (result.success) {
@@ -230,10 +236,26 @@ const page = () => {
             }
           } catch (error) {
             console.log(error);
+            toast.error("Payment done but failed to update order");
           }
         },
+        prefill: {
+          name: orderData?.data.user?.name,
+          email: orderData?.data.user?.email,
+          contact: orderData?.data.user?.phoneNumber,
+        },
+        theme: {
+          color: "#3399cc",
+        },
       };
-    } catch (error) {}
+
+      const razorpay = new window.Razorpay(options);
+      razorpay.open();
+    } catch (error) {
+      toast.error("failed to initiate payment. plz try againm");
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const handleSelectAddress = async (address: Address) => {
@@ -275,148 +297,158 @@ const page = () => {
     );
   }
 
+  if (isCartLoading || isOrderLoading) {
+    return <BookLoader />;
+  }
+
   return (
-    <div className="min-h-screen bg-white">
-      <div className="bg-gray-100 py-4 px-6 mb-8">
-        <div className="container mx-auto flex items-center">
-          <ShoppingCart className="h-6 w-6 mr-2 text-gray-600" />
-          <span className="text-lg font-semibold text-gray-600">
-            {cart.items.length} {cart.items.length === 1 ? "item" : "items"}
-            in your cart
-          </span>
-        </div>
-      </div>
-      <div className="container mx-auto px-4 max-w-6xl">
-        <div className="mb-8">
-          <div className="flex justify-center items-center gap-4">
-            <div className="flex items-center gap-2">
-              <div
-                className={`rounded-full p-3 ${step === "cart" ? "bg-blue-600 text-gray-200" : "bg-gray-200 text-gray-600"}`}
-              >
-                <ShoppingCart className="h-6 w-6" />
-              </div>
-              <span className="font-medium hidden md:inline">Cart</span>
-            </div>
-            <ChevronRight className="h-5 w-5 text-gray-400" />
-            {/*  */}
-            <div className="flex items-center gap-2">
-              <div
-                className={`rounded-full p-3 ${step === "address" ? "bg-blue-600 text-gray-200" : "bg-gray-200 text-gray-600"}`}
-              >
-                <MapPin className="h-6 w-6" />
-              </div>
-              <span className="font-medium hidden md:inline">Address</span>
-            </div>
-            <ChevronRight className="h-5 w-5 text-gray-400" />
-
-            {/*  */}
-
-            {/*  */}
-            <div className="flex items-center gap-2">
-              <div
-                className={`rounded-full p-3 ${step === "payment" ? "bg-blue-600 text-gray-200" : "bg-gray-200 text-gray-600"}`}
-              >
-                <CreditCard className="h-6 w-6" />
-              </div>
-              <span className="font-medium hidden md:inline">Payment</span>
-            </div>
-
-            {/*  */}
+    <>
+      <Script
+        id="razorpay-checkout-js"
+        src="https://checkout.razorpay.com/v1/checkout.js"
+      />
+      <div className="min-h-screen bg-white">
+        <div className="bg-gray-100 py-4 px-6 mb-8">
+          <div className="container mx-auto flex items-center">
+            <ShoppingCart className="h-6 w-6 mr-2 text-gray-600" />
+            <span className="text-lg font-semibold text-gray-600">
+              {cart.items.length} {cart.items.length === 1 ? "item" : "items"}
+              in your cart
+            </span>
           </div>
         </div>
-        {/*  */}
-        <div className="grid gap-8 lg:grid-cols-3">
-          <div className="lg:col-span-2">
-            <Card className="shadow-lg ">
-              <CardHeader>
-                <CardTitle className="text-2xl">Order Summary</CardTitle>
-                <CardDescription>Review your items</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <CartItems
-                  items={cart.items}
-                  onRemoveItem={handleRemoveItem}
-                  onToggleWishlist={handleAddToWishList}
-                  wishlist={wishlist}
-                />
-              </CardContent>
-            </Card>
+        <div className="container mx-auto px-4 max-w-6xl">
+          <div className="mb-8">
+            <div className="flex justify-center items-center gap-4">
+              <div className="flex items-center gap-2">
+                <div
+                  className={`rounded-full p-3 ${step === "cart" ? "bg-blue-600 text-gray-200" : "bg-gray-200 text-gray-600"}`}
+                >
+                  <ShoppingCart className="h-6 w-6" />
+                </div>
+                <span className="font-medium hidden md:inline">Cart</span>
+              </div>
+              <ChevronRight className="h-5 w-5 text-gray-400" />
+              {/*  */}
+              <div className="flex items-center gap-2">
+                <div
+                  className={`rounded-full p-3 ${step === "address" ? "bg-blue-600 text-gray-200" : "bg-gray-200 text-gray-600"}`}
+                >
+                  <MapPin className="h-6 w-6" />
+                </div>
+                <span className="font-medium hidden md:inline">Address</span>
+              </div>
+              <ChevronRight className="h-5 w-5 text-gray-400" />
+
+              {/*  */}
+
+              {/*  */}
+              <div className="flex items-center gap-2">
+                <div
+                  className={`rounded-full p-3 ${step === "payment" ? "bg-blue-600 text-gray-200" : "bg-gray-200 text-gray-600"}`}
+                >
+                  <CreditCard className="h-6 w-6" />
+                </div>
+                <span className="font-medium hidden md:inline">Payment</span>
+              </div>
+
+              {/*  */}
+            </div>
           </div>
           {/*  */}
-          <div>
-            <PriceDetails
-              totalOriginalAmount={totalOriginalAmount}
-              totalAmount={finalAmount}
-              shippingCharge={maximumShippingCharge}
-              totalDiscount={totalDiscount}
-              itemCount={cart.items.length}
-              isProcessing={isProcessing}
-              step={step}
-              onProceed={handleProceedToCheckout}
-              onBack={() =>
-                dispatch(
-                  setCheckoutStep(step === "address" ? "cart" : "address"),
-                )
-              }
-            />
-            {/* address */}
-
-            {selectedAddress && (
-              <Card className="mt-6 mb-6 shadow-lg">
+          <div className="grid gap-8 lg:grid-cols-3">
+            <div className="lg:col-span-2">
+              <Card className="shadow-lg ">
                 <CardHeader>
-                  <CardTitle className="text-xl">Delivery Address</CardTitle>
+                  <CardTitle className="text-2xl">Order Summary</CardTitle>
+                  <CardDescription>Review your items</CardDescription>
                 </CardHeader>
-
                 <CardContent>
-                  <div className="space-y-1">
-                    <p>{selectedAddress?.addressLine1}</p>
-                    {selectedAddress?.addressLine2 && (
-                      <p>{selectedAddress?.addressLine2}</p>
-                    )}
-
-                    <p>
-                      {selectedAddress.city} , {selectedAddress?.state}{" "}
-                      {selectedAddress?.pincode}
-                    </p>
-
-                    <p>Phone : {selectedAddress?.phoneNumber}</p>
-                  </div>
-                  <Button
-                    className="mt-4"
-                    variant={"outline"}
-                    onClick={() => setShowAddressDialog(true)}
-                  >
-                    <MapPin className="mr-2 w-4 h-4" /> Change Address
-                  </Button>
+                  <CartItems
+                    items={cart.items}
+                    onRemoveItem={handleRemoveItem}
+                    onToggleWishlist={handleAddToWishList}
+                    wishlist={wishlist}
+                  />
                 </CardContent>
               </Card>
-            )}
+            </div>
+            {/*  */}
+            <div>
+              <PriceDetails
+                totalOriginalAmount={totalOriginalAmount}
+                totalAmount={finalAmount}
+                shippingCharge={maximumShippingCharge}
+                totalDiscount={totalDiscount}
+                itemCount={cart.items.length}
+                isProcessing={isProcessing}
+                step={step}
+                onProceed={handleProceedToCheckout}
+                onBack={() =>
+                  dispatch(
+                    setCheckoutStep(step === "address" ? "cart" : "address"),
+                  )
+                }
+              />
+              {/* address */}
 
-            {/* address */}
+              {selectedAddress && (
+                <Card className="mt-6 mb-6 shadow-lg">
+                  <CardHeader>
+                    <CardTitle className="text-xl">Delivery Address</CardTitle>
+                  </CardHeader>
+
+                  <CardContent>
+                    <div className="space-y-1">
+                      <p>{selectedAddress?.addressLine1}</p>
+                      {selectedAddress?.addressLine2 && (
+                        <p>{selectedAddress?.addressLine2}</p>
+                      )}
+
+                      <p>
+                        {selectedAddress.city} , {selectedAddress?.state}{" "}
+                        {selectedAddress?.pincode}
+                      </p>
+
+                      <p>Phone : {selectedAddress?.phoneNumber}</p>
+                    </div>
+                    <Button
+                      className="mt-4"
+                      variant={"outline"}
+                      onClick={() => setShowAddressDialog(true)}
+                    >
+                      <MapPin className="mr-2 w-4 h-4" /> Change Address
+                    </Button>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* address */}
+            </div>
+
+            {/*  */}
           </div>
+
+          {/* dialog */}
+
+          <Dialog open={showAddressDialog} onOpenChange={setShowAddressDialog}>
+            <DialogContent className="sm:max-w-[600px]">
+              <DialogHeader>
+                <DialogTitle>Select or Add Delivery Address</DialogTitle>
+              </DialogHeader>
+              <CheckoutAddress
+                onAddressSelect={handleSelectAddress}
+                selectedAddressId={selectedAddress?._id}
+              />
+            </DialogContent>
+          </Dialog>
+
+          {/* dialog */}
 
           {/*  */}
         </div>
-
-        {/* dialog */}
-
-        <Dialog open={showAddressDialog} onOpenChange={setShowAddressDialog}>
-          <DialogContent className="sm:max-w-[600px]">
-            <DialogHeader>
-              <DialogTitle>Select or Add Delivery Address</DialogTitle>
-            </DialogHeader>
-            <CheckoutAddress
-              onAddressSelect={handleSelectAddress}
-              selectedAddressId={selectedAddress?._id}
-            />
-          </DialogContent>
-        </Dialog>
-
-        {/* dialog */}
-
-        {/*  */}
       </div>
-    </div>
+    </>
   );
 };
 

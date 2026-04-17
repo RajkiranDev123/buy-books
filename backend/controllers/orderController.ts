@@ -123,6 +123,7 @@ export const createPaymentWithRazorpay = async (
       order: razorPayOrder,
     });
   } catch (error) {
+    console.log(56,error)
     return response(res, 500, "Internal Server Error");
   }
 };
