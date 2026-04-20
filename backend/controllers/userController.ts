@@ -6,6 +6,7 @@ import User from "../models/User";
 export const updateUserProfile = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
+    console.log(675,userId)
 
     if (!userId) {
       return response(res, 400, "user id is req.");
@@ -26,6 +27,7 @@ export const updateUserProfile = async (req: Request, res: Response) => {
 
     return response(res, 200, "User profile updated", updateUser);
   } catch (error) {
+    console.log(error)
     return response(res, 500, "Internal Server Error");
   }
 };
