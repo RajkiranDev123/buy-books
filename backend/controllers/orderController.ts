@@ -71,7 +71,7 @@ export const getOrderByUser = async (req: Request, res: Response) => {
     const order = await Order.find({ user: userId })
       .sort({ createdAt: -1 })
       .populate({
-        path: "item.product",
+        path: "items.product",
         model: "Product",
       });
     if (!order) {
@@ -80,6 +80,7 @@ export const getOrderByUser = async (req: Request, res: Response) => {
 
     return response(res, 200, "Order fetched successfully", order);
   } catch (error) {
+    console.log(777,error)
     return response(res, 500, "Internal Server Error");
   }
 };
