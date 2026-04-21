@@ -43,6 +43,7 @@ const StatusStep = ({
 };
 
 const OrderDetailsDialog = ({ order }: OrderDetailsDialogProps) => {
+  console.log(789,order)
   const getStatusIndex = (Status: string) => {
     const statuses = ["processing", "shipped", "delivered", "cancelled"];
     return statuses.indexOf(Status);

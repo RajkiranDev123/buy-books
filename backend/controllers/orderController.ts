@@ -12,7 +12,7 @@ const razorpay = new Razorpay({
 
 export const createOrUpdateOrder = async (req: Request, res: Response) => {
   try {
-    console.log(876756453,req.body)
+    console.log(876756453, req.body);
     const userId = req.id;
     const {
       orderId,
@@ -60,35 +60,37 @@ export const createOrUpdateOrder = async (req: Request, res: Response) => {
     }
     return response(res, 200, "order created/updated successfully", order);
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return response(res, 500, "Internal Server Error");
   }
 };
 
 export const getOrderByUser = async (req: Request, res: Response) => {
   try {
-    console.log(78)
+    console.log(78);
     const userId = req.id;
     const order = await Order.find({ user: userId })
       .sort({ createdAt: -1 })
       .populate({
         path: "items.product",
         model: "Product",
-      });
-    if (!order) {
+      })
+      .populate("shippingAddress");
+    if (order?.length === 0) {
+      // find returns array
       return response(res, 404, "order not found");
     }
 
-    return response(res, 200, "Order fetched successfully", order);
+    return response(res, 200, "Order fetched successfullym", order);
   } catch (error) {
-    console.log(777,error)
+    console.log(777, error);
     return response(res, 500, "Internal Server Error");
   }
 };
 
 export const getOrderById = async (req: Request, res: Response) => {
   try {
-    console.log(89)
+    console.log(89);
     const order = await Order.findById(req.params.id)
       .populate("user", "name email")
       .populate("shippingAddress")
@@ -126,7 +128,7 @@ export const createPaymentWithRazorpay = async (
       order: razorPayOrder,
     });
   } catch (error) {
-    console.log(56,error)
+    console.log(56, error);
     return response(res, 500, "Internal Server Error");
   }
 };
