@@ -67,6 +67,7 @@ export const createOrUpdateOrder = async (req: Request, res: Response) => {
 
 export const getOrderByUser = async (req: Request, res: Response) => {
   try {
+    console.log(78)
     const userId = req.id;
     const order = await Order.find({ user: userId })
       .sort({ createdAt: -1 })
@@ -87,6 +88,7 @@ export const getOrderByUser = async (req: Request, res: Response) => {
 
 export const getOrderById = async (req: Request, res: Response) => {
   try {
+    console.log(89)
     const order = await Order.findById(req.params.id)
       .populate("user", "name email")
       .populate("shippingAddress")
