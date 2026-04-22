@@ -32,3 +32,12 @@
   ],
   "exclude": ["node_modules"]
 }
+
+// tsconfig.json exists to control how TypeScript understands and compiles your project.
+
+// compilerOptions → defines how TypeScript compiles your code
+// include → specifies which files/folders to include
+// exclude → specifies which files/folders to ignore
+// files → explicitly lists individual files to compile
+// extends → inherits configuration from another tsconfig
+// references → links multiple TypeScript projects together

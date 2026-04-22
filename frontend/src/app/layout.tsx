@@ -39,3 +39,13 @@ export default function RootLayout({
     </html>
   );
 }
+
+// Next.js
+//    ↓
+// layout.tsx
+//    ↓
+// LayoutWrapper
+//    ↓
+// AuthCheck
+//    ↓
+// children (page.tsx)
