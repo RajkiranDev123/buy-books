@@ -16,13 +16,15 @@ router.post("/reset-password/:token", authController.resetPassword);
 router.get("/logout", authController.logout);
 router.get("/verify-auth", auth, authController.checkUserAuth);
 
-///auth/google route just redirects the user to Google for authentication.
+// router.push(`${Base_URL}/auth/google`);
 router.get(
   "/google",
   passport.authenticate("google", {
     scope: ["profile", "email"],
   }),
 );
+
+// http://localhost:8000/api/v1/auth/google/callback ==> from  (google cloud console)
 
 router.get(
   "/google/callback",
@@ -46,3 +48,22 @@ router.get(
 );
 
 export default router;
+
+// User clicks login → hits /google route
+// passport.authenticate("google") runs
+// Passport sends HTTP 302 redirect response
+// Browser is redirected to Google login page
+// User logs in on Google
+// User grants permission (profile, email)
+// Google redirects user to callback URL with an authorization code
+// /google/callback route runs
+// Passport exchanges code → accessToken → profile (internally)
+// verify callback runs (DB check / create user)
+// Passport attaches user → req.user
+// Your next middleware runs (JWT, cookie, redirect)
+
+// small controller ==> eg of redirect : 302
+
+// export const googleAuth = (req, res) => {
+//   return res.status(302).redirect("/auth/google");
+// };
