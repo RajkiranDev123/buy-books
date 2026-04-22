@@ -8,6 +8,8 @@ import {
 } from "../config/emailConfig";
 import { generateToken } from "../utils/generateToken";
 
+console.log("auth controller")
+
 export const register = async (req: Request, res: Response) => {
   try {
     const { name, email, password, agreeTerms } = req.body;

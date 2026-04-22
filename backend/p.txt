@@ -1,25 +1,29 @@
 
-npm init -y
+npm init -y ==> It populates the package.json file with  defaults based on your current directory
 
-npm i express mongoose dotenv body-parser cors typescript multer cloudinary nodemailer bcryptjs jsonwebtoken cookie-parser
+(e.g., using the folder name as the project name).
 
-npm i nodemon
+npm i express mongoose dotenv body-parser cors typescript multer cloudinary
+      nodemailer bcryptjs jsonwebtoken cookie-parser nodemon
 
-sd21:
+sd21: npm i --save-dev nodemon
+
+@types/... :
 
 npm i --save-dev @types/express
 npm i --save-dev @types/cors
 npm i --save-dev @types/cookie-parser
 npm i --save-dev @types/jsonwebtoken
 
-npm install --save-dev ts-node
+npm i --save-dev ts-node
+
 npm uninstall moongose : un install
 
 npm i --save-dev @types/nodemailer
 npm i --save-dev @types/multer
 
- npm i passport
-npm install passport-google-oauth20
+npm i passport
+npm i passport-google-oauth20
 
 npm i --save-dev @types/passport
 npm i --save-dev @types/passport-google-oauth20

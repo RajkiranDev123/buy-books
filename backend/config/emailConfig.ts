@@ -16,7 +16,7 @@ transporter.verify((error, success) => {
     console.log("email error ==>", error);
     console.log("gmail service is not ready, plz check the config.");
   } else {
-    console.log("gmail service is ready to send the mail.");
+    console.log("Gmail service is ready to send the mail.");
   }
 });
 

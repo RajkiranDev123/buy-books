@@ -8,22 +8,37 @@ import mongoose from "mongoose";
 //   return "Hello";
 // };
 
-// async function fetchMessage(): Promise<void> {
+// async function getMessage(): Promise<void> {
 //   return "Hello";
 // }
 
-// If MongoDB fails to connect, the server should not start.
+// If MongoDB fails to connect, the server/app should not start.
 // 1 signals failure to the OS (useful in deployment, Docker, CI/CD).
-//If the database connection fails, our app cannot work properly.
 
-export const connectDb = async (): Promise<void> => {
+
+const connectWithRetry = async (retries = 5): Promise<void> => {
   try {
-    const connection = await mongoose.connect(process.env.MONGO_URI as string);
-    console.log(`DB Connected!`);
+    await mongoose.connect(process.env.MONGO_URI as string);
+    console.log("DB Connected !");
   } catch (error) {
-    console.log(error);
-    process.exit(1);
+    console.log("DB connection failed ❌", error);
+
+    if (retries === 0) {
+      console.log("No retries left. Exiting...");
+      process.exit(1);
+    }
+
+    console.log(`Retrying... attempts left: ${retries}`);
+
+    setTimeout(() => {
+      connectWithRetry(retries - 1);
+    }, 5000);
   }
 };
 
-//type assertion : When you know the type better than the compiler.
+// even without return keyword, an async function still returns a Promise. , that's why ==> Promise<void>
+export const connectDb = async (): Promise<void> => {
+  await connectWithRetry();
+};
+
+//type assertion : When you know the type better than the compiler : as syntax (most common)
