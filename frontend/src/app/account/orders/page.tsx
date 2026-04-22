@@ -66,17 +66,17 @@ const page = () => {
             <CardContent className="flex-grow">
               <div className="space-y-2">
                 <p className="font-medium">
-                  {order?.items.map((item) => item.product.title).join(",")}
+                  {order?.items.map((item) => item?.product?.title).join(",")}
                 </p>
                 <div className="text-sm flex gap-2 text-gray-600">
                   <span>
                     {" "}
-                    {order?.items.map((item) => item.product.subject).join(",")}
+                    {order?.items?.map((item) => item?.product?.subject).join(",")}
                   </span>
                   <span>
                     {" "}
                     ({" "}
-                    {order?.items.map((item) => item.product.author).join(",")})
+                    {order?.items?.map((item) => item?.product?.author).join(",")})
                   </span>
                 </div>
                 <p className="text-sm flex items-center">

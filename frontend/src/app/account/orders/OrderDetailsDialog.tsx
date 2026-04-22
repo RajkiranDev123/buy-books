@@ -124,25 +124,25 @@ const OrderDetailsDialog = ({ order }: OrderDetailsDialogProps) => {
           <div className="bg-linear-to-r from-blue-100 to-cyan-100 p-4 rounded-lg">
             <h3 className="font-semibold text-lg text-blue-800 mb-2">Items</h3>
             <div className="space-y-4">
-              {order.items.map((item, index) => (
+              {order?.items?.map((item, index) => (
                 <div className="flex items-center space-x-4 " key={index}>
                   <Image
-                    src={item.product.images[0]}
-                    alt={item.product.title}
+                    src={item?.product?.images[0]}
+                    alt={item?.product?.title}
                     width={60}
                     height={60}
                     className="rounded-md"
                   />
 
                   <div>
-                    <p className="font-medium">{item.product.title}</p>
+                    <p className="font-medium">{item?.product?.title}</p>
                     <div className="flex gap-2">
-                      <p className="font-medium ">{item.product.subject}</p>(
-                      {order.items.map((item) => item.product.author).join(",")}
+                      <p className="font-medium ">{item?.product?.subject}</p>(
+                      {order?.items?.map((item) => item?.product?.author).join(",")}
                       )
                     </div>
                     <p className="text-xs text-gray-600">
-                      Quantity : {item.quantity}
+                      Quantity : {item?.quantity}
                     </p>
                   </div>
                 </div>

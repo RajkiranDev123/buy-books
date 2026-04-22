@@ -1,5 +1,14 @@
 "use client";
 import NoData from "@/app/components/NoData";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import BookLoader from "@/lib/BookLoader";
 import { BookDetails } from "@/lib/types/type";
 import {
@@ -10,6 +19,8 @@ import {
 import { addToCart } from "@/store/slice/cartSlice";
 import { removeFromWishListAction } from "@/store/slice/wishlistSlice";
 import { RootState } from "@/store/store";
+import { Check, Heart, Loader2, ShoppingCart, Trash2 } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -96,14 +107,66 @@ const page = () => {
     );
   }
 
-  return <div className="space-y-6">
+  return (
+    <div className="space-y-6">
+      <div className="space-x-2 flex items-center">
+        <Heart className="h-6 w-6 text-red-600 " />
+        <h3 className="text-2xl font-bold">My Wishlist</h3>
+      </div>
 
-    <div className="space-x-2 flex items-center">
+      <div className="grid gap-2 md:grid-cols-2 lg:grid-cols-3">
+        {wishlistItems.map((item) => (
+          <Card key={item._id}>
+            <CardHeader>
+              <CardTitle>{item.title}</CardTitle>
+              <CardDescription>rs {item.finalPrice.toFixed(2)}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Image
+                className="aspect-square w-full object-cover"
+                src={item.images[0]}
+                alt={item.title}
+              />
+            </CardContent>
 
+            <CardFooter className="flex justify-center">
+              <Button
+                variant={"outline"}
+                size={"icon"}
+                onClick={() => toggleWishList(item._id)}
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+              {isItemInCart(item._id) ? (
+                <Button disabled>
+                  <Check className="mr-2 h-5 w-5" />
+                  Item in cart
+                </Button>
+              ) : (
+                <Button
+         
+                  onClick={() => handleAddToCart(item?._id)}
+                  disabled={isAddToCart}
+                >
+                  {isAddToCart ? (
+                    <>
+                      <Loader2 className="mr-2 animate-spin" size={30} />
+                      Loading...
+                    </>
+                  ) : (
+                    <>
+                      <ShoppingCart className="mr-2 h-5 w-5" />
+                      Add to cart
+                    </>
+                  )}
+                </Button>
+              )}
+            </CardFooter>
+          </Card>
+        ))}
+      </div>
     </div>
-    
-
-  </div>;
+  );
 };
 
 export default page;
