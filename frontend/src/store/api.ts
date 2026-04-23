@@ -78,7 +78,7 @@ export const api = createApi({
       query: (email) => ({
         url: API_URLS.FORGOT_PASSWORD,
         method: "POST",
-        body: {email},
+        body: { email },
       }),
     }),
     resetPassword: builder.mutation({
@@ -161,7 +161,7 @@ export const api = createApi({
       query: (productId) => ({
         url: API_URLS.ADD_TO_WISHLIST,
         method: "POST",
-        body:{ productId},
+        body: { productId },
       }),
       invalidatesTags: ["Wishlist"],
     }),
@@ -187,7 +187,6 @@ export const api = createApi({
     }),
     createOrUpdateOrder: builder.mutation({
       query: ({ orderId, updates }) => ({
-  
         url: API_URLS.ORDERS,
         method: orderId ? "PATCH" : "POST",
         body: updates,

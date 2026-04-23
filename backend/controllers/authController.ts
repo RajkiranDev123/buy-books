@@ -8,7 +8,7 @@ import {
 } from "../config/emailConfig";
 import { generateToken } from "../utils/generateToken";
 
-console.log("auth controller")
+console.log("auth controller");
 
 export const register = async (req: Request, res: Response) => {
   try {
@@ -60,7 +60,7 @@ export const register = async (req: Request, res: Response) => {
 
 export const verifyEmail = async (req: Request, res: Response) => {
   try {
-    const {token} = req.params;
+    const { token } = req.params;
     const user = await User.findOne({ verificationToken: token }); //match
     if (!user) {
       return response(res, 400, "Invalid or expired verification token.");
@@ -136,7 +136,7 @@ export const forgotPassword = async (req: Request, res: Response) => {
 
 export const resetPassword = async (req: Request, res: Response) => {
   try {
-    const {token} = req.params;
+    const { token } = req.params;
     const { newPassword } = req.body;
     const user = await User.findOne({
       resetPasswordToken: token,
@@ -184,7 +184,7 @@ export const checkUserAuth = async (req: Request, res: Response) => {
       return response(res, 403, "User not found.");
       // 403 : the server understood the request but refuses to authorize it, indicating a lack of proper permissions.
     }
-    return response(res, 200, "User retreived successfully",user);
+    return response(res, 200, "User retreived successfully", user);
   } catch (error) {
     return response(res, 500, "Internal Server Error");
   }

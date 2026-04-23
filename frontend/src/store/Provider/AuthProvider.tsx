@@ -7,12 +7,12 @@ import { logout, setEmailVerified, setUser } from "../slice/userSlice";
 
 export default function AuthCheck({ children }: { children: React.ReactNode }) {
   const [verifyAuth, { isLoading }] = useVerifyAuthMutation();
-  // useVerifyAuthMutation hook returns :
-  //   [ triggerFunction,resultObject]
-  //   {isLoading,isSuccess,isError,data,error}
-  // Query = auto : Runs automatically when component loads , Mutation = mutation, we have to call manually
+  console.log("Auth Check : isLoading  ==>", isLoading);
+  // useVerifyAuthMutation hook returns : [ triggerFunction,{isLoading,isSuccess,isError,data,error}=resultObject]
+  // Query = auto : Runs automatically when component loads ,  mutation ==> we have to call manually
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const dispatch = useDispatch();
+  //
   const user = useSelector((state: RootState) => state.user.user);
   const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
 
@@ -20,7 +20,7 @@ export default function AuthCheck({ children }: { children: React.ReactNode }) {
   const checkAuth = async () => {
     try {
       const response = await verifyAuth({}).unwrap();
-      console.log(77, response);
+
       if (response.success) {
         dispatch(setUser(response.data));
         dispatch(setEmailVerified(response.data.isVerified));
@@ -41,9 +41,14 @@ export default function AuthCheck({ children }: { children: React.ReactNode }) {
     // }
   }, [verifyAuth, dispatch]);
 
-  //[verifyAuth,dispatch,user] ==> the user state changes → useEffect runs again → checkAuth() runs again → another API call.
+
 
   if (isLoading || isCheckingAuth) {
+    // if isLoading == true then stop , or ==> any 1 true then true
+    // return stops the AuthCheck component function execution, not the whole app.
+    // this block runs when :
+    // API is running (isLoading = true)
+    // OR auth check not finished (isCheckingAuth = true)
     return <BookLoader />;
   }
 

@@ -20,11 +20,7 @@ export const metadata: Metadata = {
   description: "Buy Books",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: Readonly<{children: React.ReactNode}>) {
   return (
     <html lang="en">
       <body
@@ -49,3 +45,17 @@ export default function RootLayout({
 // AuthCheck
 //    ↓
 // children (page.tsx)
+
+
+
+// type Product = {
+//   id: number;
+//   title: string;
+// };
+
+// const p: Readonly<Product> = {
+//   id: 1,
+//   title: "Phone",
+// };
+
+// p.title = "Laptop"; // ❌ Error
