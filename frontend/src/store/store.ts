@@ -20,13 +20,13 @@ import { api } from "./api";
 const userPersistConfig = {
   key: "user",
   storage,
-  whiteList: ["user", "isEmailVerified", "isLoggedIn"],
+  whitelist: ["user", "isEmailVerified", "isLoggedIn"],
 };
 
 const cartPersistConfig = {
   key: "cart",
   storage,
-  whiteList: ["items"],
+  whitelist: ["items"], //Only save these selected fields from Redux state into storage (like localStorage).”
 };
 
 const wishlistPersistConfig = {
@@ -35,7 +35,7 @@ const wishlistPersistConfig = {
 };
 
 const checkoutPersistConfig = {
-  key: "wishlist",
+  key: "checkout",
   storage,
 };
 const persistedUserReducer = persistReducer(userPersistConfig, userReducer);

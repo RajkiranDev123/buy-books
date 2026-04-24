@@ -16,7 +16,10 @@ export const register = async (req: Request, res: Response) => {
     // if (!name || !email || !password || !agreeTerms) {
     //   return response(res, 400, "All fields are required.");
     // }
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ email }); // findOne takes query object
+    // .lean() ==> without it you don’t get a simple js object.
+    // You get a Mongoose document instance — kind of like a “smart object”.
+    // & includes methods like save()
     if (existingUser) {
       return response(res, 400, "User already exists.");
     }
@@ -30,7 +33,9 @@ export const register = async (req: Request, res: Response) => {
     });
     await user.save();
 
-    //await new User({ name, email, password, agreeTerms, verificationToken }).save(); :sh 1
+    // const user = await new User({ name, email, password, agreeTerms, verificationToken }).save();
+
+    // or
 
     //await User.create({
     //   name,
@@ -44,12 +49,12 @@ export const register = async (req: Request, res: Response) => {
     // await user.save();
 
     const result = await sendVerificationToEmail(user.email, verificationToken);
-    console.log("mail res==> ", result?.response);
+    console.log("mail res ==> ", result?.response);
 
     return response(
       res,
       200,
-      "Registration done, Plz check your email to verify!",
+      "Registration done, Please check your email to verify!",
     );
   } catch (error) {
     return response(res, 500, "Internal Server Error");
@@ -60,8 +65,8 @@ export const register = async (req: Request, res: Response) => {
 
 export const verifyEmail = async (req: Request, res: Response) => {
   try {
-    const { token } = req.params;
-    const user = await User.findOne({ verificationToken: token }); //match
+    const { token } = req.params; // "/verify-email/:token"
+    const user = await User.findOne({ verificationToken: token });
     if (!user) {
       return response(res, 400, "Invalid or expired verification token.");
     }
@@ -69,10 +74,16 @@ export const verifyEmail = async (req: Request, res: Response) => {
     user.verificationToken = undefined;
 
     const accessToken = generateToken(user);
+
+    // res.cookie(name, value, options);
     res.cookie("access_token", accessToken, {
-      httpOnly: true,
+      httpOnly: true, // JavaScript (browser) cannot access it
       maxAge: 24 * 60 * 60 * 1000,
     });
+
+    // httpOnly ==>	JS cannot access cookie : true/false
+    // secure	  ==> Only sent over HTTPS    : true/false
+    // sameSite	==> Controls cross-site sending : strict , lax and none
 
     await user.save();
     return response(res, 200, "Email Verified, You can use Buy Books now.");
@@ -121,7 +132,7 @@ export const forgotPassword = async (req: Request, res: Response) => {
     }
     const resetPasswordToken = crypto.randomBytes(10).toString("hex");
     user.resetPasswordToken = resetPasswordToken;
-    user.resetPasswordExpires = new Date(Date.now() + 3600000); //1 hour from the current time
+    user.resetPasswordExpires = new Date(Date.now() + 3600000); // 1 hour from the current time
     await user.save(); //save resetPasswordToken and resetPasswordExpires
 
     await sendResetPasswordLinkToEmail(user.email, resetPasswordToken);

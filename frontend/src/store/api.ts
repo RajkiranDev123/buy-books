@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-export const Base_URL = process.env.NEXT_PUBLIC_API_URL;
+export const Base_URL = process.env.NEXT_PUBLIC_API_URL; //"http://localhost:8000/api/v1"
 
 const API_URLS = {
   // auth
@@ -11,6 +11,7 @@ const API_URLS = {
   RESET_PASSWORD: (token: string) => `${Base_URL}/auth/reset-password/${token}`,
   VERIFY_AUTH: `${Base_URL}/auth/verify-auth`,
   LOGOUT: `${Base_URL}/auth/logout`,
+  //
   UPDATE_USER_PROFILE: (userId: string) =>
     `${Base_URL}/user/profile/update/${userId}`,
 
@@ -44,12 +45,27 @@ const API_URLS = {
   ADD_OR_UPDATE_ADDRESS: `${Base_URL}/user/address/create-or-update`,
 };
 
+///////////////////////////////////////// createApi /////////////////////////////////
+
+// createApi({
+//   reducerPath, not used then, default ==> reducerPath: "api"
+//   baseQuery,
+//   tagTypes,
+//   endpoints: (builder) => ({
+//     query → GET (auto fetch)
+//     mutation → POST/PUT/DELETE (manual call)
+//   })
+// })
+
 export const api = createApi({
+  // baseQuery
   baseQuery: fetchBaseQuery({
     baseUrl: Base_URL,
     credentials: "include",
   }),
+  // tagTypes
   tagTypes: ["User", "Product", "Cart", "Wishlist", "Order", "Address"],
+  // endpoints
   endpoints: (builder) => ({
     //user endpoints
     register: builder.mutation({
@@ -114,7 +130,7 @@ export const api = createApi({
         method: "POST",
         body: productData,
       }),
-      invalidatesTags: ["Product"],
+      invalidatesTags: ["Product"], // “After adding product, refresh Product data”
     }),
     getProducts: builder.query({
       query: () => API_URLS.PRODUCTS,

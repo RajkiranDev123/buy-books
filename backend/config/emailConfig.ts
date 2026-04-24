@@ -33,9 +33,9 @@ const sendEmail = async (to: string, subject: string, body: string) => {
 export const sendVerificationToEmail = async (to: string, token: string) => {
   const verificationUrl = `${process.env.FRONTEND_URL}/verify-email/${token}`;
   const html = `
-  <h1>Welcome to your Buy Books! Verify your email.</h1>
+  <h1>Welcome to Buy Books! Verify your email.</h1>
   <p>Thanks for registering. Please click link below to verify your email</p>
-  <a href="${verificationUrl}">Verify Email Here</a>
+  <a href="${verificationUrl}">Verify your Email Here</a>
   `;
   const res=await sendEmail(to, "Plz verify your email to access Buy Books", html);
   return res
