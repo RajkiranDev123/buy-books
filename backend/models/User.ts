@@ -30,7 +30,7 @@ const userSchema = new Schema<IUSER>(
     isVerified: { type: Boolean, default: false },
     agreeTerms: { type: Boolean, default: false },
     verificationToken: { type: String, default: null },
-
+    //“Field exists, but has no value” : null
     resetPasswordToken: { type: String, default: null },
     resetPasswordExpires: { type: Date, default: null },
     addresses: [{ type: Schema.Types.ObjectId, ref: "Address" }],

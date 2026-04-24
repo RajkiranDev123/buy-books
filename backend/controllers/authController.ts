@@ -122,13 +122,14 @@ export const login = async (req: Request, res: Response) => {
 };
 
 ////////////////////////////////////////////////////////////////////////////
-
+// generate resetPasswordToken and resetPasswordExpires
+// send mail
 export const forgotPassword = async (req: Request, res: Response) => {
   try {
     const { email } = req.body;
     const user = await User.findOne({ email: email });
     if (!user) {
-      return response(res, 400, "No A/C found with this email address.");
+      return response(res, 404, "No account found with this email address.");
     }
     const resetPasswordToken = crypto.randomBytes(10).toString("hex");
     user.resetPasswordToken = resetPasswordToken;
@@ -152,6 +153,8 @@ export const resetPassword = async (req: Request, res: Response) => {
     const user = await User.findOne({
       resetPasswordToken: token,
       resetPasswordExpires: { $gt: Date.now() },
+      // Expiry time (resetPasswordExpires): 2:00 PM
+      // Current time: 1:30 PM → ✅ valid (2:00 > 1:30)
     });
     if (!user) {
       return response(res, 400, "Invalid or expired reset password token.");
@@ -159,6 +162,8 @@ export const resetPassword = async (req: Request, res: Response) => {
 
     user.password = newPassword;
     user.resetPasswordToken = undefined;
+    // Remove the field (unset it)” : undefined 
+    // We don’t even need the field anymore
     user.resetPasswordExpires = undefined;
     await user.save(); // remove resetPasswordToken & resetPasswordExpires & save password
 
@@ -186,14 +191,16 @@ export const checkUserAuth = async (req: Request, res: Response) => {
   try {
     const userId = req.id;
     if (!userId) {
-      return response(res, 400, "Not authenticated . plz login to access ");
+      // 401 Unauthorized → user not logged in / no token
+      return response(res, 401, "Not authenticated , Please login to access. ");
     }
     const user = await User.findById(userId).select(
       "-password -verificationToken -resetPasswordToken -resetPasswordExpires",
     );
     if (!user) {
-      return response(res, 403, "User not found.");
-      // 403 : the server understood the request but refuses to authorize it, indicating a lack of proper permissions.
+      return response(res, 404, "User not found.");
+      // 404 , Not Found , Resource doesn’t exist
+      // 403 = authenticated but forbidden
     }
     return response(res, 200, "User retreived successfully", user);
   } catch (error) {
@@ -201,5 +208,6 @@ export const checkUserAuth = async (req: Request, res: Response) => {
   }
 };
 
-//Port 443 : Default port for HTTPS (secure web)
+//Port 80 : http
+//Port 443 : Default port for HTTPS (secure web) : Data is encrypted (SSL/TLS)
 //Port 8000 : Common port for development servers
