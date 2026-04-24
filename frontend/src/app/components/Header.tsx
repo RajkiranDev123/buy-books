@@ -191,6 +191,21 @@ const Header = () => {
       : []),
   ];
 
+  // const user = true;
+  // const menu = [
+  //   ...(user ? ["Profile"] : ["Login"]),
+  //   "Cart",
+  //   "Help"
+  // ];
+  // console.log(menu);// ["Profile", "Cart", "Help"]
+  // without ...  ==>
+  // [
+  //   ["Profile"],   // ❗ nested array
+  //   "Cart",
+  //   "Help"
+  // ]
+  // [...["Profile"], "Cart"]; ==> ["Profile","Cart"]
+
   // menu have two types of items
   // item with href  : No extra logic, just a page change
   // item with onclick : Can do multiple things: checks user then navigate

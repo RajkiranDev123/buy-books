@@ -23,7 +23,7 @@ const userSchema = new Schema<IUSER>(
   {
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true, index: true },
-    password: { type: String },
+    password: { type: String }, // required not mentioned
     googleId: { type: String },
     profilePicture: { type: String, default: null },
     phoneNumber: { type: String, default: null },
