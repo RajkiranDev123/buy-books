@@ -8,8 +8,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+//
 import { logout, toggleLoginDialog } from "@/store/slice/userSlice";
 import { RootState } from "@/store/store";
+//
 import {
   BookLock,
   ChevronRight,
@@ -26,6 +28,7 @@ import {
   User,
   User2,
 } from "lucide-react";
+// A collection of SVG icons as React components : lucide-react
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -44,26 +47,26 @@ const Header = () => {
   const isLoginOpen = useSelector(
     (state: RootState) => state.user.isLoginDialogOpen,
   );
-  // const user = {
-  //   profilePicture: "",
-  //   name: "raj",
-  //   email: "raj@gmail.com",
-  // };
-  // const user = "";
+
   const user = useSelector((state: RootState) => state.user.user);
-  console.log(user);
+  //   state
+  //    └── user        ← Slice reducer (from store)
+  //          └── user  ← actual data : name: "user"
 
   const userPlaceholder = user?.name
-    ?.split(" ")
-    .map((name: string) => name[0])
-    .join("");
+    ?.split(" ") // ["raj","kiran"]
+    .map((name: string) => name[0]) //["r","k"]
+    .join(""); // "rk"
 
   const cartItemCount = useSelector(
     (state: RootState) => state.cart.items.length,
   );
-  console.log(cartItemCount);
+
 
   const { data: cartData } = useGetCartQuery(user?._id, { skip: !user });
+// App starts → user = null → skip = true → NO API call
+// Because the API needs a valid user._id; without a user, 
+// the request would be invalid (/cart/undefined), so skip prevents that.
   const [searchTerms, setSearchTerms] = useState("");
 
   const handleSearch = () => {
@@ -101,6 +104,7 @@ const Header = () => {
     }
   };
 
+  // icon label onclick href content
   const menuItems = [
     ...(user
       ? [
@@ -226,6 +230,7 @@ const Header = () => {
             <ChevronRight className="w-4 h-4 ml-auto" />
           </Link>
         ) : (
+          // handleLoginClick , handleLogout , handleProtectionNavigation
           <button
             key={index}
             onClick={item?.onclick}
@@ -246,10 +251,12 @@ const Header = () => {
       {/* container : If the screen width is 2000px, in Tailwind CSS the container will not become 2000px. */}
       {/* It stops at the largest breakpoint : 1536px */}
       {/* Yes — container already has mx-auto behavior, so adding mx-auto is usually redundant. */}
-      {/* m	margin , x	left + right , auto	automatic margin ==> It centers a block element horizontally inside its parent.*/}
+      {/* m :	margin , x	: left + right , auto :	automatic margin */}
+      {/* mx-auto : the element itself center and text-center : text inside*/}
 
-      {/* desktop contents starts */}
+      {/* desktop header starts */}
       <div className="container hidden lg:flex items-center justify-between p-4">
+        {/* container is used on the child so you can keep the parent full-width (for layout/background) */}
         {/* logo : buy books */}
         <Link href={"/"} className="flex items-center">
           <Image
@@ -265,10 +272,11 @@ const Header = () => {
         </Link>
         {/* logo ends */}
 
-        {/* [Logo]   [Search Bar]   [Buttons / Cart / Account] ====> thats why flex-1 : fills the remaining space*/}
         {/* xs sm md lg xl 2xl : max-w-xl => 36rem / 576px */}
         {/* search starts*/}
         <div className="flex-1 max-w-xl px-4 ">
+          {/* [Logo]   ==> [Search Bar] <==   [Sell Used Book / Account / Cart] ====> thats why flex-1 : fills the remaining space*/}
+
           <div className="relative">
             <Input
               type="text"
@@ -285,16 +293,17 @@ const Header = () => {
             <Button
               onClick={handleSearch}
               size={"icon"} //The button becomes square and small, designed for icons only, equal width and height , small padding
-              variant={"ghost"} //No background , No border , light background appears on hover otherwise black (default) in shadcn/ui.
-              className="absolute bg-amber-100 right-px"
+              variant={"ghost"} //No background (transparent) , No border , light background appears on hover otherwise black (default) in shadcn/ui.
+              className="absolute bg-amber-100 right-[2px]"
             >
-              <SearchIcon className="w-5 h-5" />
+              <SearchIcon className="w-5! h-5!" />
+              {/* ! = important → overrides internal styles */}
             </Button>
           </div>
         </div>
         {/* search ends */}
 
-        {/* sell used book button , my account dropdown and cart*/}
+        {/* [Sell Used Book / Account / Cart] starts*/}
         <div className="flex items-center gap-4">
           {/*sell button starts*/}
           <Link href={"/book-sell"}>
@@ -308,15 +317,22 @@ const Header = () => {
           </Link>
           {/*sell  button ends*/}
 
-          {/*my account dropdown starts*/}
+          {/*my account  starts*/}
           <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
             <DropdownMenuTrigger asChild>
-              {/* So your button will not show outline after dropdown closes. */}
+              {/* asChild : “Don’t create your own button — use my child as the trigger” */}
+              {/* DropdownMenuTrigger is also button , Button inside button (invalid HTML) , 
+             Causes focus, outline, click glitches  */}
               <Button
-                variant={"ghost"}
+                variant={"ghost"} // no border and transparent
                 className="outline-none focus:outline-none focus:ring-0 focus-visible:ring-0"
+                // Browser gives → outline and Tailwind gives → ring
+                // focus → click + tab and focus-visible → tab only
+                // ring = outer glow around a component (like a modern outline) added by Tailwind
+                // Pseudo-class ==> CSS way to style elements based on user interaction or state
+                // button:hover {  background: red } , :focus , :focus-visible
               >
-                <Avatar className="w-8 h-8 rounded-full">
+                <Avatar className="w-8 h-8 ">
                   {user?.profilePicture ? (
                     <AvatarImage
                       src={user?.profilePicture}
@@ -327,28 +343,18 @@ const Header = () => {
                   ) : (
                     <User className="ml-2 mt-2" />
                   )}
+                  {/* cond1 ? result1 : cond2 ? result2 : cond3 ? result3 : result4 */}
                 </Avatar>
                 My Account
               </Button>
             </DropdownMenuTrigger>
 
-            {/* content starts */}
             <DropdownMenuContent className="mt-5">
               <DisplayMenuItems />
             </DropdownMenuContent>
-            {/* content ends */}
           </DropdownMenu>
-          {/* 
-             asChild example:
-            <Button asChild>
-             <a href="/login">Login</a>
-            </Button>
-            Here, the <Button> will NOT render a <button> tag.
-            Instead, it passes its styles and behavior to the child element.
-            So the <a> becomes the button-styled element.
-          */}
 
-          {/*my account  dropdown ends */}
+          {/*my account ends */}
 
           {/* cart starts */}
           <Link href={"/checkout/cart"}>
@@ -382,11 +388,11 @@ const Header = () => {
           </Link>
           {/* cart ends */}
         </div>
-        {/* sell used book button , my account and cart ends*/}
+        {/* [Sell Used Book / Account / Cart] ends*/}
       </div>
-      {/* desktop contents ends */}
+      {/* desktop header ends */}
 
-      {/* mobile header/contents starts*/}
+      {/* mobile header starts*/}
       {/* sheet , logo , search , cart */}
       <div className="container mx-auto flex lg:hidden items-center justify-between p-4">
         {/*Sheet : slide-over panel, often used for modals, menus etc */}
@@ -459,7 +465,8 @@ const Header = () => {
 
         {/*  */}
       </div>
-      {/* mobile header/contents ends*/}
+      {/* mobile header ends*/}
+
       <AuthPage isLoginOpen={isLoginOpen} setIsLoginOpen={handleLoginClick} />
     </header>
   );

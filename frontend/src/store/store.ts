@@ -19,12 +19,12 @@ import { api } from "./api";
 
 const userPersistConfig = {
   key: "user",
-  storage,
+  storage, // localStorage (browser storage)
   whitelist: ["user", "isEmailVerified", "isLoggedIn"],
 };
 
 const cartPersistConfig = {
-  key: "cart",
+  key: "cart", // In browser storage (like localStorage), data is saved as: cart: { items: [...] }
   storage,
   whitelist: ["items"], //Only save these selected fields from Redux state into storage (like localStorage).”
 };
@@ -33,6 +33,7 @@ const wishlistPersistConfig = {
   key: "wishlist",
   storage,
 };
+// If you don’t use whitelist, redux-persist will save the entire reducer state.
 
 const checkoutPersistConfig = {
   key: "checkout",

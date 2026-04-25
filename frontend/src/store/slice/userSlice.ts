@@ -37,7 +37,8 @@ const userSlice = createSlice({
     },
   },
 });
-
+// setUser inside the slice is the reducer, but setUser you export from .actions 
+// is an action creator that triggers that reducer.
 export const {
   setUser,
   setEmailVerified,
