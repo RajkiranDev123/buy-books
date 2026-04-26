@@ -9,12 +9,12 @@ declare global {
     }
   }
 }
-// “Go to the existing Express namespace and add this property to Request.”
+// “Go to the existing Express namespace and add (id) property to Request.”
 // namespace is a TypeScript keyword used to group related types or interfaces together.
 // Only interface supports declaration merging. Extending the existing Request interface
 
 export const auth = (req: Request, res: Response, next: NextFunction) => {
-  const token = req.cookies?.access_token; // app.use(cookieParser());
+  const token = req?.cookies?.access_token; // app.use(cookieParser());
 
   if (!token) {
     return response(res, 401, "User is not authenticated.");
@@ -27,7 +27,7 @@ export const auth = (req: Request, res: Response, next: NextFunction) => {
       process.env.JWT_SECRET as string,
     ) as jwt.JwtPayload;
 
-    req.id = decode.userId as string;
+    req.id = decode.userId as string; // jwt.sign({ userId: user?._id }, process.env.JWT_SECRET as string, { expiresIn: "90d" });
 
     next();
   } catch (error) {
@@ -35,5 +35,5 @@ export const auth = (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-// as = type assertion , It tells TypeScript: “Trust me, I know the type of this value.”
-// !  = “This value is NOT null or undefined.” ==> non-null assertion.
+// as (type assertion)    =  It tells TypeScript: “Trust me, I know the type of this value.”
+// ! (non-null assertion) = “This value is NOT null or undefined.” ==>

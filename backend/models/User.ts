@@ -14,7 +14,8 @@ export interface IUSER extends Document {
   resetPasswordExpires?: Date;
   agreeTerms: boolean;
   addresses: mongoose.Types.ObjectId[];
-  comparePassword(candidatePassword: string): Promise<boolean>;
+  comparePassword(candidatePassword: string): Promise<boolean>; // This is NOT a function, it’s just a method signature (type declaration)
+  // const comparePassword = (candidatePassword: string) : Promise<boolean> => {} // type declaration vs actual function implementation syntax.
 }
 // Promise is generic (Promise<T>) , But You filled T = boolean
 // Promise<boolean> , No flexibility left → concrete type / fixed result type
@@ -25,7 +26,7 @@ const userSchema = new Schema<IUSER>(
     email: { type: String, required: true, unique: true, index: true },
     password: { type: String }, // required not mentioned
     googleId: { type: String },
-    profilePicture: { type: String, default: null },
+    profilePicture: { type: String, default: null }, // When default is there, don’t use required
     phoneNumber: { type: String, default: null },
     isVerified: { type: Boolean, default: false },
     agreeTerms: { type: Boolean, default: false },
@@ -38,14 +39,14 @@ const userSchema = new Schema<IUSER>(
   { timestamps: true },
 );
 
-// userSchema Defines database fields only, not methods : comparePassword(candidatePassword: string): Promise<boolean>;
+// userSchema Defines database fields only, not methods ==> comparePassword(candidatePassword: string): Promise<boolean>;
 
 // this = current DB record (document)
 
 // pre("save") runs right before .save() or .create() writes data to the database
 userSchema.pre("save", async function () {
   // 'this' is the document
-  if (!this.isModified("password")) return; //  false then password is same
+  if (!this.isModified("password")) return; // true ==> changed , dont run and go below to hash ,  false ==> same , !false == true and return
   // When a document is loaded or saved : original password = "123" and
   // When you change something : this.password = "1234"
   // Mongoose tracks changes internally on every document.
