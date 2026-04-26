@@ -21,13 +21,13 @@ transporter.verify((error, success) => {
 });
 
 const sendEmail = async (to: string, subject: string, body: string) => {
- const res= await transporter.sendMail({
+  const res = await transporter.sendMail({
     from: `Buy Books  <${process.env.SMTP_MAIL}>`,
     to,
     subject,
     html: body,
   });
-  return res
+  return res;
 };
 
 export const sendVerificationToEmail = async (to: string, token: string) => {
@@ -37,11 +37,18 @@ export const sendVerificationToEmail = async (to: string, token: string) => {
   <p>Thanks for registering. Please click link below to verify your email</p>
   <a href="${verificationUrl}">Verify your Email Here</a>
   `;
-  const res=await sendEmail(to, "Plz verify your email to access Buy Books", html);
-  return res
+  const res = await sendEmail(
+    to,
+    "Plz verify your email to access Buy Books",
+    html,
+  );
+  return res;
 };
 
-export const sendResetPasswordLinkToEmail = async (to: string, token: string) => {
+export const sendResetPasswordLinkToEmail = async (
+  to: string,
+  token: string,
+) => {
   const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${token}`;
   const html = `
   <h1>Welcome to your Buy Books! Reset your Password.</h1>

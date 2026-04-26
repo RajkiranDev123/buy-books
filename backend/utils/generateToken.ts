@@ -7,5 +7,3 @@ export const generateToken = (user: IUSER): string => {
     expiresIn: "90d",
   });
 };
-
-

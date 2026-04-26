@@ -1,8 +1,6 @@
 import passport from "passport";
-// passport is an authentication middleware for Express
-// Passport is a middleware that simplifies authentication in Node.js by using strategies like
-// Google login, JWT, or local login
-// and attaching the authenticated user to requests.
+// passport is an authentication middleware for Express and simplifies authentication in Node.js by using strategies like
+// Google login, JWT, or local login and attaching the authenticated user to requests.
 
 import { Strategy as GoggleStrategy } from "passport-google-oauth20";
 

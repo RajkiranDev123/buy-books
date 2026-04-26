@@ -37,5 +37,3 @@ export const auth = (req: Request, res: Response, next: NextFunction) => {
 
 // as = type assertion , It tells TypeScript: “Trust me, I know the type of this value.”
 // !  = “This value is NOT null or undefined.” ==> non-null assertion.
-
-

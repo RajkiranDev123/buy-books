@@ -7,7 +7,7 @@ import mongoose from "mongoose";
 // const getMessage = ()=> { return "Hello" }
 // const getMessage = ()=>  "Hello"   // implicit return
 // const getMessage = () : string =>  "Hello"   
-// const getMessage = async () : Promise<void> =>  "Hello"   
+// const getMessage = async () : Promise<void> =>  ...
 
 // const getMessage = async (): Promise<void> => {
 //   return "Hello";

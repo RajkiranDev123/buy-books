@@ -162,7 +162,7 @@ export const resetPassword = async (req: Request, res: Response) => {
 
     user.password = newPassword;
     user.resetPasswordToken = undefined;
-    // Remove the field (unset it)” : undefined 
+    // Remove the field (unset it)” : undefined
     // We don’t even need the field anymore
     user.resetPasswordExpires = undefined;
     await user.save(); // remove resetPasswordToken & resetPasswordExpires & save password
