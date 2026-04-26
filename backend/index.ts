@@ -34,7 +34,7 @@ app.use(express.urlencoded({ extended: true }));
 // If a form sends data like ==> name=raj&age=20, it converts it into a JavaScript object ==> req.body = { name: "Raj", age: "20"}
 // extended : true ==> allows nested objects in form data & extended : false ==> only allows flat key=value pairs
 app.use(passport.initialize());
-app.use(cookieParser()); //Cookie: user=raj; theme=dark to req.cookies = {user: "raj",theme: "dark"}
+app.use(cookieParser()); //Cookie: user=raj; theme=dark; to req.cookies = {user: "raj",theme: "dark"}
 
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/user", userRoutes);
@@ -58,9 +58,8 @@ async function startServer() {
 
 startServer();
 
-// Node app runs
-// Node exits with a code
+
+// Node exits with a code ,  OS records that code and Terminal can check it.
 // 0 → success
 // 1 → failure
-// OS records that code
-// Terminal can check it.
+
