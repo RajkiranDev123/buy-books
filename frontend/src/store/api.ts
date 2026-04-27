@@ -2,6 +2,28 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const Base_URL = process.env.NEXT_PUBLIC_API_URL; //"http://localhost:8000/api/v1"
 
+// | Feature   | providesTags 🟢      | invalidatesTags 🔴         |
+// | --------- | -------------------- | -------------------------- |
+// | Used in   | Query (GET)          | Mutation (POST/PUT/DELETE) |
+// | Meaning   | Marks cached data    | Marks data as outdated     |
+// | Effect    | Stores & labels data | Triggers refetch           |
+
+// Cache = temporary memory in Redux
+// Lives in RAM (memory)
+// Fast access
+// Lost when page refreshes
+
+// invalidatesTags triggers refetch only for GET queries (not mutations) that used providesTags with the same tag.
+// it re-render the component?  YES — but only if the component is using that (get) query hook
+
+// | Feature          | RTK Query Cache    | LocalStorage    |
+// | ---------------- | ----------------   | --------------- |
+// | Where stored     | Redux (memory)     | Browser storage |
+// | Survives refresh | ❌ No              | ✅ Yes           |
+// | Speed            | ⚡ Very fast       | 🐢 slower       |
+// | Auto-managed     | ✅ Yes             | ❌ Manual        |
+// | Purpose          | API data caching    | persistent data |
+
 const API_URLS = {
   // auth
   REGISTER: `${Base_URL}/auth/register`,

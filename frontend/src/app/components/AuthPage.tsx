@@ -67,18 +67,21 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setIsLoginOpen }) => {
   const [forgotPassword] = useForgotPasswordMutation();
   const router = useRouter();
 
+  // login
   const {
     register: registerLogin,
     handleSubmit: handleLoginSubmit,
     formState: { errors: loginError },
   } = useForm<LoginFormData>();
 
+  // signup
   const {
     register: registerSignup,
     handleSubmit: handleSignUpSubmit, // it validates your form before calling onSubmitSignUp
     formState: { errors: signUpError },
   } = useForm<SignupFormData>();
 
+  // forgot Password
   const {
     register: registerForgotPassword,
     handleSubmit: handleForgotPasswordSubmit,
@@ -107,13 +110,11 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setIsLoginOpen }) => {
     setLoginLoading(true);
     try {
       const result = await login(data).unwrap();
-
       if (result.success) {
         toast.success(result?.message);
         dispatch(toggleLoginDialog());
         dispatch(authStatus());
         router.push("/");
-
         window.location.reload();
       }
     } catch (error: any) {
@@ -127,7 +128,6 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setIsLoginOpen }) => {
     setForgotPasswordLoading(true);
     try {
       const result = await forgotPassword(data.email).unwrap();
-
       if (result.success) {
         toast.success(result?.message);
         setForgotPasswordSuccess(true);
@@ -145,7 +145,6 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setIsLoginOpen }) => {
       router.push(`${Base_URL}/auth/google`);
       dispatch(authStatus());
       dispatch(toggleLoginDialog());
-
       setTimeout(() => {
         toast.success("Google login done.");
         setIsLoginOpen(false);
@@ -180,6 +179,8 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setIsLoginOpen }) => {
           </TabsList>
 
           <AnimatePresence mode="wait">
+            {/* Without mode="wait" ==> Old component goes out , New component comes in , Both happen together */}
+            {/* motion can do exit animation, but only AnimatePresence lets it run */}
             <motion.div
               key={currentTab}
               initial={{ opacity: 0, y: 20 }}

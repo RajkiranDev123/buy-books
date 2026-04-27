@@ -34,10 +34,12 @@ const userSlice = createSlice({
     },
     authStatus: (state) => {
       state.isLoggedIn = true;
+      // state.isLoggedIn = !state.isLoggedIn; // For authentication, this is usually not good design:
+      // user could accidentally toggle logout/login
     },
   },
 });
-// setUser inside the slice is the reducer, but setUser you export from .actions 
+// setUser inside the slice is the reducer, but setUser you export from .actions
 // is an action creator that triggers that reducer.
 export const {
   setUser,
