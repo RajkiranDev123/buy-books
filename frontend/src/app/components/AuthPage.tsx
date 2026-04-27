@@ -95,8 +95,7 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setIsLoginOpen }) => {
           "Verification link sent to your email, please verify your email.",
         );
         dispatch(toggleLoginDialog());
-        router.push("/")
-
+        router.push("/");
       }
     } catch (error: any) {
       toast.error(error?.data?.message || "Something went wrong");
@@ -113,7 +112,7 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setIsLoginOpen }) => {
         toast.success(result?.message);
         dispatch(toggleLoginDialog());
         dispatch(authStatus());
-        router.push("/")
+        router.push("/");
 
         window.location.reload();
       }
@@ -150,7 +149,7 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setIsLoginOpen }) => {
       setTimeout(() => {
         toast.success("Google login done.");
         setIsLoginOpen(false);
-        router.push("/")
+        router.push("/");
       }, 3000);
     } catch (error: any) {
       toast.error(error?.data?.message || "Something went wrong");
@@ -164,7 +163,7 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setIsLoginOpen }) => {
       <DialogContent className="sm:max-w-[425px] p-6  mt-8">
         <DialogHeader>
           <DialogTitle className="text-center text-2xl font-bold mb-4">
-            Welcome to Buy Books
+            Welcome to Buy Books!
           </DialogTitle>
         </DialogHeader>
         {/* tabs start */}
@@ -304,6 +303,7 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setIsLoginOpen }) => {
                   )}
                 </Button>
               </TabsContent>
+              {/* login tab ends */}
               {/* signup tab starts*/}
               <TabsContent value="signup" className="space-y-4">
                 <form
@@ -470,7 +470,7 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setIsLoginOpen }) => {
                 )}
               </TabsContent>
 
-              {/*  */}
+              {/* forgot password tab ends */}
             </motion.div>
           </AnimatePresence>
         </Tabs>

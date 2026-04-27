@@ -62,11 +62,10 @@ const Header = () => {
     (state: RootState) => state.cart.items.length,
   );
 
-
   const { data: cartData } = useGetCartQuery(user?._id, { skip: !user });
-// App starts → user = null → skip = true → NO API call
-// Because the API needs a valid user._id; without a user, 
-// the request would be invalid (/cart/undefined), so skip prevents that.
+  // App starts → user = null → skip = true → NO API call
+  // Because the API needs a valid user._id; without a user,
+  // the request would be invalid (/cart/undefined), so skip prevents that.
   const [searchTerms, setSearchTerms] = useState("");
 
   const handleSearch = () => {
