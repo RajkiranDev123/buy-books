@@ -41,8 +41,6 @@ export default function AuthCheck({ children }: { children: React.ReactNode }) {
     // }
   }, [verifyAuth, dispatch]);
 
-
-
   if (isLoading || isCheckingAuth) {
     // if isLoading == true then stop , or ==> any 1 true then true
     // return stops the AuthCheck component function execution, not the whole app.

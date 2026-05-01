@@ -1,26 +1,27 @@
 WORKDIR /app :
 
 /
+
 ├── bin
 ├── etc
 ├── home
+
 ├── usr   : is a Linux directory that stores installed software and libraries.
 ├── var
 └── app   ← your folder
 
-it is directly under root /
+it is directly under root /  ==> /app
 
 /
 └── app
      ├── package.json
      ├── node_modules
-     ├── pages
-     └── components
+     ├── src
 
-------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------
 FROM node:18 ==>
 
-Linux OS                :  / , /usr , /etc , /var => The Linux operating system files are spread across many folders:
+Linux OS                : /usr , /etc , /var => The Linux operating system files are spread across many folders:
 Node.js runtime         : /usr/local/bin/node
 npm                     : /usr/local/bin/npm
 basic system tools (ls) : /bin and /usr/bin
@@ -49,6 +50,7 @@ What exactly is 3000:3000 : It is the value (argument) of the -p option.
 
 Option WITHOUT argument/value : -d , -it , --rm
 Option WITH argument/value : --name ==> docker run -p 3000:3000 --name fc  frontend-app
+--name fc → give a custom name to the container
 -------------------------------------------------------------------------
 
 Short options (-d) → convenient, quick
