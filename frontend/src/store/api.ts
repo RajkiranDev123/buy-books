@@ -8,10 +8,8 @@ export const Base_URL = process.env.NEXT_PUBLIC_API_URL; //"http://localhost:800
 // | Meaning   | Marks cached data    | Marks data as outdated     |
 // | Effect    | Stores & labels data | Triggers refetch           |
 
-// Cache = temporary memory in Redux
-// Lives in RAM (memory)
-// Fast access
-// Lost when page refreshes
+// Cache = temporary memory in Redux , Lives in RAM (memory)
+// Fast access , Lost when page refreshes
 
 // invalidatesTags triggers refetch only for GET queries (not mutations) that used providesTags with the same tag.
 // it re-render the component?  YES — but only if the component is using that (get) query hook
