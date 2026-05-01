@@ -13,7 +13,7 @@ export default config;
 
 
 
-// display: flex; ===>
+// display: flex; ===> and then...
 
 // now PostCSS (with plugin) converts:
 
@@ -21,9 +21,9 @@ export default config;
 // display: -ms-flexbox;
 // display: flex;
 
-// 👉 Now works in more browsers
+// Now works in more browsers
 
-// 🔌 Common plugins :
+// Common plugins :
 // Tailwind CSS → classes → real CSS
 // Autoprefixer → adds browser support
 

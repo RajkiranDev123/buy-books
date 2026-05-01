@@ -2,10 +2,11 @@ import type { NextConfig } from "next";
 
 // next.config.ts is used to configure Next.js features like images, performance, and build behavior.
 // It controls how your Next.js app behaves during build time
+// eh : “Enable React optimizations and allow images from these external domains.”
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
-  
+
   images: {
     remotePatterns: [
       {
@@ -16,7 +17,7 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "media.istockphoto.com",
       },
-          {
+      {
         protocol: "https",
         hostname: "res.cloudinary.com",
       },
