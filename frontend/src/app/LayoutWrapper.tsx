@@ -21,3 +21,5 @@ const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
 };
 
 export default LayoutWrapper;
+
+// LayoutWrapper exists mainly to keep layout.tsx as a server component and move all client-side logic into a client component.

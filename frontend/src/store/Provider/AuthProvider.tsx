@@ -1,3 +1,14 @@
+// layout.tsx (server)
+//    ↓
+// LayoutWrapper ("use client")
+//    ↓
+// AuthCheck (implicitly client)
+//    ↓
+// children
+
+// Implicit : Imported inside a client component
+// Explicit : "use client"
+
 import { useEffect, useState } from "react";
 import { useVerifyAuthMutation } from "../api";
 import { useDispatch, useSelector } from "react-redux";
