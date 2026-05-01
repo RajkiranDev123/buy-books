@@ -12,7 +12,9 @@ const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
     <Provider store={store}>
       <PersistGate loading={<BookLoader />} persistor={persistor}>
         <Toaster />
+        {/* { children }  =   <Header /> , {children} , <Footer /> */}
         <AuthCheck>{children}</AuthCheck>
+
       </PersistGate>
     </Provider>
   );

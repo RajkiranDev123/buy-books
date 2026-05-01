@@ -25,7 +25,7 @@ const multerMiddleware: RequestHandler = multer({
 
 // ✅ Upload + delete local file
 const uploadToCloudinary = (
-  file: Express.Multer.File
+  file: Express.Multer.File,
 ): Promise<UploadApiResponse> => {
   const options: UploadApiOptions = {
     resource_type: "image",
@@ -34,7 +34,6 @@ const uploadToCloudinary = (
 
   return new Promise((resolve, reject) => {
     cloudinary.uploader.upload(file.path, options, (error, result) => {
-      
       // ✅ delete file (important)
       if (file.path && fs.existsSync(file.path)) {
         fs.unlinkSync(file.path);

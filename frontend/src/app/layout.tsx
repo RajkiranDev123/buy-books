@@ -20,9 +20,7 @@ export const metadata: Metadata = {
   description: "Buy Books",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayout( { children }: Readonly<{ children: React.ReactNode }> ) {
   return (
     <html lang="en">
       <body
@@ -42,9 +40,9 @@ export default function RootLayout({
 //    ↓
 // layout.tsx
 //    ↓
-// LayoutWrapper
+// LayoutWrapper.tsx
 //    ↓
-// AuthCheck
+// AuthCheck.ts
 //    ↓
 // children (page.tsx)
 
@@ -59,3 +57,5 @@ export default function RootLayout({
 // };
 
 // p.title = "Laptop"; // ❌ Error
+
+// In TypeScript, “read-only” usually means making something immutable (cannot be changed after creation).
