@@ -427,8 +427,8 @@ const Header = () => {
           <div className="relative w-full">
             <Input
               type="text"
-              // onChange={() => {}}
-              value={""}
+              value={searchTerms}
+              onChange={(e) => setSearchTerms(e.target.value)}
               className="w-full pr-10"
               placeholder="Search Books..."
             />
