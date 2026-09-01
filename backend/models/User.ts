@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from "mongoose";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcryptjs"; // genSalt , hash
 
 export interface IUSER extends Document {
   name: string;
@@ -11,14 +11,18 @@ export interface IUSER extends Document {
   isVerified: boolean;
   verificationToken?: string;
   resetPasswordToken?: string;
-  resetPasswordExpires?: Date;
+  resetPasswordExpires?: Date; // Stores when the password-reset token expires.
   agreeTerms: boolean;
   addresses: mongoose.Types.ObjectId[];
   comparePassword(candidatePassword: string): Promise<boolean>; // This is NOT a function, it’s just a method signature (type declaration)
   // const comparePassword = (candidatePassword: string) : Promise<boolean> => {} // type declaration vs actual function implementation syntax.
 }
 // Promise is generic (Promise<T>) , But You filled T = boolean
-// Promise<boolean> , No flexibility left → concrete type / fixed result type
+// Promise<boolean> , here No flexibility is left → concrete type / fixed result type
+
+// "This schema represents an IUSER."
+// "Documents returned by this User model are IUSER documents."
+//  So TypeScript can understand things like: user?.randomProperty;     // ❌ TypeScript error
 
 const userSchema = new Schema<IUSER>(
   {
@@ -35,6 +39,7 @@ const userSchema = new Schema<IUSER>(
     resetPasswordToken: { type: String, default: null },
     resetPasswordExpires: { type: Date, default: null },
     addresses: [{ type: Schema.Types.ObjectId, ref: "Address" }],
+    // user can have multiple Address documents, and addresses stores their MongoDB IDs.
   },
   { timestamps: true },
 );
@@ -46,7 +51,7 @@ const userSchema = new Schema<IUSER>(
 // pre("save") runs right before .save() or .create() writes data to the database
 userSchema.pre("save", async function () {
   // 'this' is the document
-  if (!this.isModified("password")) return; // true ==> changed , dont run and go below to hash ,  false ==> same , !false == true and return
+  if (!this.isModified("password")) return; 
   // When a document is loaded or saved : original password = "123" and
   // When you change something : this.password = "1234"
   // Mongoose tracks changes internally on every document.
@@ -60,9 +65,7 @@ userSchema.pre("save", async function () {
 // ! does NOT add runtime safety — it only silences TypeScript.
 // If password is actually undefined at runtime : your app will crash.
 
-userSchema.methods.comparePassword = async function (
-  candidatePassword: string,
-): Promise<boolean> {
+userSchema.methods.comparePassword = async function ( candidatePassword: string ): Promise<boolean> {
   return bcrypt.compare(candidatePassword, this.password);
 };
 

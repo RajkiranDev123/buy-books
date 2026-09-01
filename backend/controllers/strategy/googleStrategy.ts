@@ -1,37 +1,57 @@
+
 import passport from "passport";
+
 // passport is an authentication middleware for Express and simplifies authentication in Node.js by using strategies like
 // Google login, JWT, or local login and attaching the authenticated user to requests.
 
-import { Strategy as GoggleStrategy } from "passport-google-oauth20";
+// this is a Passport + Google OAuth strategy. The main job of this code is:
+
+// Google authenticates the user → Passport receives Google's profile → you find/create the user in MongoDB
+//  → done() tells Passport authentication succeeded or failed.
+
+import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 
 import dotenv from "dotenv";
 import { Request } from "express";
+
 import User, { IUSER } from "../../models/User";
+
 dotenv.config();
 
 // new GoogleStrategy(options, verifyCallback)
 // The verify callback runs only after Google successfully authenticates the user and redirects back to your app.
 // passReqToCallback: true is used when authentication depends on request-specific data in addition to Google profile data.
+
 passport.use(
-  new GoggleStrategy(
+
+  new GoogleStrategy(
+
     {
       clientID: process.env.GOOGLE_CLIENT_ID || "",
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
       callbackURL: process.env.GOOGLE_CALLBACK_URL || "",
       passReqToCallback: true,
     },
+
+    // it runs when Passport receives Google's response at "/google/callback" and needs to verify/find the application user.
     async (
+
       req: Request,
       accessToken,
       refreshToken,
       profile,
       done: (error: any, user?: IUSER | false) => void,
+
     ) => {
+
       const { emails, displayName, photos } = profile;
 
-      console.log("profile", profile);
+      console.log("profile ==> ", profile);
+
       try {
+
         let user = await User.findOne({ email: emails?.[0]?.value });
+
         // If user already exists
         // BUT profile picture is empty in DB
         // AND Google provides a photo
@@ -43,7 +63,9 @@ passport.use(
           }
           return done(null, user); // Return user to Passport
         }
-        // This part is executed when the user does NOT already exist in your database,
+
+        // This part is executed when the user does NOT  exist in your database
+
         user = await User.create({
           googleId: profile.id,
           name: displayName,
@@ -54,6 +76,7 @@ passport.use(
         });
 
         done(null, user);
+
       } catch (error) {
         done(error);
       }

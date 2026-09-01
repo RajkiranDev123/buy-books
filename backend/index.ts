@@ -5,10 +5,10 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import { connectDb } from "./config/dbConnect";
 
-//Routes
+//Routes : 7
 import authRoutes from "./routes/authRouter";
 import productRoutes from "./routes/productRouter";
-import cardRoutes from "./routes/cartRouter";
+import cartRoutes from "./routes/cartRouter";
 import wishListRoutes from "./routes/wishListRouter";
 import addressRoutes from "./routes/addressRouter";
 import userRoutes from "./routes/userRouter";
@@ -17,13 +17,17 @@ import orderRoutes from "./routes/orderRouter";
 import passport from "./controllers/strategy/googleStrategy";
 
 dotenv.config();
+
 const PORT = process.env.PORT || 8080;
+
 const app = express();
+
 const corsOption = {
   origin: process.env.FRONTEND_URL || "http://localhost:3000",
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   credentials: true,
 };
+
 //Browser blocks requests between different origins , Origin = Protocol + Domain (host) + Port ==> http://localhost:3000
 app.use(cors(corsOption)); // HTTPS → port 443 , HTTP → port 80
 
@@ -33,13 +37,13 @@ app.use(express.urlencoded({ extended: true }));
 // When a form is submitted , the browser sends data using the format : application/x-www-form-urlencoded vs application/json
 // If a form sends data like ==> name=raj&age=20, it converts it into a JavaScript object ==> req.body = { name: "Raj", age: "20"}
 // extended : true ==> allows nested objects in form data & extended : false ==> only allows flat key=value pairs
-app.use(passport.initialize());
+app.use(passport.initialize()); // sets up Passport and then later passport.authenticate("google") in authRouter
 app.use(cookieParser()); //Cookie: user=raj; theme=dark; to req.cookies = {user: "raj",theme: "dark"}
 
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/product", productRoutes);
-app.use("/api/v1/cart", cardRoutes);
+app.use("/api/v1/cart", cartRoutes);
 app.use("/api/v1/wishList", wishListRoutes);
 app.use("/api/v1/user/address", addressRoutes);
 app.use("/api/v1/order", orderRoutes);
@@ -58,8 +62,6 @@ async function startServer() {
 
 startServer();
 
-
 // Node exits with a code ,  OS records that code and Terminal can check it.
 // 0 → success
 // 1 → failure
-
