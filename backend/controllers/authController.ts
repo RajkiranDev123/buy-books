@@ -8,14 +8,17 @@ import {
 } from "../config/emailConfig";
 import { generateToken } from "../utils/generateToken";
 
-console.log("auth controller");
+// 7 controllers
 
 export const register = async (req: Request, res: Response) => {
   try {
+
     const { name, email, password, agreeTerms } = req.body;
-    // if (!name || !email || !password || !agreeTerms) {
-    //   return response(res, 400, "All fields are required.");
-    // }
+
+    if (!name || !email || !password || !agreeTerms) {
+      return response(res, 400, "All fields are required.");
+    }
+
     const existingUser = await User.findOne({ email }); // findOne takes query object
     // .lean() ==> without it you don’t get a simple js object.
     // You get a Mongoose document instance — kind of like a “smart object”.
@@ -24,6 +27,7 @@ export const register = async (req: Request, res: Response) => {
       return response(res, 400, "User already exists.");
     }
     const verificationToken = crypto.randomBytes(10).toString("hex");
+
     const user = new User({
       name,
       email,
@@ -31,13 +35,14 @@ export const register = async (req: Request, res: Response) => {
       agreeTerms,
       verificationToken,
     });
+
     await user.save();
 
     // const user = await new User({ name, email, password, agreeTerms, verificationToken }).save();
 
     // or
 
-    //await User.create({
+    // await User.create({
     //   name,
     //   email,
     //   password,
@@ -45,31 +50,43 @@ export const register = async (req: Request, res: Response) => {
     //   verificationToken
     // }); is equivalent to
 
-    // const user = new User({ name, email, password, agreeTerms, verificationToken });
-    // await user.save();
+    // const user = new User({ name, email, password, agreeTerms, verificationToken }); and await user.save();
+    
 
     const result = await sendVerificationToEmail(user.email, verificationToken);
-    console.log("mail res ==> ", result?.response);
+
+    console.log("mail res sendVerificationToEmail ==> ", result?.response);
 
     return response(
       res,
       200,
       "Registration done, Please check your email to verify!",
     );
+
+    // response object , status code , message and data
+
   } catch (error) {
+
     return response(res, 500, "Internal Server Error");
+
   }
+
 };
 
 //////////////////////////////////////////////////////////////
 
 export const verifyEmail = async (req: Request, res: Response) => {
   try {
-    const { token } = req.params; // "/verify-email/:token"
+    
+    // /users and /users/:id are different routes. not optional like query params : /users?id=123
+    const { token } = req.params; // router.post("/verify-email/:token", authController.verifyEmail);
+    
     const user = await User.findOne({ verificationToken: token });
+    
     if (!user) {
       return response(res, 400, "Invalid or expired verification token.");
     }
+
     user.isVerified = true;
     user.verificationToken = undefined;
 
@@ -87,6 +104,7 @@ export const verifyEmail = async (req: Request, res: Response) => {
 
     await user.save();
     return response(res, 200, "Email Verified, You can use Buy Books now.");
+
   } catch (error) {
     return response(res, 500, "Internal Server Error");
   }
