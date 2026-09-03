@@ -4,12 +4,12 @@ import bcrypt from "bcryptjs"; // genSalt , hash
 export interface IUSER extends Document {
   name: string;
   email: string;
-  password?: string;
+  password?: string; // "abc" or undefined if omitted , const user = {} and user.password is undefined
   googleId?: string;
   profilePicture?: string;
   phoneNumber?: string;
   isVerified: boolean;
-  verificationToken?: string;
+  verificationToken?: string | null;
   resetPasswordToken?: string;
   resetPasswordExpires?: Date; // Stores when the password-reset token expires.
   agreeTerms: boolean;
@@ -28,7 +28,7 @@ const userSchema = new Schema<IUSER>(
   {
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true, index: true },
-    password: { type: String }, // required not mentioned
+    password: { type: String }, // required not mentioned 
     googleId: { type: String },
     profilePicture: { type: String, default: null }, // When default is there, don’t use required
     phoneNumber: { type: String, default: null },
@@ -38,8 +38,9 @@ const userSchema = new Schema<IUSER>(
     //“Field exists, but has no value” : null
     resetPasswordToken: { type: String, default: null },
     resetPasswordExpires: { type: Date, default: null },
-    addresses: [{ type: Schema.Types.ObjectId, ref: "Address" }],
+    addresses: [{ type: Schema.Types.ObjectId, ref: "Address" , default: undefined }],
     // user can have multiple Address documents, and addresses stores their MongoDB IDs.
+    // if i do await User.create({   name: "John",  email: "john@gmail.com" }) then in db no ==> address:[]
   },
   { timestamps: true },
 );

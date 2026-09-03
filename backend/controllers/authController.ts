@@ -11,7 +11,7 @@ import { generateToken } from "../utils/generateToken";
 // 7 controllers
 
 export const register = async (req: Request, res: Response) => {
-  
+
   try {
 
     const { name, email, password, agreeTerms } = req.body;
@@ -24,9 +24,11 @@ export const register = async (req: Request, res: Response) => {
     // .lean() ==> without it you don’t get a simple js object.
     // You get a Mongoose document instance — kind of like a “smart object”.
     // & includes methods like .save()
+
     if (existingUser) {
       return response(res, 400, "User already exists.");
     }
+    
     const verificationToken = crypto.randomBytes(10).toString("hex");
 
     const user = new User({
