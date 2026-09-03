@@ -23,17 +23,20 @@ const multerMiddleware: RequestHandler = multer({
   limits: { fileSize: 2 * 1024 * 1024 }, // 2MB limit
 }).array("images", 4);
 
+
 // ✅ Upload + delete local file
-const uploadToCloudinary = (
-  file: Express.Multer.File,
-): Promise<UploadApiResponse> => {
+// There is no await inside the function, so you don't need async.
+const uploadToCloudinary = ( file: Express.Multer.File ): Promise<UploadApiResponse> => {
+  
   const options: UploadApiOptions = {
     resource_type: "image",
     folder: "buy_books",
   };
 
   return new Promise((resolve, reject) => {
+
     cloudinary.uploader.upload(file.path, options, (error, result) => {
+
       // ✅ delete file (important)
       if (file.path && fs.existsSync(file.path)) {
         fs.unlinkSync(file.path);
@@ -44,8 +47,10 @@ const uploadToCloudinary = (
       } else {
         resolve(result as UploadApiResponse);
       }
+
     });
   });
+
 };
 
 export { multerMiddleware, uploadToCloudinary };

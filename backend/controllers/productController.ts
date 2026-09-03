@@ -51,7 +51,11 @@ export const createProduct = async (req: Request, res: Response) => {
     }
 
     const uploadPromise = images.map((file) => uploadToCloudinary(file as any));
+    // map() gives you: [Promise , Promise] and It just collects the returned Promises into an array.
+    // Then Promise.all() waits for all of them:
+    
     const uploadImages = await Promise.all(uploadPromise);
+
     const imageUrls = uploadImages.map((image) => image.secure_url);
 
     const product = new Products({

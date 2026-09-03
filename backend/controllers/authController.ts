@@ -11,6 +11,7 @@ import { generateToken } from "../utils/generateToken";
 // 7 controllers
 
 export const register = async (req: Request, res: Response) => {
+  
   try {
 
     const { name, email, password, agreeTerms } = req.body;
@@ -22,7 +23,7 @@ export const register = async (req: Request, res: Response) => {
     const existingUser = await User.findOne({ email }); // findOne takes query object
     // .lean() ==> without it you don’t get a simple js object.
     // You get a Mongoose document instance — kind of like a “smart object”.
-    // & includes methods like save()
+    // & includes methods like .save()
     if (existingUser) {
       return response(res, 400, "User already exists.");
     }
@@ -76,6 +77,7 @@ export const register = async (req: Request, res: Response) => {
 //////////////////////////////////////////////////////////////
 
 export const verifyEmail = async (req: Request, res: Response) => {
+
   try {
     
     // /users and /users/:id are different routes. not optional like query params : /users?id=123
