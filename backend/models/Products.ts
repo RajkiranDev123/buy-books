@@ -34,7 +34,7 @@ const productSchema = new Schema<IProduct>(
     subject: { type: String, required: true },
     images: [{ type: String }],
     price: { type: Number, required: true },
-    author: { type: String},
+    author: { type: String },
     edition: { type: String },
     description: { type: String },
     finalPrice: { type: Number, required: true },

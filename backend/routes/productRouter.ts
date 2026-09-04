@@ -6,12 +6,10 @@ import { multerMiddleware } from "../config/cloudinaryConfig";
 const router = Router();
 
 router.post("/", auth, multerMiddleware, productController.createProduct);
-router.get("/", auth,  productController.getAllProducts);
-router.get("/:id", auth,  productController.getProductById);
+router.get("/", auth, productController.getAllProducts);
+router.get("/:id", auth, productController.getProductById);
 
-router.delete("/seller/:productId", auth,  productController.deleteProduct);
-router.get("/seller/:sellerId", auth,  productController.getProductBySellerId);
-
-
+router.delete("/seller/:productId", auth, productController.deleteProduct);
+router.get("/seller/:sellerId", auth, productController.getProductBySellerId);
 
 export default router;

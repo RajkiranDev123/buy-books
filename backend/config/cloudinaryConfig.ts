@@ -26,17 +26,17 @@ const multerMiddleware: RequestHandler = multer({
 
 // ✅ Upload + delete local file
 // There is no await inside the function, so you don't need async.
-const uploadToCloudinary = ( file: Express.Multer.File ): Promise<UploadApiResponse> => {
-  
+
+const uploadToCloudinary = (
+  file: Express.Multer.File,
+): Promise<UploadApiResponse> => {
   const options: UploadApiOptions = {
     resource_type: "image",
     folder: "buy_books",
   };
 
   return new Promise((resolve, reject) => {
-
     cloudinary.uploader.upload(file.path, options, (error, result) => {
-
       // ✅ delete file (important)
       if (file.path && fs.existsSync(file.path)) {
         fs.unlinkSync(file.path);
@@ -47,13 +47,11 @@ const uploadToCloudinary = ( file: Express.Multer.File ): Promise<UploadApiRespo
       } else {
         resolve(result as UploadApiResponse);
       }
-
     });
   });
-
 };
 
-export { multerMiddleware, uploadToCloudinary };
+export { multerMiddleware, uploadToCloudinary }; // same as export const multerMiddleware = ...
 
 // With memoryStorage: Client → Multer (RAM) → Cloudinary → Done ✅ ==> RAM is temporary storage managed by the runtime (Node.js + OS).
 // With disk storage: Client → Multer (Disk) → Cloudinary → Delete file ❗

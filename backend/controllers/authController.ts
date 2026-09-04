@@ -156,7 +156,7 @@ export const login = async (req: Request, res: Response) => {
 
 ////////////////////////////////////////////////////////////////////////////
 // generate resetPasswordToken and resetPasswordExpires and save in db.
-// send mail the link of fe url 
+// send mail the link of fe url : `${process.env.FRONTEND_URL}/reset-password/${token}`;
 export const forgotPassword = async (req: Request, res: Response) => {
   try {
 
@@ -199,7 +199,7 @@ export const resetPassword = async (req: Request, res: Response) => {
     const user = await User.findOne({
 
       resetPasswordToken: token,
-      resetPasswordExpires: { $gt: Date.now() } // Find a user whose resetPasswordExpires date is greater than the current time.
+      resetPasswordExpires: { $gt: Date.now() } // Find a user whose resetPasswordExpires date is greater than the current time (now).
      
     });
 
@@ -215,6 +215,7 @@ export const resetPassword = async (req: Request, res: Response) => {
     await user.save(); // remove resetPasswordToken & resetPasswordExpires & save password
 
     return response(res, 200, "Password reset done.");
+    
   } catch (error) {
     // console.log(error)
     return response(res, 500, "Internal Server Error");
