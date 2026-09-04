@@ -4,11 +4,13 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const transporter = nodemailer.createTransport({
+
   service: "gmail",
   auth: {
     user: process.env.SMTP_MAIL,
     pass: process.env.SMTP_PASSWORD,
   },
+
 });
 
 // transporter.verify() makes an SMTP request/connection. It contacts Gmail's SMTP server to check:
@@ -16,12 +18,14 @@ const transporter = nodemailer.createTransport({
 // verify() does not send an email. It only tests the transporter configuration/connection.
 
 transporter.verify((error, success) => {
+
   if (error) {
     console.log(" email error ==>", error.message);
     console.log("Gmail service is not ready, please check the config.");
   } else {
     console.log("Gmail service is ready to send the mail.");
   }
+
 });
 
 const sendEmail = async (to: string, subject: string, body: string) => {
@@ -49,9 +53,9 @@ export const sendVerificationToEmail = async (to: string, verificationToken: str
 
   const html = `
 
-  <h1>Welcome to Buy Books! Verify your email.</h1>
-  <p>Thanks for registering. Please click the link below to verify your email</p>
-  <a href="${verificationUrl}">Verify your Email Here</a>
+  <h1> Welcome to Buy Books! Verify your email. </h1>
+  <p> Thanks for registering. Please click the link below to verify your email.</p>
+  <a href="${verificationUrl}"> Verify your Email Here. </a>
 
   `;
 
@@ -65,8 +69,9 @@ export const sendVerificationToEmail = async (to: string, verificationToken: str
 export const sendResetPasswordLinkToEmail = async ( to: string, token: string) => {
 
   const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${token}`;
+  
   const html = `
-  <h1>Welcome to your Buy Books! Reset your Password.</h1>
+  <h1>Welcome to your Buy Books! if you forgot your password you can Reset your password now.</h1>
   <p>Click the link below to reset your password</p>
   <a href="${resetUrl}">Reset Password Here</a>
   `;

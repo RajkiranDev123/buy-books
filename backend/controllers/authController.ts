@@ -28,7 +28,7 @@ export const register = async (req: Request, res: Response) => {
     if (existingUser) {
       return response(res, 400, "User already exists.");
     }
-    
+
     const verificationToken = crypto.randomBytes(10).toString("hex");
 
     const user = new User({
@@ -93,13 +93,15 @@ export const verifyEmail = async (req: Request, res: Response) => {
 
     user.isVerified = true;
     user.verificationToken = undefined;
+    // user.verificationToken = 2; // Type 'number' is not assignable to type 'string'.
+
 
     const accessToken = generateToken(user);
 
     // res.cookie(name, value, options);
     res.cookie("access_token", accessToken, {
       httpOnly: true, // JavaScript (browser) cannot access it
-      maxAge: 24 * 60 * 60 * 1000,
+      maxAge: 6 * 24 * 60 * 60 * 1000, // 6 days
     });
 
     // httpOnly ==>	JS cannot access cookie : true/false
@@ -107,7 +109,8 @@ export const verifyEmail = async (req: Request, res: Response) => {
     // sameSite	==> Controls cross-site sending : strict , lax and none
 
     await user.save();
-    return response(res, 200, "Email Verified, You can use Buy Books now.");
+
+    return response(res, 200, "Email is Verified, You can use Buy Books now.");
 
   } catch (error) {
     return response(res, 500, "Internal Server Error");
@@ -118,51 +121,69 @@ export const verifyEmail = async (req: Request, res: Response) => {
 
 export const login = async (req: Request, res: Response) => {
   try {
+
     const { email, password } = req.body;
     const user = await User.findOne({ email });
 
     if (!user || !(await user?.comparePassword(password))) {
       return response(res, 400, "Invalid email or password.");
     }
+
     if (!user.isVerified) {
-      return response(res, 400, "Plz verify email , check your inbox.");
+      return response(res, 400, "Please verify your email first , check your inbox.");
     }
 
     const accessToken = generateToken(user);
+
     res.cookie("access_token", accessToken, {
       httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000,
+      maxAge: 6 * 24 * 60 * 60 * 1000,
     });
 
-    return response(res, 200, "You are logged in.", {
+    return response(res, 200, "You are logged in.", 
+    { 
       user: { name: user.name, email: user.email },
-    });
+    }
+    );
+
   } catch (error) {
+
     console.log(error);
     return response(res, 500, "Internal Server Error");
+
   }
 };
 
 ////////////////////////////////////////////////////////////////////////////
-// generate resetPasswordToken and resetPasswordExpires
-// send mail
+// generate resetPasswordToken and resetPasswordExpires and save in db.
+// send mail the link of fe url 
 export const forgotPassword = async (req: Request, res: Response) => {
   try {
+
     const { email } = req.body;
+
     const user = await User.findOne({ email: email });
+
     if (!user) {
       return response(res, 404, "No account found with this email address.");
     }
+
     const resetPasswordToken = crypto.randomBytes(10).toString("hex");
+
     user.resetPasswordToken = resetPasswordToken;
+
     user.resetPasswordExpires = new Date(Date.now() + 3600000); // 1 hour from the current time
-    await user.save(); //save resetPasswordToken and resetPasswordExpires
+
+    await user.save(); 
 
     await sendResetPasswordLinkToEmail(user.email, resetPasswordToken);
 
     return response(res, 200, "Password reset link sent to your email.");
+
   } catch (error) {
+
     return response(res, 500, "Internal Server Error");
+
   }
 };
 
@@ -170,27 +191,32 @@ export const forgotPassword = async (req: Request, res: Response) => {
 
 export const resetPassword = async (req: Request, res: Response) => {
   try {
+
     const { token } = req.params;
+
     const { newPassword } = req.body;
+
     const user = await User.findOne({
+
       resetPasswordToken: token,
-      resetPasswordExpires: { $gt: Date.now() },
-      // Expiry time (resetPasswordExpires): 2:00 PM
-      // Current time: 1:30 PM → ✅ valid (2:00 > 1:30)
+      resetPasswordExpires: { $gt: Date.now() } // Find a user whose resetPasswordExpires date is greater than the current time.
+     
     });
+
     if (!user) {
       return response(res, 400, "Invalid or expired reset password token.");
     }
 
     user.password = newPassword;
+
     user.resetPasswordToken = undefined;
-    // Remove the field (unset it)” : undefined
-    // We don’t even need the field anymore
     user.resetPasswordExpires = undefined;
+
     await user.save(); // remove resetPasswordToken & resetPasswordExpires & save password
 
     return response(res, 200, "Password reset done.");
   } catch (error) {
+    // console.log(error)
     return response(res, 500, "Internal Server Error");
   }
 };
@@ -199,34 +225,47 @@ export const resetPassword = async (req: Request, res: Response) => {
 
 export const logout = async (req: Request, res: Response) => {
   try {
+
     res.clearCookie("access_token", {
       httpOnly: true,
     });
+
     return response(res, 200, "logout done");
+
   } catch (error) {
+
     return response(res, 500, "Internal Server Error");
   }
 };
 
 ////////////////////////////////////////////////////
 export const checkUserAuth = async (req: Request, res: Response) => {
+
   try {
+
     const userId = req.id;
+
     if (!userId) {
       // 401 Unauthorized → user not logged in / no token
       return response(res, 401, "Not authenticated , Please login to access. ");
     }
+
     const user = await User.findById(userId).select(
       "-password -verificationToken -resetPasswordToken -resetPasswordExpires",
     );
+
     if (!user) {
       return response(res, 404, "User not found.");
       // 404 , Not Found , Resource doesn’t exist
       // 403 = authenticated but forbidden
     }
+
     return response(res, 200, "User retreived successfully", user);
+
   } catch (error) {
+
     return response(res, 500, "Internal Server Error");
+    
   }
 };
 

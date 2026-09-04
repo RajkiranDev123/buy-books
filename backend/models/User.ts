@@ -67,7 +67,9 @@ userSchema.pre("save", async function () {
 // If password is actually undefined at runtime : your app will crash.
 
 userSchema.methods.comparePassword = async function ( candidatePassword: string ): Promise<boolean> {
+
   return bcrypt.compare(candidatePassword, this.password);
+  
 };
 
 // user is an instance of your Mongoose model (a document from the User collection).
