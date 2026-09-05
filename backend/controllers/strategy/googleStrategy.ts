@@ -18,7 +18,7 @@ import User, { IUSER } from "../../models/User";
 
 dotenv.config();
 
-// new GoogleStrategy(options, verifyCallback)
+// passport.use( new GoogleStrategy(options, verifyCallback) )
 // The verify callback runs only after Google successfully authenticates the user and redirects back to your app.
 // passReqToCallback: true is used when authentication depends on request-specific data in addition to Google profile data.
 
@@ -80,8 +80,9 @@ passport.use(
       } catch (error) {
         done(error);
       }
-    },
-  ),
+    }
+
+  )
 );
 
 export default passport;

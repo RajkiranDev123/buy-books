@@ -41,6 +41,7 @@ const userSchema = new Schema<IUSER>(
     addresses: [{ type: Schema.Types.ObjectId, ref: "Address" , default: undefined }],
     // user can have multiple Address documents, and addresses stores their MongoDB IDs.
     // if i do await User.create({   name: "John",  email: "john@gmail.com" }) then in db no ==> address:[]
+    // if addresses was single doc then ==>  addresses: { type: Schema.Types.ObjectId, ref: "Address" , default: undefined }
   },
   { timestamps: true },
 );

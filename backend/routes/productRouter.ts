@@ -5,11 +5,15 @@ import { multerMiddleware } from "../config/cloudinaryConfig";
 
 const router = Router();
 
+
+// app.use("/api/v1/product", productRoutes);
+
 router.post("/", auth, multerMiddleware, productController.createProduct);
+
 router.get("/", auth, productController.getAllProducts);
 router.get("/:id", auth, productController.getProductById);
 
 router.delete("/seller/:productId", auth, productController.deleteProduct);
-router.get("/seller/:sellerId", auth, productController.getProductBySellerId);
+router.get("/seller/:sellerId", auth, productController.getProductsBySellerId);
 
 export default router;
