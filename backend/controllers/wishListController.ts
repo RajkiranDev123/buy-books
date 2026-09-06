@@ -10,7 +10,6 @@ export const addToWishList = async (req: Request, res: Response) => {
 
     const { productId } = req.body;
 
-
     const product = await Products.findById(productId);
     if (!product) {
       return response(res, 404, "Product not found");
@@ -29,7 +28,7 @@ export const addToWishList = async (req: Request, res: Response) => {
 
     return response(res, 200, "Product added to wishList", wishList);
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return response(res, 500, "Internal Server Error");
   }
 };
@@ -37,9 +36,9 @@ export const addToWishList = async (req: Request, res: Response) => {
 export const removeFromWishList = async (req: Request, res: Response) => {
   try {
     const userId = req.id;
- 
+
     const { productId } = req.params;
-  
+
     let wishList = await WishList.findOne({ user: userId });
 
     if (!wishList) {
