@@ -5,7 +5,9 @@ import { auth } from "../middleware/authMiddleware";
 const router = Router();
 
 router.post("/add", auth, cartController.addToCart);
-router.delete("/remove/:productId", auth, cartController.removeFromCart);
+
+router.delete("/remove/:productId", auth, cartController.removeItemFromCart);
+
 router.get("/:userId", auth, cartController.getCartByUser);
 
 export default router;

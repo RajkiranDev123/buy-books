@@ -6,28 +6,26 @@ import User from "../models/User";
 export const createOrUpdateAddressByUserId = async ( req: Request, res: Response) => {
 
   try {
+
     const userId = req.id;
 
     const { addressLine1, addressLine2, phoneNumber, city, state, pincode, addressId } = req.body;
+    // console.log(req.body)
 
     if (!userId) {
-      return response(res, 400, "user not found, plz provide a valid id");
+      return response(res, 400, "user not found, please provide a valid id.");
     }
-    if (
-      !addressLine1 || !addressLine2 || !phoneNumber || !city || !state || !pincode
-    ) {
-      return response(
-        res,
-        400,
-        "plz enter all values to create a new address.",
-      );
+
+    if ( !addressLine1 || !addressLine2 || !phoneNumber || !city || !state || !pincode ) {
+      return response( res, 400, "please enter all values to create a new address.");
     }
+
     if (addressId) {
 
       const existingAddress = await Address.findById(addressId);
 
       if (!existingAddress) {
-        return response(res, 400, "Address not found");
+        return response(res, 400, "Address not found.");
       }
 
       existingAddress.addressLine1 = addressLine1;
@@ -38,9 +36,11 @@ export const createOrUpdateAddressByUserId = async ( req: Request, res: Response
       existingAddress.pincode = pincode;
 
       await existingAddress.save();
+
       return response( res, 200, "Address updated successfully.", existingAddress );
 
     } else {
+
       const newAddress = new Address({ user: userId, addressLine1, addressLine2, phoneNumber, city, state, pincode });
       await newAddress.save();
       await User.findByIdAndUpdate(
@@ -50,7 +50,12 @@ export const createOrUpdateAddressByUserId = async ( req: Request, res: Response
         },
         { new: true },
       );
-      return response(res, 200, "User address created.", newAddress);
+
+      // newAddress._id  // ObjectId("68abc123...")
+      // newAddress.id   // "68abc123..."
+
+      return response(res, 201, "User address created.", newAddress);
+
     }
   } catch (error) {
     console.log(error);

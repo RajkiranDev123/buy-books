@@ -77,7 +77,7 @@ export const getOrderByUser = async (req: Request, res: Response) => {
       })
       .populate("shippingAddress");
     if (order?.length === 0) {
-      // find returns empty array [] not ==> null 
+      // find returns empty array [] not ==> null
       // Because .find() is designed to return multiple documents
       return response(res, 404, "order not found");
     }
