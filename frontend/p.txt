@@ -1,3 +1,6 @@
+
+---------------------------------------------
+
 PS C:\Users\HP\OneDrive\Desktop\AI\clones\buy books\frontend> npx create-next-app@latest
 √ What is your project named? ... ./
 √ Would you like to use the recommended Next.js defaults? » No, customize settings
@@ -12,11 +15,10 @@ PS C:\Users\HP\OneDrive\Desktop\AI\clones\buy books\frontend> npx create-next-ap
 
 --------------------------
 
-
 npx shadcn@latest init
 √ Which color would you like to use as the base color? » Neutral
 
-------
+-------------------------------
 
 npx shadcn@latest add accordion
 npx shadcn@latest add avatar   
@@ -36,13 +38,14 @@ npx shadcn@latest  add card
 npx shadcn@latest add checkbox
 
 
---------
+--------------------------
 
  npm i @reduxjs/toolkit
 
  npm i react-redux    
 
- ----------
+ -------------------------
+
 PS C:\Users\HP\OneDrive\Desktop\AI\clones\buy books> git config user.name "RajkiranDev123"
 PS C:\Users\HP\OneDrive\Desktop\AI\clones\buy books> git config user.email "rajtech645@gmail.com"  
 
@@ -51,7 +54,7 @@ If you want it for all repositories on your machine, use the --global flag:==>
 git config --global user.name "RajkiranDev123"
 
 
-----
+--------------------------------------------
 
 npm i redux-persist
 
@@ -66,20 +69,20 @@ npx shadcn@latest add badge
 npx shadcn@latest add radio-group
 npx shadcn@latest add scroll-area
 
- npx shadcn@latest add dialog
+npx shadcn@latest add dialog
 npx shadcn@latest add tabs  
 
-  npm i react-form-hook
-   npm i react-hook-form
-    npm i react-web-share
+npm i react-form-hook
+npm i react-hook-form
+npm i react-web-share
 
 
 
-  npm i @hookform/resolvers
+npm i @hookform/resolvers
 
-  npx shadcn@latest add form   
+npx shadcn@latest add form   
 
-   npm i canvas-confetti
-   npm i --save-dev @types/canvas-confetti
+npm i canvas-confetti
+npm i --save-dev @types/canvas-confetti
 
-     npx shadcn@latest add separator   
+npx shadcn@latest add separator   

@@ -5,7 +5,7 @@ import { Provider } from "react-redux";
 import { store, persistor } from "@/store/store";
 import { PersistGate } from "redux-persist/integration/react";
 // It delays rendering your app until Redux state is restored (rehydrated) from storage.
-// 
+
 import BookLoader from "@/lib/BookLoader";
 import AuthCheck from "@/store/Provider/AuthProvider";
 
@@ -16,7 +16,6 @@ const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
         <Toaster />
         {/* { children }  =   <Header /> , {children} , <Footer /> */}
         <AuthCheck>{children}</AuthCheck>
-
       </PersistGate>
     </Provider>
   );

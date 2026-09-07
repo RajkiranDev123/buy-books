@@ -12,33 +12,30 @@ const razorpay = new Razorpay({
 
 export const createOrUpdateOrder = async (req: Request, res: Response) => {
   try {
-    console.log(876756453, req.body);
     const userId = req.id;
-    const {
-      orderId,
-      shippingAddress,
-      paymentMethod,
-      totalAmount,
-      paymentDetails,
-    } = req.body;
 
-    const cart = await CartItems.findOne({ user: userId }).populate(
-      "items.product",
-    );
+    const { orderId, shippingAddress, paymentMethod, totalAmount, paymentDetails } = req.body;
+
+    const cart = await CartItems.findOne({ user: userId }).populate( "items.product");
+
     if (!cart || cart.items.length === 0) {
-      return response(res, 400, "cart is empty");
+      return response(res, 400, "cart is empty.");
     }
+
     let order = await Order.findOne({ _id: orderId });
+
     if (order) {
       order.shippingAddress = shippingAddress || order.shippingAddress;
       order.paymentMethod = paymentMethod || order.paymentMethod;
       order.totalAmount = totalAmount || order.totalAmount;
+
       if (paymentDetails) {
         order.paymentDetails = paymentDetails;
         order.paymentStatus = "complete";
         order.status = "processing";
       }
     } else {
+
       order = new Order({
         user: userId,
         items: cart.items,
@@ -48,8 +45,11 @@ export const createOrUpdateOrder = async (req: Request, res: Response) => {
         paymentDetails,
         paymentStatus: paymentDetails ? "completed" : "pending",
       });
+      
     }
+
     await order.save();
+
     if (paymentDetails) {
       await CartItems.findOneAndUpdate(
         {
@@ -58,16 +58,16 @@ export const createOrUpdateOrder = async (req: Request, res: Response) => {
         { $set: { items: [] } },
       );
     }
-    return response(res, 200, "order created/updated successfully", order);
+
+    return response(res, 200, "order created/updated successfully.", order);
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return response(res, 500, "Internal Server Error");
   }
 };
 
 export const getOrderByUser = async (req: Request, res: Response) => {
   try {
-    console.log(78);
     const userId = req.id;
     const order = await Order.find({ user: userId })
       .sort({ createdAt: -1 })

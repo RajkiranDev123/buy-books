@@ -244,7 +244,6 @@ export default function Home() {
                   <p className="text-gray-600 text-sm grow">
                     {step.description}
                   </p>
-                  
                 </div>
               ))}
             </div>

@@ -2,8 +2,10 @@ import mongoose, { Document, Schema } from "mongoose";
 import { IADDRESS } from "./Address";
 
 export interface IOrderItem extends Document {
+  
   product: mongoose.Types.ObjectId;
   quantity: number;
+
 }
 
 export interface IOrder extends Document {
