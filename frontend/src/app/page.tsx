@@ -29,7 +29,8 @@ export default function Home() {
   const blogPosts = [
     {
       imageSrc:
-        "https://images.unsplash.com/photo-1604866830893-c13cafa515d5?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8b25saW5lJTIwc2VsbCUyMGJvb2tzfGVufDB8fDB8fHww",
+        `https://images.unsplash.com/photo-1604866830893-c13cafa515d5?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=
+        M3wxMjA3fDB8MHxzZWFyY2h8NHx8b25saW5lJTIwc2VsbCUyMGJvb2tzfGVufDB8fDB8fHww`,
       title: "Where and how to sell old books online?",
       description:
         "Get started with selling your used books online and earn money from your old books.",
@@ -37,7 +38,8 @@ export default function Home() {
     },
     {
       imageSrc:
-        "https://media.istockphoto.com/id/910384920/photo/kid-reading-near-locked-door.webp?a=1&b=1&s=612x612&w=0&k=20&c=J3FL4ZVORItw_bkLzlVo4WO-xUy22S7Qqbuq2xusNnc=",
+        `https://media.istockphoto.com/id/910384920/photo/kid-reading-near-locked-door.webp?a=1
+        &b=1&s=612x612&w=0&k=20&c=J3FL4ZVORItw_bkLzlVo4WO-xUy22S7Qqbuq2xusNnc=`,
       title: "What to do with old books?",
       description:
         "Learn about different ways to make use of your old books and get value from them.",
@@ -45,7 +47,8 @@ export default function Home() {
     },
     {
       imageSrc:
-        "https://images.unsplash.com/photo-1492539438225-2666b2a98f93?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fG9sZCUyMCUyMGJvb2tzfGVufDB8fDB8fHww",
+        `https://images.unsplash.com/photo-1492539438225-2666b2a98f93?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3
+        &ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fG9sZCUyMCUyMGJvb2tzfGVufDB8fDB8fHww`,
       title: "What is BookKart?",
       description:
         "Discover how BookKart helps you buy and sell used books online easily.",
@@ -99,16 +102,20 @@ export default function Home() {
       icon: <Truck className="h-8 w-8 text-primary" />,
     },
   ];
+
   const [currentImage, setCurrentImage] = useState(0);
+
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentImage((prev) => (prev + 1) % bannerImages.length);
     }, 3000);
     return () => clearInterval(timer);
   }, []);
+
   return (
     <>
       <main className="min-h-screen">
+
         {/* section 1 */}
         <section className="relative  h-[600px] overflow-hidden rounded-xs">
           {bannerImages?.map((image, index) => (
@@ -177,6 +184,7 @@ export default function Home() {
         {/* section 2 starts : newly added books and explore all books button*/}
 
         <section>
+
           <NewBooks />
 
           {/* mb-10 → pushes next element down
@@ -193,13 +201,16 @@ export default function Home() {
               Box 3 */}
 
           <Button className="flex mt-10 mb-10 mx-auto bg-yellow-500 px-8 py-6 rounded-xl cursor-pointer">
+
             <Link href={"/books"}>
               <div className="text-sm"> Explore All Books</div>
             </Link>
+            
           </Button>
+
         </section>
 
-        {/* section 2 starts : newly added books and explore all books button*/}
+        {/* section 2 ends : newly added books and explore all books button*/}
 
         {/* section 3 : how to sell your old books online*/}
 
@@ -250,7 +261,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* section 3 : how to sell your old books online ends*/}
+        {/* section 3 ends : how to sell your old books online ends*/}
 
         {/*how to buy old books online : section 4 */}
 
@@ -383,6 +394,7 @@ export default function Home() {
         </section>
 
         {/* read from our post ends: last section 5*/}
+
       </main>
     </>
   );

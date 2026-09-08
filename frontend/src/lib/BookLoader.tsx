@@ -2,8 +2,11 @@
 
 export default function BookLoader() {
   return (
+    
     <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-gray-300 bg-opacity-80 backdrop-blur-md">
+      
       <div className="flex flex-col items-center">
+
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 200 200"
@@ -39,10 +42,13 @@ export default function BookLoader() {
         <p className="mt-6 text-xl font-semibold text-gray-700">
           Loading Books...
         </p>
+        
         <p className="mt-2 text-sm text-gray-500">
           Your next favorite read is on its way!
         </p>
+
       </div>
+
     </div>
   );
 }

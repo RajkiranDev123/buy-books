@@ -132,16 +132,18 @@ const page = () => {
   const paymentMode = watch("paymentMode");
 
   const handleOpenLogin = () => {
+
     dispatch(toggleLoginDialog());
   };
+
   if (!user) {
     return (
       <>
         <NoData
-          message="Please log in to access!"
-          description="You need to be logged in to add books"
+          message="Please log in to Sell Used Books!"
+          description="You need to be logged in to sell used books."
           ButtonText="Login"
-          imageUrl="/images/login.jpg"
+          imageUrl="/images/login.webp"
           onClick={handleOpenLogin}
         />
       </>

@@ -63,14 +63,10 @@ const page = () => {
   const cart = useSelector((state: RootState) => state.cart);
   const [showAddressDialog, setShowAddressDialog] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
-  const { data: cartData, isLoading: isCartLoading } = useGetCartQuery(
-    user?._id,
-  );
+  const { data: cartData, isLoading: isCartLoading } = useGetCartQuery(user?._id);
 
   const [createOrUpdateOrder] = useCreateOrUpdateOrderMutation();
-  const { data: orderData, isLoading: isOrderLoading } = useGetOrderByIdQuery(
-    orderId || "",
-  );
+  const { data: orderData, isLoading: isOrderLoading } = useGetOrderByIdQuery(orderId || "");
 
   const [createRazorPayPayment] = useCreateRazorpayPaymentMutation();
   const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
@@ -196,16 +192,19 @@ const page = () => {
 
   const handlePayment = async () => {
     if (!orderId) {
-      toast.error("No rorder id found ");
+      toast.error("No order id found. ");
       return;
     }
+
     setIsProcessing(true);
+
     try {
       const { data, error } = await createRazorPayPayment(orderId);
       if (error) {
         throw new Error("failed to create razor pay order");
       }
       const razorpayOrder = data.data.order;
+
       const options = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY,
         amount: razorpayOrder.amount,
@@ -251,8 +250,9 @@ const page = () => {
 
       const razorpay = new window.Razorpay(options);
       razorpay.open();
+
     } catch (error) {
-      toast.error("failed to initiate payment. plz try againm");
+      toast.error("failed to initiate payment. plz try again");
     } finally {
       setIsProcessing(false);
     }
@@ -277,9 +277,9 @@ const page = () => {
     return (
       <NoData
         message="Please Login to access your cart"
-        description="You need to be loggged in to view your cart"
+        description="You need to be loggged in to view your cart."
         ButtonText="Login"
-        imageUrl="/images/login.jpg"
+        imageUrl="/images/login.webp"
         onClick={handleLoginClick}
       />
     );

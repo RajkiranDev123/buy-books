@@ -34,15 +34,17 @@ npx shadcn@latest add separator
 npx shadcn@latest add sheet  
 npx shadcn@latest add textarea
 npx shadcn@latest add tabs 
-npx shadcn@latest  add card
+npx shadcn@latest add card
 npx shadcn@latest add checkbox
+npx shadcn@latest add dialog
 
 
 --------------------------
 
  npm i @reduxjs/toolkit
-
- npm i react-redux    
+ npm i react-redux  
+ npm i redux-persist  
+ npm i --save-dev @types/redux-persist
 
  -------------------------
 
@@ -53,36 +55,18 @@ If you want it for all repositories on your machine, use the --global flag:==>
 
 git config --global user.name "RajkiranDev123"
 
-
 --------------------------------------------
-
-npm i redux-persist
-
-npm i --save-dev @types/redux-persist
 
 npm i react-hot-toast
 npm i date-fns
-npx shadcn@latest add select  
 npm i framer-motion
-npx shadcn@latest add badge
-npx shadcn@latest add badge
-npx shadcn@latest add radio-group
-npx shadcn@latest add scroll-area
-
-npx shadcn@latest add dialog
-npx shadcn@latest add tabs  
-
 npm i react-form-hook
 npm i react-hook-form
 npm i react-web-share
 
-
-
 npm i @hookform/resolvers
-
-npx shadcn@latest add form   
 
 npm i canvas-confetti
 npm i --save-dev @types/canvas-confetti
 
-npx shadcn@latest add separator   
+ 

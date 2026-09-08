@@ -10,27 +10,43 @@
 // Explicit : "use client"
 
 import { useEffect, useState } from "react";
+
 import { useVerifyAuthMutation } from "../api";
+
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../store";
+
+// import { RootState } from "../store";
+
 import BookLoader from "@/lib/BookLoader";
+
 import { logout, setEmailVerified, setUser } from "../slice/userSlice";
 
 export default function AuthCheck({ children }: { children: React.ReactNode }) {
-  const [verifyAuth, { isLoading }] = useVerifyAuthMutation();
-  console.log("Auth Check : isLoading  ==>", isLoading);
-  // useVerifyAuthMutation hook returns : [ triggerFunction,{isLoading,isSuccess,isError,data,error}=resultObject]
-  // Query = auto : Runs automatically when component loads ,  mutation ==> we have to call manually
-  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
-  const dispatch = useDispatch();
-  //
-  const user = useSelector((state: RootState) => state.user.user);
-  const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
 
-  //Check if user is logged in / token valid
+  const [verifyAuth, { isLoading }] = useVerifyAuthMutation();
+  // false → mutation is not currently running and true → verifyAuth() request is currently running 
+  // When the verifyAuth() request finishes, isLoading becomes false again.
+  // initially ==> false
+
+  // useVerifyAuthMutation hook returns : [ triggerFunction , {isLoading , isSuccess , isError , data, error } = resultObject ]
+  // use...Query() = Runs automatically when component loads ,  mutation ==> we have to call manually
+
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+
+  const dispatch = useDispatch();
+  
+  // const user = useSelector((state: RootState) => state.user.user);
+
+
+  // Check if user is logged in / token valid
+
   const checkAuth = async () => {
+
     try {
+
       const response = await verifyAuth({}).unwrap();
+      // {} ==> I'm calling the mutation, but I have no data to send.
+      // no .unwrap() ==> RTK Query returns its result object instead of directly giving you the response data.
 
       if (response.success) {
         dispatch(setUser(response.data));
@@ -47,18 +63,12 @@ export default function AuthCheck({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     checkAuth();
-    // if (!user && isLoggedIn) {
-    //   checkAuth();
-    // }
   }, [verifyAuth, dispatch]);
 
   if (isLoading || isCheckingAuth) {
-    // if isLoading == true then stop , or ==> any 1 true then true
-    // return stops the AuthCheck component function execution, not the whole app.
-    // this block runs when :
-    // API is running (isLoading = true)
-    // OR auth check not finished (isCheckingAuth = true)
     return <BookLoader />;
+    // return does not remove/unmount a component from React's component tree.
+    // only when navigation to another component or when condition is like ==> { false && <AuthCheck/> }
   }
 
   return <>{children}</>;

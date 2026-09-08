@@ -158,13 +158,17 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setIsLoginOpen }) => {
   };
 
   return (
+    
     <Dialog open={isLoginOpen} onOpenChange={setIsLoginOpen}>
-      <DialogContent className="sm:max-w-[425px] p-6  mt-8">
+
+      <DialogContent className="mt-5">
+
         <DialogHeader>
           <DialogTitle className="text-center text-2xl font-bold mb-4">
             Welcome to Buy Books!
           </DialogTitle>
         </DialogHeader>
+
         {/* tabs start */}
         <Tabs
           value={currentTab}
@@ -172,10 +176,13 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setIsLoginOpen }) => {
             setCurrenttab(value as "login" | "signup" | "forgot")
           }
         >
-          <TabsList className="grid w-full grid-cols-3 mb-6">
-            <TabsTrigger value="login">Login</TabsTrigger>
+
+          <TabsList className="grid w-full md:grid-cols-3 mb-15 bg-white">
+
+            <TabsTrigger className="" value="login">Login</TabsTrigger>
             <TabsTrigger value="signup">Sign Up</TabsTrigger>
             <TabsTrigger value="forgot">Forgot Password ?</TabsTrigger>
+
           </TabsList>
 
           <AnimatePresence mode="wait">
@@ -477,7 +484,7 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setIsLoginOpen }) => {
         </Tabs>
         {/* tabs ends */}
 
-        {/* privacy policy etc starts */}
+        {/* privacy policy etc starts : common for all tabs */}
         <p className="text-sm mt-2 text-center text-gray-600">
           By Clicking 'agree' , you agree to our{" "}
           <Link
@@ -494,7 +501,8 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setIsLoginOpen }) => {
             Privacy Policy
           </Link>
         </p>
-        {/* privacy policy etc starts */}
+        {/* privacy policy etc ends */}
+
       </DialogContent>
     </Dialog>
   );

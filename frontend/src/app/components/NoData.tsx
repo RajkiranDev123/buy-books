@@ -37,7 +37,7 @@ const NoData: React.FC<NoDataProps> = ({
       {onClick && (
         <button
           onClick={onClick}
-          className="px-6 w-60 py-3 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-300 
+          className="px-6 w-60 py-3 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-300 cursor-pointer
         text-white font-medium rounded-xl shadow-lg hover:shadow-xl hover:scale-105
          transform transition duration-300 ease-in-out"
         >
