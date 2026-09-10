@@ -1,30 +1,11 @@
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader , DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Base_URL,
-  useForgotPasswordMutation,
-  useLoginMutation,
-  useRegisterMutation,
-} from "@/store/api";
+import { Base_URL, useForgotPasswordMutation, useLoginMutation, useRegisterMutation } from "@/store/api";
 import { authStatus, toggleLoginDialog } from "@/store/slice/userSlice";
 import { AnimatePresence, motion } from "framer-motion";
-import {
-  CheckCircle,
-  Copy,
-  Eye,
-  EyeOff,
-  Loader2,
-  Lock,
-  Mail,
-  User,
-} from "lucide-react";
+import { CheckCircle,Copy,Eye,EyeOff,Loader2,Lock,Mail,User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -35,26 +16,30 @@ import { useDispatch } from "react-redux";
 
 interface LoginProps {
   isLoginOpen: boolean;
-  setIsLoginOpen: (open: boolean) => void;
+  setIsLoginOpen: () => void;
 }
+
 interface LoginFormData {
   email?: string;
   password?: string;
 }
+
 interface SignupFormData {
   email: string;
   name: string;
   password: string;
   agreeTerms: boolean;
 }
+
 interface ForgotPasswordFormData {
   email: string;
 }
+
 const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setIsLoginOpen }) => {
+
   const dispatch = useDispatch();
-  const [currentTab, setCurrenttab] = useState<"login" | "signup" | "forgot">(
-    "login",
-  );
+
+  const [currentTab, setCurrenttab] = useState<"login" | "signup" | "forgot">("login");
   const [showPassword, setShowPassword] = useState(false);
   const [forgotPasswordSuccess, setForgotPasswordSuccess] = useState(false);
   const [loginLoading, setLoginLoading] = useState(false);
@@ -65,32 +50,49 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setIsLoginOpen }) => {
   const [register] = useRegisterMutation();
   const [login] = useLoginMutation();
   const [forgotPassword] = useForgotPasswordMutation();
+
   const router = useRouter();
 
   // login
-  const {
-    register: registerLogin,
-    handleSubmit: handleLoginSubmit,
-    formState: { errors: loginError },
-  } = useForm<LoginFormData>();
+  const { register: registerLogin, handleSubmit: handleLoginSubmit, formState: { errors: loginError } } = useForm<LoginFormData>();
+
+  // registerLogin → register/track an input & store its value under the key email etc
+  // handleLoginSubmit passes the form data to your callback function (submits the tracked data)
+
+//   const user = {
+//   name: "Rahul",
+//   address: {
+//     city: "Kolkata",
+//     pin: 700001
+//   }
+// };
+
+// const { address: { city } } = user;  // nested destructuring.
+
+// why useForm<LoginFormData>() ?
+// <input {...register("username")} />
+// will give a TypeScript error because username isn't in LoginFormData.
 
   // signup
   const {
     register: registerSignup,
     handleSubmit: handleSignUpSubmit, // it validates your form before calling onSubmitSignUp
-    formState: { errors: signUpError },
+    formState: { errors: signUpError }
   } = useForm<SignupFormData>();
 
   // forgot Password
   const {
     register: registerForgotPassword,
     handleSubmit: handleForgotPasswordSubmit,
-    formState: { errors: forgotPasswordError },
+    formState: { errors: forgotPasswordError }
   } = useForm<ForgotPasswordFormData>();
 
   const onSubmitSignUp = async (data: SignupFormData) => {
+
     setSignupLoading(true);
+
     try {
+
       const { email, password, name } = data;
       const result = await register({ email, password, name }).unwrap();
       if (result.success) {
@@ -101,11 +103,12 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setIsLoginOpen }) => {
         router.push("/");
       }
     } catch (error: any) {
-      toast.error(error?.data?.message || "Something went wrong");
+      toast.error(error?.data?.message || "Something went wrong.");
     } finally {
       setSignupLoading(false);
     }
   };
+
   const onSubmitLogin = async (data: LoginFormData) => {
     setLoginLoading(true);
     try {
@@ -139,23 +142,12 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setIsLoginOpen }) => {
     }
   };
 
-  const handleGoogleLogin = async () => {
-    setGoogleLoading(true);
-    try {
-      router.push(`${Base_URL}/auth/google`);
-      dispatch(authStatus());
-      dispatch(toggleLoginDialog());
-      setTimeout(() => {
-        toast.success("Google login done.");
-        setIsLoginOpen(false);
-        router.push("/");
-      }, 3000);
-    } catch (error: any) {
-      toast.error(error?.data?.message || "Something went wrong");
-    } finally {
-      setGoogleLoading(false);
-    }
-  };
+  const handleGoogleLogin = () => {
+
+  setGoogleLoading(true);
+  window.location.href = `${Base_URL}/auth/google`;
+  
+};
 
   return (
     
@@ -164,30 +156,31 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setIsLoginOpen }) => {
       <DialogContent className="mt-5">
 
         <DialogHeader>
-          <DialogTitle className="text-center text-2xl font-bold mb-4">
+          <DialogTitle className="text-center text-2xl font-bold mb-4 text-black/70">
             Welcome to Buy Books!
           </DialogTitle>
         </DialogHeader>
 
         {/* tabs start */}
+
         <Tabs
           value={currentTab}
-          onValueChange={(value) =>
-            setCurrenttab(value as "login" | "signup" | "forgot")
-          }
+          onValueChange={(value) => setCurrenttab(value as "login" | "signup" | "forgot") }
         >
 
-          <TabsList className="grid w-full md:grid-cols-3 mb-15 bg-white">
+          <TabsList className="grid w-full md:grid-cols-3 mb-15 gap-1 bg-white">
 
-            <TabsTrigger className="" value="login">Login</TabsTrigger>
+            <TabsTrigger value="login">Login</TabsTrigger>
             <TabsTrigger value="signup">Sign Up</TabsTrigger>
             <TabsTrigger value="forgot">Forgot Password ?</TabsTrigger>
 
           </TabsList>
 
           <AnimatePresence mode="wait">
+
             {/* Without mode="wait" ==> Old component goes out , New component comes in , Both happen together */}
             {/* motion can do exit animation, but only AnimatePresence lets it run */}
+
             <motion.div
               key={currentTab}
               initial={{ opacity: 0, y: 20 }}
@@ -195,45 +188,54 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setIsLoginOpen }) => {
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
             >
-              {/* login tab */}
+
+              {/* login tabs content */}
+
               <TabsContent value="login" className="space-y-4">
-                <form
-                  onSubmit={handleLoginSubmit(onSubmitLogin)}
-                  className="space-y-4"
-                >
+
+                <form onSubmit={handleLoginSubmit(onSubmitLogin)} className="space-y-4">
+
                   <div className="flex gap-4 items-center">
                     Test Email{" "}
+
                     <Copy
                       onClick={() => {
-                        navigator.clipboard.writeText("rajtech645@gmail.com"); // ✅ fixed email
+                        navigator.clipboard.writeText("rajtech645@gmail.com"); 
                         toast.success("Email copied!");
                       }}
                       className="cursor-pointer animate-pulse"
                       size={18}
                     />
+
                   </div>
+
                   <div className="relative">
+
                     <Input
+
                       {...registerLogin("email", {
-                        required: "Email is Required",
+                        required: "Email is Required.",
                       })}
+
                       placeholder="Email"
                       type="email"
                       className="pl-10"
                     />
+
                     <Mail
-                      className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                      className="absolute left-3 top-1/2  -translate-y-1/2 text-gray-500"
                       size={20}
                     />
+
                   </div>
-                  {loginError.email && (
-                    <p className="text-red-500 text-sm">
-                      {loginError.email.message}
-                    </p>
-                  )}
+
+                  {loginError.email && ( <p className="text-red-500 text-sm"> {loginError.email.message} </p> )}
+
                   {/* passowrd */}
                   <div className="flex gap-4 items-center">
+
                     Test Password{" "}
+
                     <Copy
                       onClick={() => {
                         navigator.clipboard.writeText("raj"); // ✅ fixed email
@@ -242,39 +244,49 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setIsLoginOpen }) => {
                       className="cursor-pointer animate-pulse"
                       size={18}
                     />
+
                   </div>
+
                   <div className="relative">
+
                     <Input
+
                       {...registerLogin("password", {
-                        required: "Password is Required",
+                        required: "Password is Required.",
                       })}
+
                       placeholder="Password"
                       type={showPassword ? "text" : "password"}
                       className="pl-10"
                     />
+
                     <Lock
                       className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
                       size={20}
                     />
+
                     {showPassword ? (
-                      <EyeOff
+                      <Eye
                         onClick={() => setShowPassword(false)}
                         className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
                         size={20}
                       />
                     ) : (
-                      <Eye
+                      <EyeOff
                         onClick={() => setShowPassword(true)}
                         className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
                         size={20}
                       />
                     )}
+
                   </div>
+
                   {loginError.password && (
                     <p className="text-red-500 text-sm">
                       {loginError.password.message}
                     </p>
                   )}
+
                   <Button type="submit" className="w-full font-bold">
                     {loginLoading ? (
                       <Loader2 className="animate-spin mr-2" size={20} />
@@ -282,7 +294,9 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setIsLoginOpen }) => {
                       "Login"
                     )}
                   </Button>
+
                 </form>
+
                 <div className="flex items-center my-4">
                   <div className="flex-1 h-px bg-gray-300"></div>
                   <p className="mx-2 text-gray-500 text-sm">Or</p>
@@ -292,7 +306,7 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setIsLoginOpen }) => {
                 <Button
                   onClick={handleGoogleLogin}
                   className="w-full flex items-center justify-center gap-2 bg-white text-gray-700 border
-                   border-gray-300 hover:bg-gray-50"
+                border-gray-300 hover:bg-gray-50"
                 >
                   {googleLoading ? (
                     <>
@@ -300,19 +314,26 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setIsLoginOpen }) => {
                     </>
                   ) : (
                     <>
+
                       <Image
                         src={"/icons/google.svg"}
                         alt="google"
                         width={20}
                         height={20}
                       />
+
                       Login with Google
                     </>
                   )}
+
                 </Button>
+                
               </TabsContent>
-              {/* login tab ends */}
-              {/* signup tab starts*/}
+
+              {/* login tabs content ends */}
+
+              {/* signup tabs content starts*/}
+
               <TabsContent value="signup" className="space-y-4">
                 <form
                   onSubmit={handleSignUpSubmit(onSubmitSignUp)}
@@ -371,13 +392,13 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setIsLoginOpen }) => {
                       size={20}
                     />
                     {showPassword ? (
-                      <EyeOff
+                      <Eye
                         onClick={() => setShowPassword(false)}
                         className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
                         size={20}
                       />
                     ) : (
-                      <Eye
+                      <EyeOff
                         onClick={() => setShowPassword(true)}
                         className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
                         size={20}
@@ -417,11 +438,13 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setIsLoginOpen }) => {
                   </Button>
                 </form>
               </TabsContent>
+
               {/* signup tab ends*/}
 
               {/* forgot password tab starts */}
 
               <TabsContent value="forgot" className="space-y-4">
+
                 {!forgotPasswordSuccess ? (
                   <form
                     className="space-y-4"
@@ -480,31 +503,44 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setIsLoginOpen }) => {
 
               {/* forgot password tab ends */}
             </motion.div>
+
           </AnimatePresence>
+
         </Tabs>
+
         {/* tabs ends */}
 
         {/* privacy policy etc starts : common for all tabs */}
-        <p className="text-sm mt-2 text-center text-gray-600">
+
+        {currentTab == "signup" && <p className="text-sm mt-2 text-center text-gray-600">
+
           By Clicking 'agree' , you agree to our{" "}
-          <Link
+
+          <Link onClick={setIsLoginOpen}
             href={"/terms-of-use"}
             className="text-blue-500 hover:underline"
           >
             Terms of Use ,
           </Link>
-          <Link
+
+          <Link onClick={setIsLoginOpen}
             href={"/privacy-policy"}
             className="text-blue-500 hover:underline"
           >
             {" "}
             Privacy Policy
           </Link>
-        </p>
+
+        </p>}
+
         {/* privacy policy etc ends */}
 
       </DialogContent>
+
+      {/* dialog content ends */}
+
     </Dialog>
+
   );
 };
 

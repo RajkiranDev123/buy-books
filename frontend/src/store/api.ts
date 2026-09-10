@@ -207,6 +207,7 @@ export const api = createApi({
     }),
 
     // wishlist endpoints
+    
     addToWishlist: builder.mutation({
       query: (productId) => ({
         url: API_URLS.ADD_TO_WISHLIST,

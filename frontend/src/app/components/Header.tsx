@@ -181,7 +181,7 @@ const Header = () => {
     {
       icon: <Heart className="h-5 w-5" />,
       label: "My Wishlist",
-      onclick: () => handleProtectionNavigation("account/wishlist"),
+      onclick: () => handleProtectionNavigation("/account/wishlist"),
     },
     {
       icon: <User2 className="h-5 w-5" />,

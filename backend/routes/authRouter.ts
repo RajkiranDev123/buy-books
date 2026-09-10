@@ -36,8 +36,7 @@ router.get(
   }),
 );
 
-// http://localhost:8000/api/v1/auth/google/callback ==> from  (google cloud console)
-// Complete Google login => triggers GoogleStrategy => done() => req.user
+
 
 router.get(
   "/google/callback",

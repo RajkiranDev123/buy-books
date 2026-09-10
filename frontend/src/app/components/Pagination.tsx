@@ -8,13 +8,11 @@ interface PaginationProps {
   onPageChange: (page: number) => void;
 }
 
-const Pagination: React.FC<PaginationProps> = ({
-  currentPage,
-  totalPages,
-  onPageChange,
-}) => {
+const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPageChange }) => {
+
   return (
     <div className="flex items-center justify-center gap-2">
+
       <Button
         variant={"outline"}
         size={"icon"}
@@ -23,16 +21,18 @@ const Pagination: React.FC<PaginationProps> = ({
       >
         <ChevronLeft className="h-4 w-4"/>
       </Button>
+
       {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
         <Button
           key={page}
           variant={currentPage === page ? "default" : "outline"}
-          className={currentPage === page ? "bg-blue-500 text-black" : ""}
+          className={currentPage === page ? "bg-blue-400 text-white cursor-pointer hover:bg-blue-500" : ""}
           onClick={() => onPageChange(page)}
         >
           {page}
         </Button>
       ))}
+
       <Button
         variant={"outline"}
         size={"icon"}
@@ -41,6 +41,7 @@ const Pagination: React.FC<PaginationProps> = ({
       >
         <ChevronRight className="h-4 w-4"/>
       </Button>
+      
     </div>
   );
 };

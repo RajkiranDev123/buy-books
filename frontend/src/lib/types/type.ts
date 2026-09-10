@@ -1,4 +1,5 @@
 export interface BookDetails {
+
   _id: string;
   title: string;
   images: string[];
@@ -23,6 +24,7 @@ export interface BookDetails {
     };
   };
   createdAt: Date;
+  
 }
 
 export interface UserData {

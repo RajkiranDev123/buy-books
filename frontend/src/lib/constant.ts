@@ -1,3 +1,4 @@
+
 export const books = [
   {
     _id: "1",
@@ -236,13 +237,16 @@ export const books = [
 ];
 
 export const filters = {
+  
   condition: ["Excellent", "Good", "Fair"],
+
   category: [
     "College Books (Higher Education Textbooks)",
     "Exam/Test Preparation Books",
     "Reading Books (Novels, Children, Business, Literature, History, etc.)",
     "School Books (up to 12th)",
   ],
+
   classType: [
     "B.Tech",
     "B.Sc",
@@ -261,4 +265,5 @@ export const filters = {
     "6th",
     "5th",
   ],
+
 };

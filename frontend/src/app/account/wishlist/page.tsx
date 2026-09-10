@@ -34,12 +34,14 @@ const page = () => {
   const [isAddToCart, setIsAddToCart] = useState(false);
   const wishlist = useSelector((state: RootState) => state.wishlist.items);
   const cart = useSelector((state: RootState) => state.cart.items);
+  const userId = useSelector((state: RootState) => state.user.user._id);
 
-  const { data: wishlistData, isLoading } = useGetWishlistQuery({});
+  const { data: wishlistData, isLoading } = useGetWishlistQuery(userId);
 
   const [wishlistItems, setWishlistItems] = useState<BookDetails[]>([]);
   useEffect(() => {
     if (wishlistData?.success) {
+      
       setWishlistItems(wishlistData?.data?.products);
     }
   }, [wishlistData]);
@@ -122,7 +124,7 @@ const page = () => {
               <CardDescription>rs {item.finalPrice.toFixed(2)}</CardDescription>
             </CardHeader>
             <CardContent>
-              <Image
+              <Image width={100} height={100}
                 className="aspect-square w-full object-cover"
                 src={item.images[0]}
                 alt={item.title}

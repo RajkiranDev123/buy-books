@@ -23,11 +23,11 @@ const NoData: React.FC<NoDataProps> = ({
           alt="no data"
           width={320}
           height={320}
-          className="shadow-md hover:shadow-lg transition duration-300"
+          className="shadow-md hover:shadow-lg transition duration-300 rounded-md"
         />
       </div>
       <div className="text-center max-w-md space-y-2">
-        <p className="text-2xl font-bold text-gray-900 tracking-wide">
+        <p className="text-2xl font-bold text-gray-500 tracking-wide">
           {message}
         </p>
         <p className="text-base text-gray-600 leading-relaxed ">
