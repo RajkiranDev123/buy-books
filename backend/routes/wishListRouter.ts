@@ -10,4 +10,5 @@ router.delete("/remove/:productId", auth, wishListController.removeFromWishList)
 
 router.get("/:userId", auth, wishListController.getWishListByUser);
 
+
 export default router;

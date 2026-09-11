@@ -82,12 +82,14 @@ export const getWishListByUser = async (req: Request, res: Response) => {
     );
 
     if (!wishList) {
-      return response(res, 404, "wishList is Empty.", { Products: [] });
+      return response(res, 404, "WishList is Empty.", { Products: [] });
     }
 
-    return response(res, 200, "wishList  fetched.", wishList);
+    return response(res, 200, "WishList  fetched.", wishList);
 
   } catch (error) {
     return response(res, 500, "Internal Server Error");
   }
 };
+
+
