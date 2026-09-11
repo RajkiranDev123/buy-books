@@ -109,9 +109,9 @@ const page = () => {
 
   const handleAddToWishList = async (productId: string) => {
     try {
-      const isWishlist = wishlist.some((item) =>
-        item.products.includes(productId),
-      );
+     const isWishlist = wishlist.some((item) =>
+  item.products.some((product) => product._id === productId)
+);
       console.log("wlkjhgf", wishlist);
       if (isWishlist) {
         const result = await removeWishlistMutation(productId).unwrap();

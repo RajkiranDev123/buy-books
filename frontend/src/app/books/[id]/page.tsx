@@ -42,6 +42,8 @@ const page = () => {
 
   const wishlist = useSelector((state: RootState) => state.wishlist.items);
 
+
+
   const { data: apiResponse = {}, isLoading, isError } = useGetProductByIdQuery(id);
 
   useEffect(() => {
@@ -80,7 +82,7 @@ const page = () => {
   const handleAddToWishList = async (productId: string) => {
 
     try {
-      const isWishlist = wishlist.some((item) => item.products.includes(productId) );
+      const isWishlist = wishlist.some((item) => item.products.some((product) => product._id === productId) );
 
       if (isWishlist) {
         const result = await removeWishlistMutation(productId).unwrap();
@@ -259,12 +261,12 @@ const page = () => {
                   onClick={() => handleAddToWishList(book._id)}
                 >
                   <Heart
-                    className={`h-4 w-4 mr-1 ${wishlist.some((w) => w.products.includes(book._id)) ? "fill-red-500 border-red-500"  : ""}`}
+                    className={`h-4 w-4 mr-1 ${wishlist.some((w) =>   w.products.some((product) => product._id === book._id) ) ? "fill-red-500 border-red-500"  : ""}`}
                   />
 
                   <span className="hidden md:inline">
                      {/* items : [  { _id : "1" , products : ["kjhggc", "kjhgfd"] } , { _id : "1" , products : ["kjhggc", "kjhgfd"] }  ] */}
-                    {wishlist.some((w) => w.products.includes(book._id))
+                    {wishlist.some((w) =>   w.products.some((product) => product._id === book._id) )
                       ? "Remove"
                       : "Add"}
 

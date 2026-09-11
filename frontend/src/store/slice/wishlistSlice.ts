@@ -1,13 +1,19 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+interface WishlistProduct {
+  _id: string;
+  title: string;
+  category: string;
+  condition: string;
+}
+
 interface WishlistItem {
   _id: string;
-  products: string[]; // array of string id's
+  products: WishlistProduct[];
 }
 
 interface WishlistState {
   items: WishlistItem[];
-  // items : [ { _id : "1" , products : ["kjhggc", "kjhgfd"] } ]
 }
 
 const initialState: WishlistState = {
@@ -15,13 +21,12 @@ const initialState: WishlistState = {
 };
 
 const wishlistSlice = createSlice({
-
+  
   name: "wishlist",
   initialState, // is state inside reducer
 
   reducers: {
-
-    setWishlist: (state, action: PayloadAction<any>) => {
+    setWishlist: (state, action: PayloadAction<WishlistItem[]>) => {
       state.items = action.payload;
     },
 
@@ -30,27 +35,35 @@ const wishlistSlice = createSlice({
     },
 
     addToWishlistAction: (state, action: PayloadAction<WishlistItem>) => {
+      const existingItemIndex = state.items.findIndex(
+        (item) => item._id === action.payload._id,
+      );
 
-      const existingItemIndex = state.items.findIndex( (item) => item._id === action.payload._id );
-
-      if (existingItemIndex !== -1) { // UPDATE  ==> -1 !== -1 ==> true
+      if (existingItemIndex !== -1) {
+        // UPDATE  ==> -1 !== -1 ==> true
         state.items[existingItemIndex] = action.payload;
       } else {
         state.items.push(action.payload);
       }
-
     },
 
     removeFromWishListAction: (state, action: PayloadAction<string>) => {
-
-      state.items = state.items.map( item => ( { ...item, products: item.products.filter( productId => productId !== action.payload ) } ) )
-      .filter((item) => item.products.length > 0)
-      // outside filter() runs on the resulting array of map.
-      // In filter ,  If no items pass the condition, it returns an empty array []
+      state.items = state.items
+        .map((item) => ({
+          ...item,
+          products: item.products.filter(
+            (product) => product._id !== action.payload,
+          ),
+        }))
+        .filter((item) => item.products.length > 0);
     },
-
-  }
+  },
 });
 
-export const { setWishlist, clearWishlist, addToWishlistAction, removeFromWishListAction } = wishlistSlice.actions;
+export const {
+  setWishlist,
+  clearWishlist,
+  addToWishlistAction,
+  removeFromWishListAction,
+} = wishlistSlice.actions;
 export default wishlistSlice.reducer;

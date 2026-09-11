@@ -37,10 +37,11 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import AuthPage from "./AuthPage";
-import { useGetCartQuery, useLogoutMutation } from "@/store/api";
+import { useGetCartQuery, useGetWishlistQuery, useLogoutMutation } from "@/store/api";
 import toast from "react-hot-toast";
 
 import { setCart } from "@/store/slice/cartSlice";
+import { setWishlist} from "@/store/slice/wishlistSlice";
 
 const Header = () => {
 
@@ -64,7 +65,7 @@ const Header = () => {
   const cartItemCount = useSelector( (state: RootState) => state.cart.items.length  )
 
 
-
+  const { data: wishlistData } = useGetWishlistQuery(user?._id, { skip: !user });
 
 
   const userPlaceholder = user?.name
@@ -85,7 +86,13 @@ const Header = () => {
     if (cartData?.success && cartData?.data) {
       dispatch(setCart(cartData.data));
     }
-  }, [cartData, dispatch]);
+
+    if(wishlistData?.success){
+   
+      dispatch(setWishlist([ wishlistData?.data]))
+    }
+ 
+  }, [cartData, dispatch, wishlistData]);
 
   const handleLoginClick = () => {
     dispatch(toggleLoginDialog());

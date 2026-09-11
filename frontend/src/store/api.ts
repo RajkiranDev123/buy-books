@@ -227,6 +227,7 @@ export const api = createApi({
       query: (userId) => API_URLS.WISHLIST(userId),
       providesTags: ["Wishlist"],
     }),
+    
     // order
     getUserOrders: builder.query({
       query: () => API_URLS.ORDERS,

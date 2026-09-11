@@ -6,11 +6,18 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
+interface WishlistProduct {
+  _id: string;
+  title: string;
+  category: string;
+  condition: string;
+}
+
 interface CartItemsProps {
   items: CartItem[];
   onRemoveItem: (productId: string) => void;
   onToggleWishlist: (productId: string) => void;
-  wishlist: { products: string[] }[];
+  wishlist: { products: WishlistProduct[] }[];
 }
 // “wishlist is an array of objects”
 // [
@@ -72,13 +79,21 @@ const CartItems: React.FC<CartItemsProps> = ({
                 size={"sm"}
                 onClick={() => onToggleWishlist(item.product._id)}
               >
-                <Heart
-                  className={`h-4 w-4 mr-1 ${wishlist.some((w) => w.products.includes(item.product._id)) ? "fill-red-500" : ""}`}
-                />
+            <Heart
+  className={`h-4 w-4 mr-1 ${
+    wishlist.some((w) =>
+      w.products.some((product) => product._id === item.product._id)
+    )
+      ? "fill-red-500"
+      : ""
+  }`}
+/>
                 <span className="hidden md:inline">
-                  {wishlist.some((w) => w.products.includes(item.product._id))
-                    ? "Remove from wishlist"
-                    : "Add to wishlist"}
+                {wishlist.some((w) =>
+  w.products.some((product) => product._id === item.product._id)
+)
+  ? "Remove from wishlist"
+  : "Add to wishlist"}
                 </span>
               </Button>
             </div>

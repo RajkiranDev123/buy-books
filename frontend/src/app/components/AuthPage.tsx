@@ -123,7 +123,7 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setIsLoginOpen }) => {
     } catch (error: any) {
       toast.error(error?.data?.message || "Something went wrong");
     } finally {
-      setLoginLoading(false);
+      setLoginLoading(false)
     }
   };
 
