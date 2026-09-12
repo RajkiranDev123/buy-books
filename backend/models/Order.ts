@@ -8,12 +8,14 @@ export interface IOrderItem extends Document {
 
 }
 
+
 export interface IOrder extends Document {
   _id: mongoose.Types.ObjectId;
   user: mongoose.Types.ObjectId;
   items: IOrderItem[];
   totalAmount: number;
   shippingAddress: mongoose.Types.ObjectId | IADDRESS;
+  // This means shippingAddress can hold either an ObjectId or a full IADDRESS object.
   paymentStatus: "pending" | "complete" | "failed";
   paymentMethod: string;
   paymentDetails: {

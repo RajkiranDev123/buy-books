@@ -205,11 +205,7 @@ const Header = () => {
       label: "Privacy Policy",
       href: "/privacy-policy",
     },
-    {
-      icon: <HelpCircle className="h-5 w-5" />,
-      label: "Help",
-      href: "/how-it-works",
-    },
+
     ...(user
       ? [
           {

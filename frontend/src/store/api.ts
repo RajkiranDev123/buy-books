@@ -184,7 +184,9 @@ export const api = createApi({
       }),
       invalidatesTags: ["Product"],
     }),
-    // cart
+
+    // cart ===========================>
+
     addToCart: builder.mutation({
       query: (productData) => ({
         url: API_URLS.ADD_TO_CART,
@@ -193,6 +195,7 @@ export const api = createApi({
       }),
       invalidatesTags: ["Cart"],
     }),
+
     removeFromCart: builder.mutation({
       query: (productId) => ({
         url: API_URLS.REMOVE_FROM_CART(productId),
@@ -206,7 +209,7 @@ export const api = createApi({
       providesTags: ["Cart"],
     }),
 
-    // wishlist endpoints
+    // wishlist endpoints ========================>
     
     addToWishlist: builder.mutation({
       query: (productId) => ({
@@ -228,11 +231,13 @@ export const api = createApi({
       providesTags: ["Wishlist"],
     }),
     
-    // order
+    // order =========================>
+
     getUserOrders: builder.query({
       query: () => API_URLS.ORDERS,
       providesTags: ["Order"],
     }),
+    
     getOrderById: builder.query({
       query: (orderId) => API_URLS.ORDER_BY_ID(orderId),
       providesTags: ["Order"],
@@ -254,7 +259,9 @@ export const api = createApi({
         body: { orderId },
       }),
     }),
-    //address
+
+    //address ===========================>
+
     getAddress: builder.query<any[], void>({
       query: () => API_URLS.GET_ADDRESS,
       providesTags: ["Address"],
@@ -266,8 +273,10 @@ export const api = createApi({
         body: address,
       }),
       invalidatesTags: ["Address"],
-    }),
-  }),
+    })
+
+  })
+
 });
 
 export const {

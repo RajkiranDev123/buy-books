@@ -12,6 +12,7 @@ export interface ICart extends Document {
   items: ICartItem[];
 }
 
+// cartItemSchema is a subdocument schema, Mongoose automatically adds _id
 const cartItemSchema = new Schema<ICartItem>({
   product: { type: Schema.Types.ObjectId, ref: "Product", required: true },
   quantity: { type: Number, required: true, min: 1 },

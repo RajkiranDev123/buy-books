@@ -1,48 +1,26 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { RootState } from "@/store/store";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  useAddToWishlistMutation,
-  useCreateOrUpdateOrderMutation,
-  useCreateRazorpayPaymentMutation,
-  useGetCartQuery,
-  useGetOrderByIdQuery,
-  useRemoveFromCartMutation,
-  useRemoveFromWishlistMutation,
+
+import { useAddToWishlistMutation, useCreateOrUpdateOrderMutation, useCreateRazorpayPaymentMutation,
+  useGetCartQuery, useGetOrderByIdQuery, useRemoveFromCartMutation, useRemoveFromWishlistMutation,
 } from "@/store/api";
-import {
-  addToWishlistAction,
-  removeFromWishListAction,
-} from "@/store/slice/wishlistSlice";
+
+import { addToWishlistAction, removeFromWishListAction } from "@/store/slice/wishlistSlice";
 import toast from "react-hot-toast";
 import { clearCart, setCart } from "@/store/slice/cartSlice";
 import NoData from "@/app/components/NoData";
 import { toggleLoginDialog } from "@/store/slice/userSlice";
 import { ChevronRight, CreditCard, MapPin, ShoppingCart } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import CartItems from "@/app/components/CartItems";
 import PriceDetails from "@/app/components/PriceDetails";
 import { Address } from "@/lib/types/type";
-import {
-  resetCheckout,
-  setCheckoutStep,
-  setOrderId,
-} from "@/store/slice/checkoutSlice";
+import { resetCheckout, setCheckoutStep, setOrderId } from "@/store/slice/checkoutSlice";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import CheckoutAddress from "@/app/components/CheckoutAddress";
 import BookLoader from "@/lib/BookLoader";
 import Script from "next/script";
@@ -54,38 +32,47 @@ declare global {
 }
 
 const page = () => {
+
   const router = useRouter();
   const dispatch = useDispatch();
-  const user = useSelector((state: RootState) => state.user.user);
+  
+  // useSelector subscribes the component to the selected Redux value. 
+  // If that selected value changes, the component re-renders.
+  // It is not async. It reads the Redux state synchronously.
 
+  // useSelector : redux state ==> user , orderId , step , wishlist , cart 
+  const user = useSelector((state: RootState) => state.user.user);
   const { orderId, step } = useSelector((state: RootState) => state.checkout);
   const wishlist = useSelector((state: RootState) => state.wishlist.items);
   const cart = useSelector((state: RootState) => state.cart);
+
+  // component state
   const [showAddressDialog, setShowAddressDialog] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
-  const { data: cartData, isLoading: isCartLoading } = useGetCartQuery(user?._id);
-
-  const [createOrUpdateOrder] = useCreateOrUpdateOrderMutation();
-  const { data: orderData, isLoading: isOrderLoading } = useGetOrderByIdQuery(orderId || "");
-
-  const [createRazorPayPayment] = useCreateRazorpayPaymentMutation();
   const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
 
-  useEffect(() => {
-    if (orderData && orderData.shippingAddress) {
-      setSelectedAddress(orderData.shippingAddress);
-    }
-  }, [orderData]);
+  // fetch
+  const { data: cartData, isLoading: isCartLoading } = useGetCartQuery(user?._id);
 
-  useEffect(() => {
-    if (step === "address" && !selectedAddress) {
-      setShowAddressDialog(true);
-    }
-  }, [step, selectedAddress]);
+  const { data: orderData, isLoading: isOrderLoading } = useGetOrderByIdQuery(orderId || "" , { skip: !orderId ,   refetchOnMountOrArgChange: true });
 
-  const [removeCartMutation] = useRemoveFromCartMutation();
+
+  // mutations
+  const [createOrUpdateOrder] = useCreateOrUpdateOrderMutation();
+  const [createRazorPayPayment] = useCreateRazorpayPaymentMutation();
+  const [removeCartMutation] = useRemoveFromCartMutation(); // add to cart is already done in /books/jhgf678
   const [addWishlistMutation] = useAddToWishlistMutation();
   const [removeWishlistMutation] = useRemoveFromWishlistMutation();
+
+
+  useEffect(() => {
+    
+    if (orderData && orderData.data.shippingAddress) {
+      
+      setSelectedAddress(orderData.data.shippingAddress);
+   
+    }
+  }, [orderData])
 
   useEffect(() => {
     if (cartData?.success && cartData?.data) {
@@ -93,6 +80,15 @@ const page = () => {
     }
   }, [cartData, dispatch]);
 
+  useEffect(() => {
+    // "address" && !null ==> "address" && true ==> true
+    if (step === "address" && !selectedAddress) {
+      setShowAddressDialog(true);
+    }
+  }, [step, selectedAddress]);
+
+
+  // remove item from cart
   const handleRemoveItem = async (productId: string) => {
     try {
       const result = await removeCartMutation(productId).unwrap();
@@ -107,12 +103,13 @@ const page = () => {
     }
   };
 
+  // toggle WishList 
   const handleAddToWishList = async (productId: string) => {
+
     try {
-     const isWishlist = wishlist.some((item) =>
-  item.products.some((product) => product._id === productId)
-);
-      console.log("wlkjhgf", wishlist);
+
+     const isWishlist = wishlist.some( item => item.products.some((product) => product._id === productId ) );
+      
       if (isWishlist) {
         const result = await removeWishlistMutation(productId).unwrap();
         if (result.success) {
@@ -137,40 +134,30 @@ const page = () => {
     }
   };
 
-  const handleLoginClick = () => {
-    dispatch(toggleLoginDialog());
-  };
+  const handleLoginClick = () => { dispatch(toggleLoginDialog()) };
 
-  const totalAmount = cart.items.reduce(
-    (acc, item) => acc + item.product.finalPrice * item.quantity,
-    0,
-  );
-  const totalOriginalAmount = cart.items.reduce(
-    (acc, item) => acc + item.product.price * item.quantity,
-    0,
-  );
+  const totalAmount = cart.items.reduce( (acc, item) => acc + item.product.finalPrice * item.quantity, 0 );
+
+  const totalOriginalAmount = cart.items.reduce( (acc, item) => acc + item.product.price * item.quantity, 0);
   const totalDiscount = totalOriginalAmount - totalAmount;
 
   const shippingCharge = cart.items.map((item) =>
-    item.product.shippingCharge.toLowerCase() === "Free"
-      ? 0
-      : parseFloat(item.product.shippingCharge) || 0,
-  );
+    item.product.shippingCharge.toLowerCase() === "Free"  ? 0 : parseFloat(item.product.shippingCharge) || 0
+   // parseFloat("abc25") // NaN and NaN is falsey , parseFloat("99.50") // 99.5 , o ommited
+  )
 
   const maximumShippingCharge = Math.max(...shippingCharge, 0);
-  const finalAmount = totalAmount - maximumShippingCharge;
+  const finalAmount = totalAmount + maximumShippingCharge;
 
   const handleProceedToCheckout = async () => {
+
     if (step === "cart") {
       try {
      
-
-        const result = await createOrUpdateOrder({
-          updates: {  totalAmount: totalAmount },
-        }).unwrap();
+        const result = await createOrUpdateOrder({ updates: {  totalAmount: totalAmount } }).unwrap();
 
         if (result.success) {
-          toast.success("Order created successfully");
+          toast.success("Order created successfully.");
           dispatch(setOrderId(result.data._id));
           dispatch(setCheckoutStep("address"));
         } else {
@@ -180,11 +167,13 @@ const page = () => {
         toast.error("Failed to create order");
       }
     } else if (step === "address") {
+
       if (selectedAddress) {
         dispatch(setCheckoutStep("payment"));
       } else {
         setShowAddressDialog(true);
       }
+
     } else if (step === "payment") {
       handlePayment();
     }
@@ -273,11 +262,12 @@ const page = () => {
     }
   };
 
+  // when user is not logged in
   if (!user) {
     return (
       <NoData
-        message="Please Login to access your cart"
-        description="You need to be loggged in to view your cart."
+        message="Please Login to access your cart."
+        description="You need to be logged in to view your cart."
         ButtonText="Login"
         imageUrl="/images/login.webp"
         onClick={handleLoginClick}
@@ -285,13 +275,14 @@ const page = () => {
     );
   }
 
+  // when cart is empty
   if (cart.items.length === 0) {
     return (
       <NoData
-        message="Your Cart is empty"
-        description="Looks like you have not added any items yet. Explore our collection and find something you love"
+        message="Your Cart is empty."
+        description="Looks like you have not added any items yet. Explore our collection and find something you love."
         ButtonText="Browse Books"
-        imageUrl="/images/cart.webp"
+        imageUrl="/images/cart.avif"
         onClick={() => router.push("/books")}
       />
     );
@@ -303,23 +294,43 @@ const page = () => {
 
   return (
     <>
+      {/* <script> tag is used to add or load JavaScript in a web page */}
+      {/* <script src="app.js" defer></script> */}
+      {/* Download the Js while HTML is being parsed, but execute it after HTML parsing is finished. */}
+      {/* An SDK is external software/code provided by another company or developer that your application can use : checkout.js */}
       <Script
         id="razorpay-checkout-js"
         src="https://checkout.razorpay.com/v1/checkout.js"
       />
+
       <div className="min-h-screen bg-white">
-        <div className="bg-gray-100 py-4 px-6 mb-8">
+
+        {/* 1 item in your cart */}
+        <div className="bg-gray-100 py-2 px-6 mb-4">
+
           <div className="container mx-auto flex items-center">
+          
             <ShoppingCart className="h-6 w-6 mr-2 text-gray-600" />
+
             <span className="text-lg font-semibold text-gray-600">
-              {cart.items.length} {cart.items.length === 1 ? "item" : "items"}
-              in your cart
+              {cart.items.length} {cart.items.length === 1 ? "item" : "items"}{" "} in your cart.
             </span>
+
           </div>
+
         </div>
+        {/* 1 item in your cart ends */}
+
+
         <div className="container mx-auto px-4 max-w-6xl">
-          <div className="mb-8">
+
+          {/* cart , address and payment */}
+
+          <div className="mb-4">
+
             <div className="flex justify-center items-center gap-4">
+
+             {/* cart */}
               <div className="flex items-center gap-2">
                 <div
                   className={`rounded-full p-3 ${step === "cart" ? "bg-blue-600 text-gray-200" : "bg-gray-200 text-gray-600"}`}
@@ -329,7 +340,9 @@ const page = () => {
                 <span className="font-medium hidden md:inline">Cart</span>
               </div>
               <ChevronRight className="h-5 w-5 text-gray-400" />
-              {/*  */}
+
+              {/* address */}
+
               <div className="flex items-center gap-2">
                 <div
                   className={`rounded-full p-3 ${step === "address" ? "bg-blue-600 text-gray-200" : "bg-gray-200 text-gray-600"}`}
@@ -340,9 +353,9 @@ const page = () => {
               </div>
               <ChevronRight className="h-5 w-5 text-gray-400" />
 
-              {/*  */}
+              {/* payment */}
 
-              {/*  */}
+            
               <div className="flex items-center gap-2">
                 <div
                   className={`rounded-full p-3 ${step === "payment" ? "bg-blue-600 text-gray-200" : "bg-gray-200 text-gray-600"}`}
@@ -353,28 +366,49 @@ const page = () => {
               </div>
 
               {/*  */}
+
             </div>
+
           </div>
-          {/*  */}
+
+          {/* cart , address and payment ends */}
+
+
           <div className="grid gap-8 lg:grid-cols-3">
-            <div className="lg:col-span-2">
+
+            {/* cart items */}
+
+            {/* lg:col-span-2 : take 2 cols of those 3 cols and price details 1 col*/}
+            {/* in md and below single col : You did not specify a number of columns for md and Tailwind classes are mobile-first */}
+            <div className="lg:col-span-2"> 
+            
               <Card className="shadow-lg ">
+
                 <CardHeader>
-                  <CardTitle className="text-2xl">Order Summary</CardTitle>
-                  <CardDescription>Review your items</CardDescription>
+                  <CardTitle className="text-2xl text-black/70">Order Summary</CardTitle>
+                  <CardDescription>Review your items.</CardDescription>
                 </CardHeader>
+
                 <CardContent>
+
                   <CartItems
                     items={cart.items}
                     onRemoveItem={handleRemoveItem}
                     onToggleWishlist={handleAddToWishList}
                     wishlist={wishlist}
                   />
+
                 </CardContent>
+
               </Card>
+
             </div>
-            {/*  */}
+            {/* cart items ends */}
+
+            {/* price details and address starts */}
+
             <div>
+
               <PriceDetails
                 totalOriginalAmount={totalOriginalAmount}
                 totalAmount={finalAmount}
@@ -390,28 +424,31 @@ const page = () => {
                   )
                 }
               />
+
               {/* address */}
 
               {selectedAddress && (
+
                 <Card className="mt-6 mb-6 shadow-lg">
+
                   <CardHeader>
                     <CardTitle className="text-xl">Delivery Address</CardTitle>
                   </CardHeader>
 
                   <CardContent>
+
                     <div className="space-y-1">
+
                       <p>{selectedAddress?.addressLine1}</p>
-                      {selectedAddress?.addressLine2 && (
-                        <p>{selectedAddress?.addressLine2}</p>
-                      )}
 
-                      <p>
-                        {selectedAddress.city} , {selectedAddress?.state}{" "}
-                        {selectedAddress?.pincode}
-                      </p>
+                      {selectedAddress?.addressLine2 && ( <p>{selectedAddress?.addressLine2}</p> )}
 
-                      <p>Phone : {selectedAddress?.phoneNumber}</p>
+                      <p> {selectedAddress.city} , {selectedAddress?.state}{" "} {selectedAddress?.pincode} </p>
+
+                      <p> Phone : {selectedAddress?.phoneNumber} </p>
+
                     </div>
+
                     <Button
                       className="mt-4"
                       variant={"outline"}
@@ -419,35 +456,47 @@ const page = () => {
                     >
                       <MapPin className="mr-2 w-4 h-4" /> Change Address
                     </Button>
+
                   </CardContent>
+
                 </Card>
+
               )}
 
               {/* address */}
+
             </div>
 
-            {/*  */}
+            {/* price details and address ends */}
+            
+
           </div>
 
-          {/* dialog */}
+          {/* dialog starts */}
 
           <Dialog open={showAddressDialog} onOpenChange={setShowAddressDialog}>
+
             <DialogContent className="sm:max-w-[600px]">
+
               <DialogHeader>
                 <DialogTitle>Select or Add Delivery Address</DialogTitle>
               </DialogHeader>
+
               <CheckoutAddress
                 onAddressSelect={handleSelectAddress}
                 selectedAddressId={selectedAddress?._id}
               />
             </DialogContent>
+
           </Dialog>
 
-          {/* dialog */}
+          {/* dialog ends */}
 
-          {/*  */}
+     
         </div>
+
       </div>
+
     </>
   );
 };

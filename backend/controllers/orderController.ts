@@ -91,7 +91,7 @@ export const getOrderByUser = async (req: Request, res: Response) => {
 
 export const getOrderById = async (req: Request, res: Response) => {
   try {
-    console.log(89);
+    
     const order = await Order.findById(req.params.id)
       .populate("user", "name email")
       .populate("shippingAddress")
@@ -101,7 +101,7 @@ export const getOrderById = async (req: Request, res: Response) => {
       });
 
     if (!order) {
-      return response(res, 404, "order not found ");
+      return response(res, 404, "order not found. ");
     }
 
     return response(res, 200, "order fetched by id", order);

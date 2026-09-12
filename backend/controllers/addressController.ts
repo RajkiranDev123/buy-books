@@ -13,11 +13,11 @@ export const createOrUpdateAddressByUserId = async ( req: Request, res: Response
     // console.log(req.body)
 
     if (!userId) {
-      return response(res, 400, "user not found, please provide a valid id.");
+      return response(res, 400, "User not found, please provide a valid id.");
     }
 
     if ( !addressLine1 || !addressLine2 || !phoneNumber || !city || !state || !pincode ) {
-      return response( res, 400, "please enter all values to create a new address.");
+      return response( res, 400, "Please enter all values to create a new address.");
     }
 
     if (addressId) {

@@ -1,11 +1,6 @@
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChevronLeft, ChevronRight, CreditCard, Shield } from "lucide-react";
 import React from "react";
 
@@ -34,17 +29,21 @@ const PriceDetails: React.FC<PriceDetailsProps> = ({
 }) => {
   return (
     <Card className="shadow-lg">
+
       <CardHeader>
         <CardTitle>Price Details</CardTitle>
       </CardHeader>
+
       <CardContent className="space-y-4">
+
         <div className="flex justify-between">
-          <span>Price ({itemCount}) items</span>
+          <span>Price items</span>
           <span>Rs {totalOriginalAmount}</span>
         </div>
+
         <div className="flex justify-between text-green-600">
           <span>Discount</span>
-          <span>- Rs {totalDiscount}</span>
+          <span>Rs {totalDiscount}</span>
         </div>
 
         <div className="flex justify-between ">
@@ -55,12 +54,16 @@ const PriceDetails: React.FC<PriceDetailsProps> = ({
             {shippingCharge === 0 ? "Free" : `Rs ${shippingCharge}`}
           </span>
         </div>
+
         <div className="border-t pt-4 font-medium flex justify-between">
           <span>Total Amount</span>
-          <span>- Rs {totalAmount}</span>
+          <span>Rs {totalAmount}</span>
         </div>
+
       </CardContent>
+
       <CardFooter className="flex flex-col gap-4">
+
         <Button
           className="w-full bg-blue-600 hover:bg-blue-700 text-white"
           size={"lg"}
@@ -80,6 +83,7 @@ const PriceDetails: React.FC<PriceDetailsProps> = ({
             </>
           )}
         </Button>
+
         {
           step !== "cart" && (
             <Button
@@ -92,12 +96,14 @@ const PriceDetails: React.FC<PriceDetailsProps> = ({
             </Button>
           )
         }
-        <div className="flex items-center gap-2 text-sm text-gray-600">
-          <Shield className="h-4 w-4"/>
-          <span>Safe and Secure Payments</span>
 
+        <div className="flex items-center gap-2 text-sm text-gray-600 ">
+          <Shield className="h-4 w-4 text-green-500"/>
+          <span>Safe and Secure Payments</span>
         </div>
+
       </CardFooter>
+
     </Card>
   );
 };

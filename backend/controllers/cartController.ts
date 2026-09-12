@@ -37,7 +37,7 @@ export const addToCart = async (req: Request, res: Response) => {
       cart = new Cart({ user: userId, items: [] });
     }
 
-    // find returns undefined if not found
+    // find returns undefined if not found and findIndex -1
     const existingItem = cart.items.find( item => item.product.toString() === productId );
 
     if (existingItem) {
@@ -83,10 +83,8 @@ export const getCartByUser = async (req: Request, res: Response) => {
 
     const userId = req.params.userId;
 
-    let cart = await Cart.findOne({ user: userId }).populate(
-      "items.product",
-    );
-  
+    let cart = await Cart.findOne({ user: userId }).populate("items.product");
+    // [ { user : "gfh675" , items : [ { product : "jkhgf678" , quantity : 1} ] ]
 
     if (!cart) {
       return response(res, 404, "Cart is Empty", { items: [] });

@@ -9,7 +9,7 @@ interface checkoutState {
 const initialState: checkoutState = {
   step: "cart",
   orderId: null,
-  orderAmount: null,
+  orderAmount: null
 };
 
 const checkoutSlice = createSlice({
@@ -49,8 +49,7 @@ const checkoutSlice = createSlice({
   },
 });
 
-export const { setCheckoutStep, setOrderAmount, setOrderId, resetCheckout } =
-  checkoutSlice.actions;
+export const { setCheckoutStep, setOrderAmount, setOrderId, resetCheckout } = checkoutSlice.actions;
 export default checkoutSlice.reducer;
 
 // type PayloadAction<T> = {

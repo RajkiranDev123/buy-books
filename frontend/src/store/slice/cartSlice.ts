@@ -15,6 +15,7 @@ export interface CartState {
   updatedAt: string;
 }
 
+// useSelector((state: RootState) => state.cart)
 const initialState: CartState = {
   _id: "",
   user: "",

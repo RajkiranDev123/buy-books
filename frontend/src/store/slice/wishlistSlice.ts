@@ -16,6 +16,8 @@ interface WishlistState {
   items: WishlistItem[];
 }
 
+// useSelector((state: RootState) => state.wishlist.items)
+
 const initialState: WishlistState = {
   items: [],
 };
@@ -60,10 +62,5 @@ const wishlistSlice = createSlice({
   },
 });
 
-export const {
-  setWishlist,
-  clearWishlist,
-  addToWishlistAction,
-  removeFromWishListAction,
-} = wishlistSlice.actions;
+export const { setWishlist, clearWishlist, addToWishlistAction, removeFromWishListAction } = wishlistSlice.actions;
 export default wishlistSlice.reducer;

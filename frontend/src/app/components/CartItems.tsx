@@ -19,25 +19,22 @@ interface CartItemsProps {
   onToggleWishlist: (productId: string) => void;
   wishlist: { products: WishlistProduct[] }[];
 }
-// “wishlist is an array of objects”
-// [
-//   { products: ["p1", "p2"] },
-//   { products: ["p3"] }
-// ]
-const CartItems: React.FC<CartItemsProps> = ({
-  items,
-  onRemoveItem,
-  onToggleWishlist,
-  wishlist,
-}) => {
-  console.log(55, items);
+
+
+const CartItems: React.FC<CartItemsProps> = ({ items, onRemoveItem, onToggleWishlist, wishlist }) => {
+
   return (
     <ScrollArea>
+
       {items.map((item) => (
+
         <div
           key={item._id}
-          className="flex flex-col md:flex-row gap-4 py-4 border-b last:border-0 "
+          className="flex flex-col md:flex-row  gap-4 py-4 border-b last:border-0 "
         >
+ 
+          {/* left side : image only*/}
+
           <Link href={`/books/${item.product._id}`}>
             <Image
               src={item?.product?.images?.[0]}
@@ -47,23 +44,29 @@ const CartItems: React.FC<CartItemsProps> = ({
               className="object-contain w-60 md:40 rounded-xl"
             />
           </Link>
-          {/* right */}
+
+          {/* left side ends */}
+
+
+          {/* right side */}
+
           <div className="flex-1">
+
             <h3 className="font-medium">{item.product.title}</h3>
-            <div className="mt-1 text-sm text-gray-500">
-              Quantity : {item.quantity}
-            </div>
+
+            <div className="mt-1 text-sm text-gray-500"> Quantity : {item.quantity} </div>
+
             <div className="mt-1 font-medium">
-              <span className="mr-2 line-through text-gray-500">
-                Rs {item.product.price}
-              </span>
-              Rs {item.product.finalPrice}
+
+              <span className="mr-2 line-through text-gray-500">Rs {item.product.price} </span> Rs {item.product.finalPrice}
+              
             </div>
+
             <div className="mt-1 text-sm text-green-600">
-              {item.product.shippingCharge === "free"
-                ? "Free shipping"
-                : `Shipping Rs ${item.product.shippingCharge}`}
+              {item.product.shippingCharge == "free" ? "Free shipping" : `Shipping Rs ${item.product.shippingCharge}`}
             </div>
+
+            {/* remove and add to wishlist buttons */}
             <div className="mt-2 flex gap-2">
               <Button
                 className="w-[100px] md:w-[200px]"
@@ -74,33 +77,32 @@ const CartItems: React.FC<CartItemsProps> = ({
                 <Trash2 className="w-4 h-4 mr-1" />
                 <span className="hidden md:inline">Remove</span>
               </Button>
+
               <Button
                 variant={"outline"}
                 size={"sm"}
                 onClick={() => onToggleWishlist(item.product._id)}
               >
-            <Heart
-  className={`h-4 w-4 mr-1 ${
-    wishlist.some((w) =>
-      w.products.some((product) => product._id === item.product._id)
-    )
-      ? "fill-red-500"
-      : ""
-  }`}
-/>
+             <Heart className={`h-4 w-4 mr-1 ${ wishlist.some((w) => w.products.some((product) => product._id === item.product._id)) ? "fill-red-500" : "" }`} />
+
                 <span className="hidden md:inline">
-                {wishlist.some((w) =>
-  w.products.some((product) => product._id === item.product._id)
-)
-  ? "Remove from wishlist"
-  : "Add to wishlist"}
+                {wishlist.some((w) => w.products.some((product) => product._id === item.product._id))
+                ? "Remove from wishlist" : "Add to wishlist"}
                 </span>
+
               </Button>
+
             </div>
+            {/* remove and add to wishlist buttons */}
+
           </div>
-          {/*  */}
+
+          {/* right side */}
+      
         </div>
+
       ))}
+
     </ScrollArea>
   );
 };
