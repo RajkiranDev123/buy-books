@@ -241,13 +241,16 @@ export const api = createApi({
     getOrderById: builder.query({
       query: (orderId) => API_URLS.ORDER_BY_ID(orderId),
       providesTags: ["Order"],
+      // If the component unmounts and is no longer using useGetOrderByIdQuery, 
+      // the query is no longer actively subscribed, so you generally won't see an immediate refetch from the invalidation.
     }),
 
     createOrUpdateOrder: builder.mutation({
       query: ({ orderId, updates }) => ({
+      
         url: API_URLS.ORDERS,
         method: orderId ? "PATCH" : "POST",
-        body: updates,
+        body: {orderId, ...updates},
       }),
       invalidatesTags: ["Order"],
     }),
@@ -266,6 +269,7 @@ export const api = createApi({
       query: () => API_URLS.GET_ADDRESS,
       providesTags: ["Address"],
     }),
+
     addOrUpdateAddress: builder.mutation<any, any>({
       query: (address) => ({
         url: API_URLS.ADD_OR_UPDATE_ADDRESS,
@@ -312,6 +316,8 @@ export const {
   useGetOrderByIdQuery,
   useCreateOrUpdateOrderMutation,
   useCreateRazorpayPaymentMutation,
+
+  // address
   useAddOrUpdateAddressMutation,
   useGetAddressQuery,
 

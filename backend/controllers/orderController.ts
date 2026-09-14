@@ -15,14 +15,15 @@ export const createOrUpdateOrder = async (req: Request, res: Response) => {
     const userId = req.id;
 
     const { orderId, shippingAddress, paymentMethod, totalAmount, paymentDetails } = req.body;
+    console.log(89,shippingAddress)
 
     const cart = await CartItems.findOne({ user: userId }).populate( "items.product");
 
     if (!cart || cart.items.length === 0) {
-      return response(res, 400, "cart is empty.");
+      return response(res, 400, "Cart is empty.");
     }
 
-    let order = await Order.findOne({ _id: orderId });
+    let order = await Order.findOne({ _id: orderId ,   user: userId });
 
     if (order) {
       order.shippingAddress = shippingAddress || order.shippingAddress;
@@ -110,26 +111,27 @@ export const getOrderById = async (req: Request, res: Response) => {
   }
 };
 
-export const createPaymentWithRazorpay = async (
-  req: Request,
-  res: Response,
-) => {
+
+
+export const createPaymentWithRazorpay = async ( req: Request, res: Response ) => {
+
   try {
     const { orderId } = req.body;
     const order = await Order.findById(orderId);
+
     if (!order) {
       return response(res, 404, "Order not found");
     }
+
     const razorPayOrder = await razorpay.orders.create({
       amount: Math.round(order.totalAmount * 100),
       currency: "INR",
-      receipt: order?._id.toString(),
-    });
-    return response(res, 200, "Razorpay order and payment created", {
-      order: razorPayOrder,
-    });
+      receipt: order?._id.toString()
+    })
+
+    return response(res, 200, "Razorpay order and payment created", { order: razorPayOrder });
   } catch (error) {
-    console.log(56, error);
+  
     return response(res, 500, "Internal Server Error");
   }
 };

@@ -35,6 +35,7 @@ const cartSlice = createSlice({
       return { ...state, ...action.payload };
     },
     clearCart: () => initialState,
+    // clearCart() does not remember the previous Redux data.
   },
 });
 

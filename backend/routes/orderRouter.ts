@@ -5,6 +5,7 @@ import { auth } from "../middleware/authMiddleware";
 const router = Router();
 
 router.post("/", auth, orderController.createOrUpdateOrder);
+router.patch("/", auth, orderController.createOrUpdateOrder);
 
 router.get("/", auth, orderController.getOrderByUser);
 

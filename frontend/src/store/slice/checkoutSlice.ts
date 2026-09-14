@@ -16,16 +16,15 @@ const checkoutSlice = createSlice({
   name: "checkout",
   initialState,
   reducers: {
-    setCheckoutStep: (
-      state,
-      action: PayloadAction<"cart" | "address" | "payment">,
-    ) => {
-      console.log("action of setCheckoutStep ==>", action);
+
+    setCheckoutStep: ( state,action: PayloadAction<"cart" | "address" | "payment">) => {
       state.step = action.payload;
     },
+
     setOrderId: (state, action: PayloadAction<string | null>) => {
       state.orderId = action.payload;
     },
+
     // PayloadAction<T> is roughly:
     // type PayloadAction<T> = {
     //   type: string;
@@ -42,12 +41,15 @@ const checkoutSlice = createSlice({
     setOrderAmount: (state, action: PayloadAction<number | null>) => {
       state.orderAmount = action.payload;
     },
+
     resetCheckout: (state) => {
       state.step = "cart";
       state.orderAmount = null;
     },
-  },
-});
+
+  }
+  
+})
 
 export const { setCheckoutStep, setOrderAmount, setOrderId, resetCheckout } = checkoutSlice.actions;
 export default checkoutSlice.reducer;

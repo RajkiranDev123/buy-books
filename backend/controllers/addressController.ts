@@ -82,6 +82,6 @@ export const getUserAddressByUserId = async (req: Request, res: Response) => {
 
   } catch (error) {
    
-    return response(res, 500, "Internal Server Error");
+    return response(res, 500, "Internal Server Error")
   }
 };

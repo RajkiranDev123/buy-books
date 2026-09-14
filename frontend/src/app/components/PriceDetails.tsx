@@ -8,7 +8,7 @@ interface PriceDetailsProps {
   totalOriginalAmount: number;
   totalAmount: number;
   totalDiscount: number;
-  itemCount: number;
+  // itemCount: number;
   shippingCharge: number;
   isProcessing: boolean;
   step: "cart" | "address" | "payment";
@@ -20,7 +20,7 @@ const PriceDetails: React.FC<PriceDetailsProps> = ({
   totalAmount,
   totalOriginalAmount,
   totalDiscount,
-  itemCount,
+  // itemCount,
   step,
   isProcessing,
   onProceed,
@@ -65,13 +65,16 @@ const PriceDetails: React.FC<PriceDetailsProps> = ({
       <CardFooter className="flex flex-col gap-4">
 
         <Button
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
           size={"lg"}
           disabled={isProcessing}
           onClick={onProceed}
         >
+          
           {isProcessing ? (
+
             "Processing..."
+
           ) : step === "payment" ? (
             <>
               <CreditCard className="h-4 w-4 mr-2" /> Continue to pay
@@ -82,6 +85,7 @@ const PriceDetails: React.FC<PriceDetailsProps> = ({
               {step === "cart" ? "Proceed to checkout" : "Proceed to Payment"}
             </>
           )}
+
         </Button>
 
         {

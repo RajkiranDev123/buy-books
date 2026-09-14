@@ -31,6 +31,9 @@ declare global {
   }
 }
 
+// window.Razorpay
+// ❌ Property 'Razorpay' does not exist on type 'Window'
+
 const page = () => {
 
   const router = useRouter();
@@ -41,7 +44,7 @@ const page = () => {
   // It is not async. It reads the Redux state synchronously.
 
   // useSelector : redux state ==> user , orderId , step , wishlist , cart 
-  const user = useSelector((state: RootState) => state.user.user);
+  const user = useSelector((state: RootState) => state.user?.user);
   const { orderId, step } = useSelector((state: RootState) => state.checkout);
   const wishlist = useSelector((state: RootState) => state.wishlist.items);
   const cart = useSelector((state: RootState) => state.cart);
@@ -152,9 +155,10 @@ const page = () => {
   const handleProceedToCheckout = async () => {
 
     if (step === "cart") {
+
       try {
      
-        const result = await createOrUpdateOrder({ updates: {  totalAmount: totalAmount } }).unwrap();
+        const result = await createOrUpdateOrder({   orderId, updates: {  totalAmount: finalAmount } }).unwrap();
 
         if (result.success) {
           toast.success("Order created successfully.");
@@ -163,9 +167,11 @@ const page = () => {
         } else {
           throw new Error(result.message);
         }
+
       } catch (error) {
         toast.error("Failed to create order");
       }
+
     } else if (step === "address") {
 
       if (selectedAddress) {
@@ -177,21 +183,24 @@ const page = () => {
     } else if (step === "payment") {
       handlePayment();
     }
+
   };
 
   const handlePayment = async () => {
+
     if (!orderId) {
-      toast.error("No order id found. ");
+      toast.error("No order id found.");
       return;
     }
 
     setIsProcessing(true);
 
     try {
+
       const { data, error } = await createRazorPayPayment(orderId);
-      if (error) {
-        throw new Error("failed to create razor pay order");
-      }
+
+      if (error) { throw new Error("failed to create razor pay order") }
+
       const razorpayOrder = data.data.order;
 
       const options = {
@@ -201,32 +210,38 @@ const page = () => {
         name: "buy books",
         description: "Book Purchase",
         order_id: razorpayOrder.id,
+
         handler: async function (response: any) {
+
           try {
+
             const result = await createOrUpdateOrder({
+              orderId,
               updates: {
-                orderId,
+            
                 paymentDetails: {
                   razorpay_order_id: response.razorpay_order_id,
                   razorpay_payment_id: response.razorpay_payment_id,
                   razorpay_signature: response.razorpay_signature,
-                },
-              },
+                }
+
+              }
             }).unwrap();
 
             if (result.success) {
               dispatch(clearCart());
               dispatch(resetCheckout());
-              toast.success("Paymenr done");
+              toast.success("Payment done.");
               router.push(`/checkout/payment-success?orderId=${orderId}`);
             } else {
               throw new Error(result.message);
             }
           } catch (error) {
-            console.log(error);
-            toast.error("Payment done but failed to update order");
+            // console.log(error);
+            toast.error("Payment done but failed to update order.");
           }
         },
+
         prefill: {
           name: orderData?.data.user?.name,
           email: orderData?.data.user?.email,
@@ -241,7 +256,7 @@ const page = () => {
       razorpay.open();
 
     } catch (error) {
-      toast.error("failed to initiate payment. plz try again");
+      toast.error("Failed to initiate payment. Please try again.");
     } finally {
       setIsProcessing(false);
     }
@@ -249,17 +264,18 @@ const page = () => {
 
   const handleSelectAddress = async (address: Address) => {
     setSelectedAddress(address);
-    setShowAddressDialog(false);
+    setShowAddressDialog(false); // It does not immediately destroy/unmount the component at that exact line.
+    // console.log(showAddressDialog); // still false in this render and does if will run
+    // The updated value is available in the next render. state updates don't change the current render's state variable immediately.
     if (orderId) {
       try {
-        await createOrUpdateOrder({
-          updates: { orderId, shippingAddress: address },
-        }).unwrap();
-        toast.success("address updated successfully");
+        await createOrUpdateOrder({ orderId , updates: { shippingAddress: address } }).unwrap();
+        toast.success("Address updated successfully.");
       } catch (error) {
-        toast.error("failed to update address");
+        toast.error("Failed to update address.");
       }
     }
+
   };
 
   // when user is not logged in
@@ -288,6 +304,7 @@ const page = () => {
     );
   }
 
+  // during loading
   if (isCartLoading || isOrderLoading) {
     return <BookLoader />;
   }
@@ -302,7 +319,8 @@ const page = () => {
         id="razorpay-checkout-js"
         src="https://checkout.razorpay.com/v1/checkout.js"
       />
-
+       
+       {/* top div ends */}
       <div className="min-h-screen bg-white">
 
         {/* 1 item in your cart */}
@@ -321,7 +339,7 @@ const page = () => {
         </div>
         {/* 1 item in your cart ends */}
 
-
+        {/* container */}
         <div className="container mx-auto px-4 max-w-6xl">
 
           {/* cart , address and payment */}
@@ -403,6 +421,7 @@ const page = () => {
               </Card>
 
             </div>
+
             {/* cart items ends */}
 
             {/* price details and address starts */}
@@ -410,29 +429,27 @@ const page = () => {
             <div>
 
               <PriceDetails
-                totalOriginalAmount={totalOriginalAmount}
+
                 totalAmount={finalAmount}
-                shippingCharge={maximumShippingCharge}
+                totalOriginalAmount={totalOriginalAmount}
                 totalDiscount={totalDiscount}
-                itemCount={cart.items.length}
-                isProcessing={isProcessing}
+                shippingCharge={maximumShippingCharge}
                 step={step}
+                isProcessing={isProcessing}
                 onProceed={handleProceedToCheckout}
-                onBack={() =>
-                  dispatch(
-                    setCheckoutStep(step === "address" ? "cart" : "address"),
-                  )
-                }
+                onBack={ () => dispatch( setCheckoutStep( step === "address" ? "cart" : "address" ) ) }    
+
+
               />
 
-              {/* address */}
+              {/*show selected address */}
 
               {selectedAddress && (
 
                 <Card className="mt-6 mb-6 shadow-lg">
 
                   <CardHeader>
-                    <CardTitle className="text-xl">Delivery Address</CardTitle>
+                    <CardTitle className="text-xl text-black/70">Delivery Address</CardTitle>
                   </CardHeader>
 
                   <CardContent>
@@ -450,11 +467,12 @@ const page = () => {
                     </div>
 
                     <Button
-                      className="mt-4"
+                      className="mt-4 cursor-pointer"
                       variant={"outline"}
                       onClick={() => setShowAddressDialog(true)}
                     >
                       <MapPin className="mr-2 w-4 h-4" /> Change Address
+
                     </Button>
 
                   </CardContent>
@@ -463,7 +481,7 @@ const page = () => {
 
               )}
 
-              {/* address */}
+              {/*show selected address */}
 
             </div>
 
@@ -486,6 +504,7 @@ const page = () => {
                 onAddressSelect={handleSelectAddress}
                 selectedAddressId={selectedAddress?._id}
               />
+
             </DialogContent>
 
           </Dialog>
@@ -494,8 +513,10 @@ const page = () => {
 
      
         </div>
+        {/* container ends */}
 
       </div>
+      {/* top div ends */}
 
     </>
   );
