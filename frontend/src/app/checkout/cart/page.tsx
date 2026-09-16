@@ -75,7 +75,7 @@ const page = () => {
       setSelectedAddress(orderData.data.shippingAddress);
    
     }
-    
+
   }, [orderData])
 
   useEffect(() => {
@@ -521,6 +521,7 @@ const page = () => {
 
     </>
   );
+  
 };
 
 export default page;

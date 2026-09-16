@@ -111,7 +111,7 @@ const page = () => {
           onClick={handleOpenLogin}
         />
       </>
-    );
+    )
   }
 
   return (
