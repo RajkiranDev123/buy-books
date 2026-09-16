@@ -10,64 +10,31 @@ import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import NoData from "../components/NoData";
 import Link from "next/link";
-import {
-  Book,
-  Camera,
-  ChevronRight,
-  CreditCard,
-  DollarSign,
-  HelpCircle,
-  Loader2,
-  X,
-} from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Book,Camera,CreditCard,DollarSign,HelpCircle,Loader2,X } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { filters } from "@/lib/constant";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import {Accordion,AccordionContent,AccordionItem,AccordionTrigger} from "@/components/ui/accordion";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 
 const page = () => {
+
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
   const [addProducts, { isLoading }] = useAddProductsMutation();
   const router = useRouter();
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user.user);
 
-  const {
-    register,
-    handleSubmit,
-    watch,
-    setValue,
-    control,
-    reset,
-    formState: { errors },
-  } = useForm<BookDetails>({
+  const { register,handleSubmit, watch,setValue,control,reset, formState: { errors } } = useForm<BookDetails>({
     defaultValues: {
       images: [],
-    },
+    }
   });
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -82,10 +49,7 @@ const page = () => {
         ].slice(0, 4),
       );
 
-      setValue(
-        "images",
-        [...currentFiles, ...newFiles].slice(0, 4) as string[],
-      );
+      setValue("images", [...currentFiles, ...newFiles].slice(0, 4) as string[] );
     }
   };
 
@@ -152,27 +116,30 @@ const page = () => {
 
   return (
     <div className="min-h-screen bg-linear-to-b from-blue-50 to-white py-12 ">
+
       <div className="container mx-auto px-4 max-w-4xl">
+
+        {/* heading starts  */}
+
         <div className="mb-10 text-center">
-          <h1 className=" text-4xl font-bold mb-4 text-blue-600">
-            Sell your used Books
+
+          <h1 className=" text-4xl font-bold mb-4 text-blue-600/80">
+            Sell your used Books!
           </h1>
+
           <p className="text-xl text-gray-600 mb-4">
             Submit a free classified ad to sell your used books for cash in
             India
           </p>
 
-          {/* inline-flex makes the element behave like inline content instead of taking full width. */}
+       
 
-          <Link
-            href={"#"}
-            className="text-blue-500 hover:underline inline-flex items-center"
-          >
-            Learn how it works
-            <ChevronRight className="ml-1 h-4 w-4" />
-          </Link>
         </div>
+
+        {/* heading ends */}
+
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+
           {/* card 1 */}
           <Card className="shadow-lg border-t-4 border-t-blue-500 ">
             <CardHeader className="bg-linear-to-r from-blue-50 to-indigo-50">
@@ -630,6 +597,7 @@ const page = () => {
           {/* bank details  */}
 
           <Card className="shadow-lg border-t-4 border-t-blue-500  p-0">
+            
             <CardHeader className="bg-linear-to-r from-blue-50 to-indigo-50">
               <CardTitle className="text-2xl flex  text-yellow-600 items-center">
                 <CreditCard className="mr-2 h-6 w-6" />
@@ -637,7 +605,7 @@ const page = () => {
               </CardTitle>
             </CardHeader>
 
-            <CardContent className="space-y-6 pt-6">
+            <CardContent className="space-y-6 pt-6 mb-3">
               {/* book type */}
               <div className="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-4">
                 <Label className="md:w-1/4 font-medium text-gray-700   ">
@@ -813,7 +781,7 @@ const page = () => {
             </CardContent>
           </Card>
 
-          {/* bank details  */}
+          {/* bank details ends */}
 
           {/* button  */}
           <Button
@@ -829,7 +797,7 @@ const page = () => {
                 Saving...
               </>
             ) : (
-              <>"Post your Book"</>
+              <>Post your Book</>
             )}
           </Button>
 
@@ -840,7 +808,7 @@ const page = () => {
               href={"/terms-of-use"}
               className="text-blue-500 hover:underline"
             >
-              Terms of Use ,
+              Terms of Use &
             </Link>
             <Link
               href={"/privacy-policy"}
@@ -854,7 +822,9 @@ const page = () => {
 
           {/* bank details ends */}
         </form>
+        
       </div>
+
     </div>
   );
 };

@@ -24,6 +24,8 @@ interface AddressResponse {
   data: { addresses: Address[] }
 }
 
+// This describes what valid address form data should look like.
+
 const addressFormSchema = zod.object({
   phoneNumber: zod.string().min(10, "Phone number must be 10 digits"),
   addressLine1: zod.string().min(5, "Address line 1 must be atleast 5 characters"),
@@ -33,7 +35,16 @@ const addressFormSchema = zod.object({
   pincode: zod.string().min(6, "Pincode must be 6 digits"),
 });
 
+// This automatically creates a TypeScript type from the Zod schema
 type AddressFormValues = zod.infer<typeof addressFormSchema>;
+
+// no need to write manually and usefull with ==> setValue / getValues / watch / reset / onSubmit
+// form.setValue("abc", "hello"); // ❌ TypeScript knows the valid field names from AddressFormValues.
+// type AddressFormValues = {
+//   phoneNumber: string;
+//   addressLine1: string;
+//   .............................
+// }
 
 
 
@@ -48,17 +59,23 @@ const CheckoutAddress: React.FC<CheckoutAddressProps> = ({ onAddressSelect, sele
 
   const addresses = addressData?.data?.addresses || [];
 
+  // This form will contain data shaped like AddressFormValues : useForm<AddressFormValues> 
   const form = useForm<AddressFormValues>({
-    resolver: zodResolver(addressFormSchema),
+    resolver: zodResolver(addressFormSchema), // Connects React Hook Form → Zod when submit
     defaultValues: { phoneNumber: "", addressLine1: "", addressLine2: "", city: "", state: "", pincode: ""}
   })
 
+  // if a function needs variables/state/hooks created inside a component, keep it inside the component.
+
   const handleEditAddress = (address: Address) => {
+    console.log(address)
     setEditingAddress(address);
-    form.reset(address);
+    form.reset(address); // Put the address values into the form
     setShowAddressForm(true); // open modal
   };
 
+
+  // { ...obj1, obj2 } ==> properties of obj1 + obj2 object
   const onSubmit = async (data: AddressFormValues) => {
 
     try {
@@ -71,7 +88,7 @@ const CheckoutAddress: React.FC<CheckoutAddressProps> = ({ onAddressSelect, sele
         result = await addOrUpdateAddress(data).unwrap();
       }
 
-      setShowAddressForm(false);
+      setShowAddressForm(false); // close  modal
       setEditingAddress(null);
 
     } catch (error) {
@@ -158,6 +175,7 @@ const CheckoutAddress: React.FC<CheckoutAddressProps> = ({ onAddressSelect, sele
       <Dialog open={showAddressForm} onOpenChange={setShowAddressForm}>
 
         <DialogTrigger asChild>
+          {/* will trigger onOpenChange={setShowAddressForm} */}
           <Button className="w-full" variant={"outline"}>
             <Plus className="mr-2 h-4 w-4" />{" "} {editingAddress ? "Edit address" : "Add new address"}
           </Button>
@@ -170,24 +188,27 @@ const CheckoutAddress: React.FC<CheckoutAddressProps> = ({ onAddressSelect, sele
           </DialogHeader>
 
           <Form {...form}>
+            {/* shadcn's Form components are designed to work with React Hook Form, which is why you see {...form} */}
 
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
 
+              {/* FormField uses React Hook Form's Controller internally, so we don't need {...form.register("phoneNumber")} here. */}
               <FormField
                 name="phoneNumber"
                 render={({ field }) => (
+                  // field contains the necessary React Hook Form properties for this input like name and onChange
                   <FormItem>
                     <FormLabel>Phone Number</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Enter 10 digits mobile no"
+                        placeholder="Enter 10 digits mobile no."
                         {...field}
                       />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
-                control={form.control}
+                control={form.control} // This tells React Hook Form : "This field is connected to the phoneNumber field in my form.
               />
 
               {/*  */}
@@ -273,7 +294,7 @@ const CheckoutAddress: React.FC<CheckoutAddressProps> = ({ onAddressSelect, sele
                 control={form.control}
               />
 
-              <Button type="submit" className="w-full"> {editingAddress ? "update adddress" : "Add adress"} </Button>
+              <Button type="submit" className="w-full cursor-pointer"> {editingAddress ? "Update address" : "Add address"} </Button>
 
             </form>
 

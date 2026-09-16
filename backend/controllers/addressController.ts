@@ -52,7 +52,8 @@ export const createOrUpdateAddressByUserId = async ( req: Request, res: Response
       );
 
       // newAddress._id  // ObjectId("68abc123...")
-      // newAddress.id   // "68abc123..."
+      // newAddress.id   // "68abc123..." and it is  string representation of _id
+      // does JSON response convert MongoDB ObjectId to a string? — generally yes.
 
       return response(res, 201, "User address created.", newAddress);
 

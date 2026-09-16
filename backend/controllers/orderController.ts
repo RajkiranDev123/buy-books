@@ -111,7 +111,7 @@ export const getOrderById = async (req: Request, res: Response) => {
   }
 };
 
-
+// payments
 
 export const createPaymentWithRazorpay = async ( req: Request, res: Response ) => {
 
