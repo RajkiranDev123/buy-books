@@ -14,6 +14,7 @@ export interface IUSER extends Document {
   resetPasswordExpires?: Date; // Stores when the password-reset token expires.
   agreeTerms: boolean;
   addresses: mongoose.Types.ObjectId[];
+  role : "user"|"admin"
   comparePassword(candidatePassword: string): Promise<boolean>; // This is NOT a function, it’s just a method signature (type declaration)
   // const comparePassword = (candidatePassword: string) : Promise<boolean> => {} // type declaration vs actual function implementation syntax.
 }
@@ -42,6 +43,11 @@ const userSchema = new Schema<IUSER>(
     // user can have multiple Address documents, and addresses stores their MongoDB IDs.
     // if i do await User.create({   name: "John",  email: "john@gmail.com" }) then in db no ==> address:[]
     // if addresses was single doc then ==>  addresses: { type: Schema.Types.ObjectId, ref: "Address" , default: undefined }
+    role:{
+      type : String,
+      enum :["user","admin"],
+      default:"user"
+    }
   },
   { timestamps: true },
 );

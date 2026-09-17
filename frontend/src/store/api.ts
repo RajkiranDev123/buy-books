@@ -40,7 +40,7 @@ const API_URLS = {
 
   ORDERS: `${Base_URL}/order`,
   ORDER_BY_ID: (orderId: string) => `${Base_URL}/order/${orderId}`,
-  CREATE_RAZORPAY_PAYMENT: `${Base_URL}/order/payment-razorpay`,
+  CREATE_RAZORPAY_ORDER: `${Base_URL}/order/order-razorpay`,
 
   //address
   GET_ADDRESS: `${Base_URL}/user/address`,
@@ -251,13 +251,14 @@ export const api = createApi({
         url: API_URLS.ORDERS,
         method: orderId ? "PATCH" : "POST",
         body: {orderId, ...updates},
+        // { orderId } is shorthand for : { orderId: orderId }
       }),
       invalidatesTags: ["Order"],
     }),
     
-    createRazorpayPayment: builder.mutation({
+    createRazorpayOrder: builder.mutation({
       query: (orderId) => ({
-        url: API_URLS.CREATE_RAZORPAY_PAYMENT,
+        url: API_URLS.CREATE_RAZORPAY_ORDER,
         method: "POST",
         body: { orderId },
       }),
@@ -315,7 +316,7 @@ export const {
   useGetUserOrdersQuery,
   useGetOrderByIdQuery,
   useCreateOrUpdateOrderMutation,
-  useCreateRazorpayPaymentMutation,
+  useCreateRazorpayOrderMutation,
 
   // address
   useAddOrUpdateAddressMutation,

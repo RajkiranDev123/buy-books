@@ -11,7 +11,7 @@ router.get("/", auth, orderController.getOrderByUser);
 
 router.get("/:id", auth, orderController.getOrderById);
 
-router.post( "/payment-razorpay", auth, orderController.createPaymentWithRazorpay);
+router.post( "/order-razorpay", auth, orderController.createRazorpayOrder);
 router.post("/razorpay-webhook", auth, orderController.handleRazorPayWebhook);
 
 export default router;

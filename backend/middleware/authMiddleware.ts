@@ -6,6 +6,7 @@ declare global {
   namespace Express {
     interface Request {
       id: string; // req.id
+      role : string
     }
   }
 }
@@ -33,6 +34,8 @@ export const auth = (req: Request, res: Response, next: NextFunction) => {
     const decode = jwt.verify( token, process.env.JWT_SECRET as string ) as jwt.JwtPayload;
 
     req.id = decode.userId as string; // jwt.sign({ userId: user?._id }, process.env.JWT_SECRET as string, { expiresIn: "90d" });
+
+    req.role=decode.role
 
     next();
 

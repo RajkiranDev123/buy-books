@@ -15,7 +15,7 @@ export const createOrUpdateOrder = async (req: Request, res: Response) => {
     const userId = req.id;
 
     const { orderId, shippingAddress, paymentMethod, totalAmount, paymentDetails } = req.body;
-    console.log(89,shippingAddress)
+
 
     const cart = await CartItems.findOne({ user: userId }).populate( "items.product");
 
@@ -27,8 +27,9 @@ export const createOrUpdateOrder = async (req: Request, res: Response) => {
 
     if (order) {
       order.shippingAddress = shippingAddress || order.shippingAddress;
-      order.paymentMethod = paymentMethod || order.paymentMethod;
       order.totalAmount = totalAmount || order.totalAmount;
+
+      order.paymentMethod = paymentMethod || order.paymentMethod;
 
       if (paymentDetails) {
         order.paymentDetails = paymentDetails;
@@ -113,7 +114,7 @@ export const getOrderById = async (req: Request, res: Response) => {
 
 // payments
 
-export const createPaymentWithRazorpay = async ( req: Request, res: Response ) => {
+export const createRazorpayOrder = async ( req: Request, res: Response ) => {
 
   try {
     const { orderId } = req.body;

@@ -4,7 +4,7 @@ import { RootState } from "@/store/store";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 
-import { useAddToWishlistMutation, useCreateOrUpdateOrderMutation, useCreateRazorpayPaymentMutation,
+import { useAddToWishlistMutation, useCreateOrUpdateOrderMutation, useCreateRazorpayOrderMutation,
   useGetCartQuery, useGetOrderByIdQuery, useRemoveFromCartMutation, useRemoveFromWishlistMutation,
 } from "@/store/api";
 
@@ -48,6 +48,7 @@ const page = () => {
   const { orderId, step } = useSelector((state: RootState) => state.checkout);
   const wishlist = useSelector((state: RootState) => state.wishlist.items);
   const cart = useSelector((state: RootState) => state.cart);
+  //  cart: cartReducer in store , The initialState belongs to your cartReducer, so it becomes the starting value of state.cart.
 
   // component state
   const [showAddressDialog, setShowAddressDialog] = useState(false);
@@ -57,12 +58,12 @@ const page = () => {
   // fetch
   const { data: cartData, isLoading: isCartLoading } = useGetCartQuery(user?._id);
 
-  const { data: orderData, isLoading: isOrderLoading } = useGetOrderByIdQuery(orderId || "" , { skip: !orderId ,   refetchOnMountOrArgChange: true });
+  const { data: orderData, isLoading: isOrderLoading } = useGetOrderByIdQuery(orderId , { skip: !orderId ,   refetchOnMountOrArgChange: true });
 
 
   // mutations
   const [createOrUpdateOrder] = useCreateOrUpdateOrderMutation();
-  const [createRazorPayPayment] = useCreateRazorpayPaymentMutation();
+  const [createRazorpayOrder] = useCreateRazorpayOrderMutation();
   const [removeCartMutation] = useRemoveFromCartMutation(); // add to cart is already done in /books/jhgf678
   const [addWishlistMutation] = useAddToWishlistMutation();
   const [removeWishlistMutation] = useRemoveFromWishlistMutation();
@@ -170,7 +171,7 @@ const page = () => {
         }
 
       } catch (error) {
-        toast.error("Failed to create order");
+        toast.error("Failed to create order.");
       }
 
     } else if (step === "address") {
@@ -198,19 +199,22 @@ const page = () => {
 
     try {
 
-      const { data, error } = await createRazorPayPayment(orderId);
+      const { data, error } = await createRazorpayOrder(orderId);
 
-      if (error) { throw new Error("failed to create razor pay order") }
+      if (error) { throw new Error("Failed to create razorpay order.") }
 
       const razorpayOrder = data.data.order;
 
       const options = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY,
+
         amount: razorpayOrder.amount,
         currency: razorpayOrder.currency,
-        name: "buy books",
-        description: "Book Purchase",
         order_id: razorpayOrder.id,
+
+        name: "Buy Books",
+        description: "Book Purchase",
+        
 
         handler: async function (response: any) {
 
@@ -227,6 +231,7 @@ const page = () => {
                 }
 
               }
+
             }).unwrap();
 
             if (result.success) {
@@ -248,9 +253,11 @@ const page = () => {
           email: orderData?.data.user?.email,
           contact: orderData?.data.user?.phoneNumber,
         },
+
         theme: {
           color: "#3399cc",
         },
+        
       };
 
       const razorpay = new window.Razorpay(options);
@@ -521,7 +528,7 @@ const page = () => {
 
     </>
   );
-  
+
 };
 
 export default page;

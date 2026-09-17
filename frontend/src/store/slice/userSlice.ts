@@ -7,6 +7,7 @@ interface UserState {
   isLoggedIn: boolean;
 }
 
+
 const initialState: UserState = {
   user: null,
   isEmailVerified: false,
