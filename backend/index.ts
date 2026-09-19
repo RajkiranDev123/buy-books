@@ -13,6 +13,7 @@ import wishListRoutes from "./routes/wishListRouter";
 import addressRoutes from "./routes/addressRouter";
 import userRoutes from "./routes/userRouter";
 import orderRoutes from "./routes/orderRouter";
+import adminRoutes from "./routes/adminRoute";
 //
 import passport from "./controllers/strategy/googleStrategy";
 
@@ -47,6 +48,9 @@ app.use("/api/v1/cart", cartRoutes);
 app.use("/api/v1/wishList", wishListRoutes);
 app.use("/api/v1/user/address", addressRoutes);
 app.use("/api/v1/order", orderRoutes);
+
+app.use("/api/v1/admin", adminRoutes);
+
 
 async function startServer() {
   try {

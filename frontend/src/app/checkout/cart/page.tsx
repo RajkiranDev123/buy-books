@@ -199,13 +199,18 @@ const page = () => {
 
     try {
 
-      const { data, error } = await createRazorpayOrder(orderId);
+      const { data, error } = await createRazorpayOrder(orderId); 
+      // no talk with db , createRazorpayOrder controller will give to rp : 
+      // fetch order from orderId ==> receipt as order._Id.toString() , currency : "INR" and amount : order.totalAmount x 100
+      // get rp ==> id , amount and currency
 
       if (error) { throw new Error("Failed to create razorpay order.") }
 
       const razorpayOrder = data.data.order;
+     
 
       const options = {
+        
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY,
 
         amount: razorpayOrder.amount,
@@ -217,7 +222,7 @@ const page = () => {
         
 
         handler: async function (response: any) {
-
+       
           try {
 
             const result = await createOrUpdateOrder({
@@ -260,8 +265,12 @@ const page = () => {
         
       };
 
-      const razorpay = new window.Razorpay(options);
-      razorpay.open();
+      const razorpay = new window.Razorpay(options); // Creates/configures Razorpay Checkout
+      razorpay.open(); // Opens the configured Checkout
+
+      // For just opening Razorpay Checkout, the important parts of options are mainly :
+      // key → identifies your Razorpay account.
+      // order_id → tells Razorpay which Razorpay order this checkout belongs to.
 
     } catch (error) {
       toast.error("Failed to initiate payment. Please try again.");

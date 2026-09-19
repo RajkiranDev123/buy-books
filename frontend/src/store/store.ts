@@ -26,6 +26,7 @@ import wishlistReducer from "./slice/wishlistSlice";
 import checkoutReducer from "./slice/checkoutSlice";
 
 import { api } from "./api";
+import { adminApi } from "./adminApi";
 
 const userPersistConfig = {
   key: "user",
@@ -60,6 +61,7 @@ export const store = configureStore({
   reducer: {
     // RTK Query stores the API response in Redux state, specifically in the api section managed by api.reducer.
     [api.reducerPath]: api.reducer,
+    [adminApi.reducerPath]: adminApi.reducer,
 
     user: persistedUserReducer,
     cart: persistedCartReducer,
@@ -72,7 +74,7 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PURGE, PERSIST, REGISTER],
       },
-    }).concat(api.middleware)
+    }).concat(api.middleware).concat(adminApi.middleware)
 
 });
 

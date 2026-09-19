@@ -3,23 +3,19 @@ import { useEffect } from "react";
 
 import confetti from "canvas-confetti";
 import { useRouter } from "next/navigation";
-import { useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useGetOrderByIdQuery } from "@/store/api";
 import BookLoader from "@/lib/BookLoader";
 import { motion } from "framer-motion";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
+  Card,CardContent,CardDescription,CardHeader,CardTitle,
 } from "@/components/ui/card";
 import { Calendar, CheckCircle, Package, Truck } from "lucide-react";
 
 const page = () => {
   const router = useRouter();
-  const dispatch = useDispatch();
+
 
   const { orderId } = useSelector((state: RootState) => state.checkout);
   const { data: orderData, isLoading } = useGetOrderByIdQuery(orderId || "");
@@ -44,25 +40,18 @@ const page = () => {
   }
   const { totalAmount, items, status, createdAt } = orderData.data;
 
-  // 576 → 672 → 768 → 896 → 1024 → 1152 → 1280
-  // xl    2xl   3xl   4xl   5xl    6xl     7xl  Each step adds ~96px
-
-  // xs    sm    md   lg    xl     2xl ..... 7xl
-  // 320   384   448  512   576   ...........
   return (
-    <div
-      className="min-h-screen bg-linear-to-br from-purple-400
-  via-pink-500 to-red-500 flex items-center justify-center p-4"
-    >
+    <div className="min-h-screen bg-linear-to-br from-purple-400 via-pink-500 to-red-500 flex items-center justify-center p-4">
+
       <motion.div
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.5 }}
         className="w-full max-w-4xl"
       >
-        {/* opacity 1 : normal look */}
-        {/* animate = target and transition = style of movement */}
+  
         <Card className="shadow-2xl bg-white/90 backdrop-blur-sm">
+
           <CardHeader className="text-center border-b border-gray-200 pb-6">
             <motion.div
               initial={{ scale: 0 }}
@@ -81,6 +70,7 @@ const page = () => {
               Thank you for your purchase.
             </CardDescription>
           </CardHeader>
+
           <CardContent className="pt-6">
             <div className="grid md:grid-cols-2 gap-6">
               <div className="space-y-4">
@@ -189,8 +179,11 @@ const page = () => {
             </div>
             {/*  */}
           </CardContent>
+          
         </Card>
+
       </motion.div>
+
     </div>
   );
 };

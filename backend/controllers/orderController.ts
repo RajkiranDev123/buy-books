@@ -41,11 +41,13 @@ export const createOrUpdateOrder = async (req: Request, res: Response) => {
       order = new Order({
         user: userId,
         items: cart.items,
+
         totalAmount,
         shippingAddress,
+
         paymentMethod,
         paymentDetails,
-        paymentStatus: paymentDetails ? "completed" : "pending",
+        paymentStatus: paymentDetails ? "complete" : "pending",
       });
       
     }
@@ -53,12 +55,7 @@ export const createOrUpdateOrder = async (req: Request, res: Response) => {
     await order.save();
 
     if (paymentDetails) {
-      await CartItems.findOneAndUpdate(
-        {
-          user: userId,
-        },
-        { $set: { items: [] } },
-      );
+      await CartItems.findOneAndUpdate( { user: userId } , { $set: { items: [] } } );
     }
 
     return response(res, 200, "order created/updated successfully.", order);
@@ -95,7 +92,7 @@ export const getOrderById = async (req: Request, res: Response) => {
   try {
     
     const order = await Order.findById(req.params.id)
-      .populate("user", "name email")
+      .populate("user", "name email phoneNumber")
       .populate("shippingAddress")
       .populate({
         path: "items.product",
@@ -130,7 +127,7 @@ export const createRazorpayOrder = async ( req: Request, res: Response ) => {
       receipt: order?._id.toString()
     })
 
-    return response(res, 200, "Razorpay order and payment created", { order: razorPayOrder });
+    return response(res, 200, "Razorpay order created.", { order: razorPayOrder });
   } catch (error) {
   
     return response(res, 500, "Internal Server Error");
@@ -140,8 +137,11 @@ export const createRazorpayOrder = async ( req: Request, res: Response ) => {
 export const handleRazorPayWebhook = async (req: Request, res: Response) => {
   try {
     const secret = process.env.RAZORPAY_WEBHOOK_SECRET as string;
+
     const shasum = crypto.createHmac("sha256", secret);
+
     shasum.update(JSON.stringify(req.body));
+
     const digest = shasum.digest("hex");
 
     if (digest === req.headers["x-razorpay-signature"]) {
@@ -153,14 +153,12 @@ export const handleRazorPayWebhook = async (req: Request, res: Response) => {
           "paymentDetails.razorpay_order_id": orderId,
         },
         {
-          paymentStatus: "complete",
-          status: "processing",
-          "paymentDetails.razorpay_payment_id": paymentId,
-        },
+          paymentStatus: "complete", status: "processing", "paymentDetails.razorpay_payment_id": paymentId
+        }
       );
-      return response(res, 200, "webhook processed successfully");
+      return response(res, 200, "Webhook processed successfully.");
     } else {
-      return response(res, 400, "Invalid signature");
+      return response(res, 400, "Invalid signature.");
     }
   } catch (error) {
     return response(res, 500, "Internal Server Error");
