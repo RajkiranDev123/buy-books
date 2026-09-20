@@ -17,6 +17,8 @@ import NoData from "../components/NoData";
 import { useRouter } from "next/navigation";
 import { useGetProductsQuery } from "@/store/api";
 import { BookDetails } from "@/lib/types/type";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 const page = () => {
 
@@ -33,6 +35,14 @@ const page = () => {
 
   const searchTerms = new URLSearchParams(window.location.search).get("search") || "";
   console.log("searchTerms ==> ",searchTerms)
+
+    const user = useSelector((state: RootState) => state.user.user);
+    const router = useRouter()
+    useEffect(()=>{
+    if(user && user.role!=="user"){
+      router.push("/admin")
+    }
+    },[user,router])
   
 
   useEffect(() => {
@@ -41,7 +51,7 @@ const page = () => {
     }
   }, [apiResponse]);
   //
-  const router = useRouter();
+
 
   //
   const [sortOption, setSortOption] = useState<string>("newest");

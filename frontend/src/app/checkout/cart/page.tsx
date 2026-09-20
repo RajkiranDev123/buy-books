@@ -69,6 +69,14 @@ const page = () => {
   const [removeWishlistMutation] = useRemoveFromWishlistMutation();
 
 
+
+  useEffect(()=>{
+  if(user && user.role!=="user"){
+    router.push("/admin")
+  }
+  },[user,router])
+
+
   useEffect(() => {
     
     if (orderData && orderData.data.shippingAddress) {

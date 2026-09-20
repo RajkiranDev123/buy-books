@@ -4,7 +4,7 @@ import { useAddProductsMutation } from "@/store/api";
 import { toggleLoginDialog } from "@/store/slice/userSlice";
 import { RootState } from "@/store/store";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
@@ -52,6 +52,14 @@ const page = () => {
       setValue("images", [...currentFiles, ...newFiles].slice(0, 4) as string[] );
     }
   };
+
+
+  
+    useEffect(()=>{
+    if(user && user.role!=="user"){
+      router.push("/admin")
+    }
+    },[user,router])
 
   const removeImage = (index: number) => {
     setUploadedImages((prev) => prev.filter((_, i) => i !== index));

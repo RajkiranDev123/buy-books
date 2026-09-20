@@ -6,8 +6,20 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import NewBooks from "./components/NewBooks";
 import { Card, CardContent } from "@/components/ui/card";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { useRouter } from "next/navigation";
+
 
 export default function Home() {
+
+  const user = useSelector((state: RootState) => state.user.user);
+  const router = useRouter()
+  useEffect(()=>{
+  if(user && user.role!=="user"){
+    router.push("/admin")
+  }
+  },[user,router])
 
   const bannerImages = [ "/images/book1.jpg", "/images/book2.jpg", "/images/book1.jpg"];
 
