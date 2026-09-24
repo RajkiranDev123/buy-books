@@ -41,7 +41,7 @@ export default function AuthCheck({ children }: { children: React.ReactNode }) {
   // Check if user is logged in / token valid
 
   const checkAuth = async () => {
-
+  
     try {
 
       const response = await verifyAuth({}).unwrap();

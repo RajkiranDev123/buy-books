@@ -14,7 +14,7 @@ export const register = async (req: Request, res: Response) => {
 
   try {
 
-    const { name, email, password, agreeTerms } = req.body;
+    const { name, email, password, agreeTerms , role } = req.body;
 
     if (!name || !email || !password || !agreeTerms) {
       return response(res, 400, "All fields are required.");
@@ -37,6 +37,7 @@ export const register = async (req: Request, res: Response) => {
       password,
       agreeTerms,
       verificationToken,
+      role // If role is undefined, Mongoose will generally use the schema's default value
     });
 
     await user.save();

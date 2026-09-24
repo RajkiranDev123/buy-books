@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 export default function Home() {
 
   const user = useSelector((state: RootState) => state.user.user);
+ 
   const router = useRouter()
   useEffect(()=>{
   if(user && user.role!=="user"){
