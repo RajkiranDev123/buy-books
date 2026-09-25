@@ -4,18 +4,23 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react'
 import { useSelector } from 'react-redux';
 import AdminLayout from '../components/admin/AdminLayout';
+import { useGetDashboardStatsQuery } from '@/store/adminApi';
 
 const page = () => {
 
   const user = useSelector((state: RootState) => state.user.user);
 
+  const {data,isLoading,isError}=useGetDashboardStatsQuery({})
+
+  console.log(data)
+
   const router = useRouter()
 
   useEffect(()=>{
-  if( user && user.role !== "admin" ){
+   if( user && user.role !== "admin" ){
     router.push("/")
-  }
-  },[user,router])
+   }
+  },[ user, router ])
 
   return (
     <div>
@@ -23,10 +28,6 @@ const page = () => {
       <AdminLayout>
         m
       </AdminLayout>
-
-
-
-
 
       
     </div>

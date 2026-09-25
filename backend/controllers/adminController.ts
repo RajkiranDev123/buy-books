@@ -4,7 +4,7 @@ import Order from "../models/Order";
 import { response } from "../utils/responseHandler";
 import User from "../models/User";
 import Products from "../models/Products";
-import products from "razorpay/dist/types/products";
+
 
 export const getAllOrders = async( req : Request, res : Response )=>{
     
@@ -140,9 +140,7 @@ export const getDashboardStats = async( req : Request, res : Response ) =>{
 
        const [totalOrders, totalUsers , totalProducts, statusCounts, recentOrders, revenue, monthlySales ] =
        await Promise.all([
-
         // get counts
-
         Order.countDocuments().lean(),
         User.countDocuments().lean(),
         Products.countDocuments().lean(),
@@ -163,11 +161,10 @@ export const getDashboardStats = async( req : Request, res : Response ) =>{
         .populate("user","name")
         .sort({createdAt:-1}).limit(5).lean(),
 
-        // revenue
-
+        // revenue ==> [ {_id:null, total:70} ]
         Order.aggregate([
             {
-                $match:{paymentStatus:"complete"}
+                $match : {paymentStatus:"complete"}
             },
             {
                 $group : { _id:null, total:{$sum:"$totalAmount"}}
@@ -178,18 +175,23 @@ export const getDashboardStats = async( req : Request, res : Response ) =>{
 
         // monthlySales
         // $month and $year extract the month or year from a Date field.
-
         Order.aggregate([
 
             { $match:{paymentStatus:"complete"} },
 
-            { 
+            {   // frequently used with aggregate functions (COUNT, SUM, AVG, MAX, or MIN) to perform mathematical calculations on each group.
                 $group : { 
-                    _id : { month:{$month:"$createdAt"},year:{$year:"$createdAt"} } ,
+                    _id : { month: {$month : "$createdAt"}, year:{$year : "$createdAt"} } ,
                     total : {$sum : "$totalAmount"},
                     count : {$sum:1}
                 }
             },
+
+            { $sort : { "_id.year":1, "_id.month":1 } } // -1 would mean descending.
+
+          ])
+
+       ])// Promise.all
 
 //   [
 //   {
@@ -204,34 +206,31 @@ export const getDashboardStats = async( req : Request, res : Response ) =>{
 //   }
 //   ]
 
-            { $sort : { "_id.year":1, "_id.month":1 } }
-
-        ])
-
-       ])// Promise.all
-
+          
        // process status count
-       const ordersByStatus={processing:0,shipped:0,delivered:0,cancelled:0}
+       const ordersByStatus={ processing:0,shipped:0,delivered:0,cancelled:0 }
+ 
+       //  statusCounts = [  { _id: "processing", count: 3 }, ... ]
 
        statusCounts.forEach((item:any)=>{
         // typeof ordersByStatus ==> { processing: number; shipped: number; ... }
         // gets the keys of that object : "processing" | "shipped" 
-         const status=item._id as keyof typeof ordersByStatus // "Treat item._id as one of the valid keys of ordersByStatus."
+         const status = item._id as keyof typeof ordersByStatus // "Treat item._id as one of the valid keys of ordersByStatus."
          if(ordersByStatus.hasOwnProperty(status)){ // Check whether ordersByStatus has this key/property.
-            ordersByStatus[status]=item.count
+            ordersByStatus[status] = item.count
          }
        })
 
        return response(res,200,"Dashboard statistics fetched successfully.",{
         counts:{
-            orders:totalOrders,users:totalUsers,products:totalProducts,revenue : revenue.length>0?revenue[0].total : 0
+            orders:totalOrders,users:totalUsers,products:totalProducts, revenue : revenue.length>0?revenue[0].total : 0
         },
         ordersByStatus,recentOrders,monthlySales
        })      
 
  } catch (error) {
 
-       return response(res,500,"Internal Server Error")
+       return response(res,500,"Internal Server Error.")
     
  }
 

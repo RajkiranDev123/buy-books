@@ -5,18 +5,22 @@ export const Base_URL = process.env.NEXT_PUBLIC_API_URL; //"http://localhost:800
 
 export const adminApi=createApi({
 
-    reducerPath:"adminApi",
-    baseQuery:fetchBaseQuery({
-        baseUrl:Base_URL,
-        credentials:"include",
+    reducerPath : "adminApi",
+
+    baseQuery : fetchBaseQuery({
+        baseUrl : Base_URL,
+        credentials : "include",
     }),
-    tagTypes:["AdminStats","AdminOrders","SellerPayments",],
+
+    tagTypes : ["AdminStats","AdminOrders","SellerPayments"],
 
     endpoints: (builder) =>({
 
+        // app.use("/api/v1/admin", adminRoutes);
+        // router.get("/dashboard-stats",  adminController.getDashboardStats);
         getDashboardStats : builder.query({
-            query:()=>"/admin/dashboard-stats",
-            providesTags:["AdminStats"]
+            query : ()=>"/admin/dashboard-stats",
+            providesTags : ["AdminStats"]
         }),
 
         getAdminOrders:builder.query({
@@ -48,7 +52,7 @@ export const adminApi=createApi({
                     body:update
                 }
             ),
-            invalidatesTags:(result,error,{orderId})=>[ { type:"AdminOrders", id:orderId }, "AdminOrders","AdminStats"]
+            invalidatesTags:( result,error,{orderId} ) => [ { type:"AdminOrders", id:orderId }, "AdminOrders","AdminStats"]
         }),
 
         getSellerPayments:builder.query({
@@ -77,11 +81,11 @@ export const adminApi=createApi({
 
 }) // createApi
 
-
+// use................Query and use............Mutation
 export const {
     useGetDashboardStatsQuery,
     useGetAdminOrdersQuery,
     useUpdateOrderMutation,
     useProcessSellerPaymentsMutation,
     useGetSellerPaymentsQuery
-}=adminApi
+} = adminApi
