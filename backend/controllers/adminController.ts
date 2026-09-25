@@ -158,7 +158,7 @@ export const getDashboardStats = async( req : Request, res : Response ) =>{
 
         Order.find()
         .select("user totalAmount status createdAt")
-        .populate("user","name")
+        .populate("user","name") // Mongoose includes _id by default when you use populate() , but .populate("user", "name -_id")
         .sort({createdAt:-1}).limit(5).lean(),
 
         // revenue ==> [ {_id:null, total:70} ]
@@ -213,6 +213,7 @@ export const getDashboardStats = async( req : Request, res : Response ) =>{
        //  statusCounts = [  { _id: "processing", count: 3 }, ... ]
 
        statusCounts.forEach((item:any)=>{
+        // item ==>  { _id: "processing", count: 3 }
         // typeof ordersByStatus ==> { processing: number; shipped: number; ... }
         // gets the keys of that object : "processing" | "shipped" 
          const status = item._id as keyof typeof ordersByStatus // "Treat item._id as one of the valid keys of ordersByStatus."
@@ -221,11 +222,9 @@ export const getDashboardStats = async( req : Request, res : Response ) =>{
          }
        })
 
-       return response(res,200,"Dashboard statistics fetched successfully.",{
-        counts:{
-            orders:totalOrders,users:totalUsers,products:totalProducts, revenue : revenue.length>0?revenue[0].total : 0
-        },
-        ordersByStatus,recentOrders,monthlySales
+       return response(res, 200, "Dashboard statistics fetched successfully.", {
+        counts:{ orders:totalOrders,users:totalUsers,products:totalProducts, revenue : revenue.length>0?revenue[0].total : 0 },
+        ordersByStatus, recentOrders, monthlySales
        })      
 
  } catch (error) {

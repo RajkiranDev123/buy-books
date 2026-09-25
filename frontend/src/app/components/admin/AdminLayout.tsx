@@ -336,11 +336,11 @@ const AdminLayout : React.FC<AdminLayoutProps>= ({children}) => {
         </header>
         {/* header ends */}
 
-        {/* main */}
+        {/* children */}
 
         <main className='flex-1 pb-8'>
 
-          <div className='py-6'>
+          <div className='py-2'>
           <div className='max-w-7xl mx-auto px-4 sm:px-6 md:px-8'>
            {children}
           </div>
@@ -348,7 +348,7 @@ const AdminLayout : React.FC<AdminLayoutProps>= ({children}) => {
 
         </main>
 
-        {/* main ends */}
+        {/* children ends */}
 
       </div>
 
