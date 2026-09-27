@@ -8,7 +8,7 @@ export interface ISellerPayment extends Document{
     product : mongoose.Types.ObjectId
     amount : number
     paymentMethod:string
-    paymentStatus:"pending" | "completed" | "failed"
+    paymentStatus:"pending" | "complete" | "failed"
     processedBy:mongoose.Types.ObjectId
     notes?:string
 }
@@ -20,7 +20,7 @@ const sellerPaymentSchema = new Schema<ISellerPayment>({
     product : { type : Schema.Types.ObjectId , ref : "Product" , required : true },
     amount  : { type : Number , required : true },
     paymentMethod  : { type : String , required : true },
-    paymentStatus  : { type : String , enum : ["pending","completed","failed"], default : "pending" },
+    paymentStatus  : { type : String , enum : ["pending","complete","failed"], default : "pending" },
     processedBy : { type : Schema.Types.ObjectId , ref : "User" , required : true },
     notes : { type : String }
 
