@@ -12,7 +12,7 @@ import {BarChart,CartesianGrid,XAxis,YAxis,Tooltip,Legend,Bar,ResponsiveContaine
 
 const page = () => {
 
-  const user = useSelector((state: RootState) => state.user.user);
+  const user = useSelector((state: RootState) => state?.user?.user);
   const router = useRouter()
 
   const {data,isLoading,isError}=useGetDashboardStatsQuery({})
@@ -309,9 +309,6 @@ const page = () => {
 
           {/* charts ends */}
 
-
-
-
           {/* recent orders */}
 
           <Card>
@@ -379,10 +376,7 @@ const page = () => {
 
           </Card>
 
-
           {/* recent orders */}
-
-          
 
         </div>
 

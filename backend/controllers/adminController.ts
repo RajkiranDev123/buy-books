@@ -38,7 +38,7 @@ export const getAllOrders = async( req : Request, res : Response )=>{
        .populate("shippingAddress")
        .sort({createdAt:-1})
    
-       return response(res,200,"order fetched successfully",orders)
+       return response(res,200,"order fetched successfully",{orders})
 
  } catch (error) {
 
@@ -268,7 +268,9 @@ export const getSellerPayments = async ( req : Request , res : Response ) =>{
         .populate("processedBy","name")
         .sort({createdAt:-1})
 
-        return response(res,200,"Seller Payments fetched successfully",payments)
+        const users=await User.find()
+
+        return response(res,200,"Seller Payments fetched successfully",{payments,users})
 
 
 
