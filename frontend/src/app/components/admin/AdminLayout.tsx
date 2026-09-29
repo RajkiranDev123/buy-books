@@ -81,7 +81,7 @@ const AdminLayout : React.FC<AdminLayoutProps>= ({children}) => {
     },
     {
       name : "Payments",
-      onClick : () => handleProtectedNavigation("/admin/orders"),
+      onClick : () => handleProtectedNavigation("/admin/payments"),
       icon:CreditCard,
       href:"/admin/payments",
       bgColor : "from-pink-500 to-rose-600",
