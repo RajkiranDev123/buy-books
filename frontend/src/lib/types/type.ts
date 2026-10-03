@@ -73,6 +73,7 @@ export interface PaymentDetails {
 }
 
 export interface Order {
+  
   _id: string;
   user: UserData;
   items: OrderItem[];
@@ -83,4 +84,5 @@ export interface Order {
   paymentMethod: string;
   paymentDetails: PaymentDetails;
   status: string;
+
 }

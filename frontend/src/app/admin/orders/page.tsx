@@ -1,10 +1,11 @@
 "use client"
+import OrderDetailsDialog from '@/app/account/orders/OrderDetailsDialog'
 import AdminLayout from '@/app/components/admin/AdminLayout'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Table, TableHeader } from '@/components/ui/table'
+import { Table, TableBody, TableHead, TableHeader, TableRow ,TableCell } from '@/components/ui/table'
 
 import { useGetAdminOrdersQuery } from '@/store/adminApi'
 import { Filter, Search, ShoppingBag } from 'lucide-react'
@@ -242,7 +243,76 @@ const page = () => {
                         ):(
                             <div className='overflow-x-auto'>
                              <Table>
-                                <TableHeader></TableHeader>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Order Id</TableHead>
+                                        <TableHead>Name</TableHead>
+                                        <TableHead>Date</TableHead>
+                                        <TableHead>Amount</TableHead>
+                                        <TableHead>Status</TableHead>
+                                        <TableHead>Payment</TableHead>
+                                        <TableHead className='text-right'>Action</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+
+                                <TableBody>
+
+                                    {
+                                        currentOrders?.map((order:any)=>(
+
+                                            <TableRow key={order?._id}>
+
+                                             <TableCell className="font-medium">#{order?._id?.slice(-6)}</TableCell>
+                                             <TableCell>{order?.user?.name}</TableCell>
+                                             <TableCell >{new Date(order?.createdAt).toLocaleDateString()}</TableCell>
+                                             <TableCell >Rs {order?.totalAmount}</TableCell>
+                                             <TableCell className=''>
+                                                <span
+                                                className={
+                                                `px-2 py-1 text-xs rounded-full font-semibold
+                                                ${order?.status=="delivered"?"bg-green-100 text-green-800"
+                                                :  order?.status=="processing" ? "bg-yellow-100 text-yellow-800"
+                                                :  order?.status=="shipped"?"bg-blue-100 text-blue-800"
+                                                : "bg-red-100 text-red-800"
+                                                }
+                                                `}>
+
+                                                {order?.status?.charAt(0)?.toUpperCase()+order?.status?.slice(1)}
+
+                                                </span>
+                                             </TableCell>
+
+                                            <TableCell className=''>
+                                                <span
+                                                className={
+                                                `px-2 py-1 text-xs rounded-full font-semibold
+                                                ${order?.paymentStatus=="complete"?"bg-green-100 text-green-800"
+                                                :  order?.paymentStatus=="pending" ? "bg-yellow-100 text-yellow-800"
+                                    
+                                                : "bg-red-100 text-red-800"
+                                                }
+                                                `}>
+
+                                                {order?.paymentStatus?.charAt(0)?.toUpperCase()+order?.paymentStatus?.slice(1)}
+
+                                                </span>
+                                             </TableCell>
+
+                                             <TableCell className='text-right'>
+
+                                                <div className='flex justify-end space-x-2'>
+                                                    <OrderDetailsDialog order={order}/>
+                                                    
+                                                </div>
+
+                                             </TableCell>
+
+                                            </TableRow>
+                                        ))
+                                    }
+
+                                </TableBody>
+
                              </Table>
                             </div>
                         )

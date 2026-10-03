@@ -15,17 +15,7 @@ interface OrderDetailsDialogProps {
   order: Order;
 }
 
-const StatusStep = ({
-  title,
-  icon,
-  isCompleted,
-  isActive,
-}: {
-  title: string;
-  icon: React.ReactNode;
-  isCompleted: boolean;
-  isActive: boolean;
-}) => {
+const StatusStep = ({title,icon,isCompleted,isActive}: { title: string; icon: React.ReactNode; isCompleted: boolean; isActive: boolean}) => {
   return (
     <div
       className={`flex flex-col items-center
@@ -43,43 +33,50 @@ const StatusStep = ({
 };
 
 const OrderDetailsDialog = ({ order }: OrderDetailsDialogProps) => {
-  console.log(789,order)
+
   const getStatusIndex = (Status: string) => {
     const statuses = ["processing", "shipped", "delivered", "cancelled"];
     return statuses.indexOf(Status);
   };
+
   const statusIndex = getStatusIndex(order?.status);
+
   return (
+
     <Dialog>
+
       <DialogTrigger asChild>
-        <Button variant={"ghost"} size={"sm"}>
-          <Eye className="w-4 h-4 mr-2" />
-          View Details
-        </Button>
+        <Button variant={"ghost"} size={"sm"}> <Eye className="w-4 h-4 mr-2" /> View Details </Button>
       </DialogTrigger>
+
       <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
+
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-purple-700">
+          <DialogTitle className="text-sm font-bold text-black/70">
             Order Details
           </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-6">
+
+          {/* status */}
+
           <div className="bg-linear-to-r from-purple-100 to-pink-100 p-4 rounded-lg">
+
             <h3 className="font-semibold text-lg text-purple-800 mb-2">
               Order Status
             </h3>
 
             <div className="flex justify-between items-center ">
+
               <StatusStep
                 title="processing"
                 icon={<Package className="h-5 w-5" />}
                 isCompleted={statusIndex > 0}
                 isActive={statusIndex === 0}
               />
-              <div
-                className={`h-1 flex-1 ${statusIndex > 0 ? "bg-green-500" : "bg-gray-300"}`}
-              />
+
+              <div className={`h-1 flex-1 ${statusIndex > 0 ? "bg-green-500" : "bg-gray-300"}`}/>
 
               {/*  */}
               <StatusStep
@@ -88,11 +85,7 @@ const OrderDetailsDialog = ({ order }: OrderDetailsDialogProps) => {
                 isCompleted={statusIndex > 1}
                 isActive={statusIndex === 1}
               />
-              <div
-                className={`h-1 flex-1 ${statusIndex > 1 ? "bg-green-500" : "bg-gray-300"}`}
-              />
-
-              {/*  */}
+              <div className={`h-1 flex-1 ${statusIndex > 1 ? "bg-green-500" : "bg-gray-300"}`}/>
 
               {/*  */}
               <StatusStep
@@ -116,16 +109,21 @@ const OrderDetailsDialog = ({ order }: OrderDetailsDialogProps) => {
                 </>
               )}
 
-              {/*  */}
+         
             </div>
+
           </div>
-          {/*  */}
+
+          {/* items */}
 
           <div className="bg-linear-to-r from-blue-100 to-cyan-100 p-4 rounded-lg">
+
             <h3 className="font-semibold text-lg text-blue-800 mb-2">Items</h3>
+
             <div className="space-y-4">
               {order?.items?.map((item, index) => (
                 <div className="flex items-center space-x-4 " key={index}>
+
                   <Image
                     src={item?.product?.images[0]}
                     alt={item?.product?.title}
@@ -136,21 +134,21 @@ const OrderDetailsDialog = ({ order }: OrderDetailsDialogProps) => {
 
                   <div>
                     <p className="font-medium">{item?.product?.title}</p>
+
                     <div className="flex gap-2">
-                      <p className="font-medium ">{item?.product?.subject}</p>(
-                      {order?.items?.map((item) => item?.product?.author).join(",")}
-                      )
+                      <p className="font-medium ">{item?.product?.subject}</p>({ item?.product?.author})
                     </div>
-                    <p className="text-xs text-gray-600">
-                      Quantity : {item?.quantity}
-                    </p>
+                    
+                    <p className="text-xs text-gray-600"> Quantity : {item?.quantity} </p>
                   </div>
+
                 </div>
               ))}
             </div>
+
           </div>
 
-          {/*  */}
+          {/* shipping address */}
 
           <div className="bg-linear-to-r from-green-100 to-teal-100 p-4 rounded-lg ">
             <h3 className="font-semibold text-lg text-green-800 mb-2">
@@ -163,19 +161,22 @@ const OrderDetailsDialog = ({ order }: OrderDetailsDialogProps) => {
             </p>
           </div>
 
-          <div className="bg-linear-to-r from-yellow-100 to-orange-100 p-4 rounded-lg ">
-            <h3 className="font-semibold text-lg text-green-800 mb-2">
-              Payment Details
-            </h3>
-            <p> Order Id : {order?.paymentDetails?.razorpay_order_id}</p>
-            <p>Payment Id : {order?.paymentDetails?.razorpay_payment_id}</p>
+          {/* payment details */}
 
+          <div className="bg-linear-to-r from-yellow-100 to-orange-100 p-4 rounded-lg ">
+
+            <h3 className="font-semibold text-lg text-green-800 mb-2">Payment Details</h3>
+            <p>Order Id : {order?.paymentDetails?.razorpay_order_id}</p>
+            <p>Payment Id : {order?.paymentDetails?.razorpay_payment_id}</p>
             <p>Amount :Rs {order?.totalAmount}</p>
+            
           </div>
 
-          {/*  */}
+       
+
         </div>
       </DialogContent>
+
     </Dialog>
   );
 };
