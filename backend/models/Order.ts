@@ -25,6 +25,7 @@ export interface IOrder extends Document {
     razorpay_signature?: string;
   };
   status: "processing" | "shipped" | "delivered" | "cancelled";
+  notes?:string
 }
 
 const OrderItemSchema = new Schema<IOrderItem>({
@@ -54,6 +55,7 @@ const OrderSchema = new Schema<IOrder>(
       enum: ["processing", "shipped", "delivered", "cancelled"],
       default: null,
     },
+    notes : { type:String }
   },
   { timestamps: true },
 );

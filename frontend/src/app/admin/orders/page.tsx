@@ -1,14 +1,19 @@
 "use client"
 import OrderDetailsDialog from '@/app/account/orders/OrderDetailsDialog'
 import AdminLayout from '@/app/components/admin/AdminLayout'
+import OrderEditForm from '@/app/components/admin/OrderEditForm'
+import OrderPaymentDialog from '@/app/components/admin/OrderPaymentDialog'
+import Pagination from '@/app/components/Pagination'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { DialogContent,Dialog, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableHead, TableHeader, TableRow ,TableCell } from '@/components/ui/table'
 
 import { useGetAdminOrdersQuery } from '@/store/adminApi'
-import { Filter, Search, ShoppingBag } from 'lucide-react'
+import { CreditCard, Edit, Filter, Search, ShoppingBag } from 'lucide-react'
+
 
 import  { useMemo, useState } from 'react'
 
@@ -20,6 +25,9 @@ const page = () => {
 
     const [editingOrder,setEditingOrder]=useState(null)
     const [paymentOrder,setPaymentOrder]=useState(null)
+
+    const handleCloseEditDialog=()=>{ setEditingOrder(null) }
+    const handleClosePaymentDialog=()=>{ setPaymentOrder(null) }
 
     const {data:OrdersData,isLoading:isOrderLoading}=useGetAdminOrdersQuery(filters)
     const allOrders=OrdersData?.data?.orders || []
@@ -56,7 +64,7 @@ const page = () => {
         setCurrentPage(1)
     }
 
-    const handlePageChange=(page:string)=>{
+    const handlePageChange=(page:number)=>{
          setCurrentPage(1)
     }
 
@@ -302,6 +310,16 @@ const page = () => {
 
                                                 <div className='flex justify-end space-x-2'>
                                                     <OrderDetailsDialog order={order}/>
+
+                                                    <Button variant={"outline"} size={"sm"} onClick={()=>setEditingOrder(order)}>
+                                                        <Edit className="h-4 w-4 mr-1"/>
+                                                        Edit
+                                                    </Button>
+
+                                                    <Button variant={"outline"} size={"sm"} onClick={()=>setPaymentOrder(order)}>
+                                                        <CreditCard className="h-4 w-4 mr-1"/>
+                                                        Pay Seller
+                                                    </Button>
                                                     
                                                 </div>
 
@@ -317,6 +335,21 @@ const page = () => {
                             </div>
                         )
                     }
+
+                    {/* custom pagination */}
+                    {!isOrderLoading && currentOrders?.length > 0 && (
+                        <div className='mt-5'>
+                            <Pagination
+                            currentPage={currentPage}
+                            totalPages={totalPages}
+                            onPageChange={handlePageChange}
+                            />
+                        </div>
+                    )}
+                    {/* custom pagination */}
+
+
+
                 </CardContent>
 
             </Card>
@@ -324,6 +357,42 @@ const page = () => {
 
 
         </div>
+
+        {/*  */}
+
+        { editingOrder && (
+          <Dialog open={!!editingOrder} onOpenChange={open=>!open && handleCloseEditDialog()}>
+
+            <DialogContent className='sm:max-w-[600px]'>
+                <DialogHeader><DialogTitle className='text-2xl font-bold text-purple-700'>Edit Order</DialogTitle></DialogHeader>
+
+                <OrderEditForm order={editingOrder} onClose={handleClosePaymentDialog}/>
+            </DialogContent>
+
+          </Dialog>
+        )
+        }
+
+        {/*  */}
+
+
+        {/*  */}
+
+        { paymentOrder && (
+          <Dialog open={!!paymentOrder} onOpenChange={open=>!open && handleClosePaymentDialog()}>
+
+            <DialogContent className='sm:max-w-[600px]'>
+                <DialogHeader><DialogTitle className='text-2xl font-bold text-purple-700'>Process Seller Payment</DialogTitle></DialogHeader>
+
+                {/* <OrderPaymentDialog order={paymentOrder} onClose={handleClosePaymentDialog}/> */}
+            </DialogContent>
+
+          </Dialog>
+        )
+        }
+
+
+        {/*  */}
         
     </AdminLayout>
   )

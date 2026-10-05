@@ -55,7 +55,7 @@ export const updateOrder = async( req : Request, res : Response ) =>{
 
        const { id } = req.params
 
-       const { status , paymentStatus } = req.body
+       const { status , paymentStatus , notes } = req.body
 
        const order = await Order.findById(id)
 
@@ -63,8 +63,9 @@ export const updateOrder = async( req : Request, res : Response ) =>{
         return response(res,404,"Order not found.")
        }
 
-       if(status) order.status=status
-       if(paymentStatus) order.paymentStatus=paymentStatus
+       if(status) order.status = status
+       if(paymentStatus) order.paymentStatus = paymentStatus
+       if(notes) order.notes = notes
 
        await order.save()
 
