@@ -1,6 +1,8 @@
 
+import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 import { useUpdateOrderMutation } from '@/store/adminApi';
 import { useRouter } from 'next/navigation';
 import React,{useState} from 'react'
@@ -30,7 +32,7 @@ const OrderEditForm :React.FC<OrderEditFormProps> = ({order,onClose}) => {
         update:{
           status,paymentStatus,notes
         }
-      })
+      }).unwrap()
       toast.success("Order updated.")
       onClose()
       router.refresh()
@@ -43,11 +45,13 @@ const OrderEditForm :React.FC<OrderEditFormProps> = ({order,onClose}) => {
     <form onSubmit={handleSubmit} className='space-y-4'>
 
       <div className='space-y-4'>
+
         <div className='space-y-2'>
 
           <Label htmlFor='status'>Order Status</Label>
 
           <Select value={status} onValueChange={setStatus} required>
+
             <SelectTrigger><SelectValue placeholder="Select Order Status" /></SelectTrigger>
 
             <SelectContent>
@@ -59,8 +63,46 @@ const OrderEditForm :React.FC<OrderEditFormProps> = ({order,onClose}) => {
 
           </Select>
 
+        </div>
+
+        <div className='space-y-2'>
+
+          <Label htmlFor='paymentStatus'>Payment Status</Label>
+
+          <Select  value={paymentStatus} onValueChange={setPaymentStatus} required>
+            <SelectTrigger><SelectValue placeholder="Select Payment Status" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem  value='pending'>Pending</SelectItem>
+              <SelectItem value='complete'>Complete</SelectItem>
+              <SelectItem value='failed'>Failed</SelectItem>
+            </SelectContent>
+          </Select>
 
         </div>
+
+        {/* notes */}
+        <div className='space-y-2'>
+          <Label htmlFor='notes'>Notes (Optional)</Label>
+          <Textarea
+          id='notes'
+          value={notes}
+          onChange={e=>setNotes(e.target.value)}
+          placeholder='Add any additional notes about this update'
+          rows={3}
+          />
+        </div>
+        {/* notes */}
+
+        {/* button */}
+        <div className='flex justify-end space-x-2'>
+        <Button type='button' variant={"outline"} onClick={onClose}>Cancel</Button>
+        <Button disabled={isLoading} className='bg-gradient-to-r from-purple-600 to-indigo-700 hover:from-purple-700 hover:to-indigo-800'>
+          {isLoading ? "Updating...":"Update Order"}
+        </Button>
+        </div>
+        {/* button */}
+
+
       </div>
 
     </form>

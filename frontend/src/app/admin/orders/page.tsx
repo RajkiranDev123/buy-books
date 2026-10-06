@@ -2,7 +2,7 @@
 import OrderDetailsDialog from '@/app/account/orders/OrderDetailsDialog'
 import AdminLayout from '@/app/components/admin/AdminLayout'
 import OrderEditForm from '@/app/components/admin/OrderEditForm'
-import OrderPaymentDialog from '@/app/components/admin/OrderPaymentDialog'
+
 import Pagination from '@/app/components/Pagination'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -224,7 +224,7 @@ const page = () => {
             </Card>
 
             
-            {/* filters */}
+            {/* filters end*/}
 
 
             {/* orders table */}
@@ -366,7 +366,7 @@ const page = () => {
             <DialogContent className='sm:max-w-[600px]'>
                 <DialogHeader><DialogTitle className='text-2xl font-bold text-purple-700'>Edit Order</DialogTitle></DialogHeader>
 
-                <OrderEditForm order={editingOrder} onClose={handleClosePaymentDialog}/>
+                <OrderEditForm order={editingOrder} onClose={handleCloseEditDialog}/>
             </DialogContent>
 
           </Dialog>

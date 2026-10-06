@@ -124,7 +124,7 @@ export const processSellerPayment = async( req : Request, res : Response ) =>{
 
        await sellerPayment.save()
 
-       return response(res,200,"Payment to seller  processed successfully.", sellerPayment )
+       return response(res,200,"Payment to seller processed successfully.", sellerPayment )
 
  } catch (error) {
 
