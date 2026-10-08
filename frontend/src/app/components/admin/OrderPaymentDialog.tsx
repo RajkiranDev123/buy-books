@@ -181,8 +181,7 @@ const OrderPaymentDialog:React.FC<OrderPaymentDialogProps> = ({order,onClose}) =
 
             <SelectContent>
               <SelectItem value='UPI'>UPI</SelectItem>
-              <SelectItem value='UPI'>UPI</SelectItem>
-              <SelectItem value='UPI'>UPI</SelectItem>
+              <SelectItem value='Bank Transfer'>Bank Transfer</SelectItem>
               <SelectItem value='Other'>Other</SelectItem>
             </SelectContent>
 

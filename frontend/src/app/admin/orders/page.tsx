@@ -2,6 +2,7 @@
 import OrderDetailsDialog from '@/app/account/orders/OrderDetailsDialog'
 import AdminLayout from '@/app/components/admin/AdminLayout'
 import OrderEditForm from '@/app/components/admin/OrderEditForm'
+import OrderPaymentDialog from '@/app/components/admin/OrderPaymentDialog'
 
 import Pagination from '@/app/components/Pagination'
 import { Button } from '@/components/ui/button'
@@ -384,7 +385,7 @@ const page = () => {
             <DialogContent className='sm:max-w-[600px]'>
                 <DialogHeader><DialogTitle className='text-2xl font-bold text-purple-700'>Process Seller Payment</DialogTitle></DialogHeader>
 
-                {/* <OrderPaymentDialog order={paymentOrder} onClose={handleClosePaymentDialog}/> */}
+                <OrderPaymentDialog order={paymentOrder} onClose={handleClosePaymentDialog}/>
             </DialogContent>
 
           </Dialog>
