@@ -1,7 +1,6 @@
 "use client"
-import OrderDetailsDialog from '@/app/account/orders/OrderDetailsDialog'
 import AdminLayout from '@/app/components/admin/AdminLayout'
-import OrderEditForm from '@/app/components/admin/OrderEditForm'
+
 
 import Pagination from '@/app/components/Pagination'
 import { Button } from '@/components/ui/button'
@@ -12,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableHead, TableHeader, TableRow ,TableCell } from '@/components/ui/table'
 
 import { useGetSellerPaymentsQuery } from '@/store/adminApi'
-import { CreditCard, Edit, Eye, FileText, Filter, Search, ShoppingBag } from 'lucide-react'
+import { CreditCard,  Eye, FileText, Filter, Search, ShoppingBag } from 'lucide-react'
 import Image from 'next/image'
 
 
@@ -24,7 +23,12 @@ const page = () => {
 
     const [filters,setFilters]=useState({sellerId:"",status:"",paymentMethod:"",startDate:"",endDate:"",search:""})
 
-    const [selectedPayment,setSelectedPayment]=useState(null)
+    const [selectedPayment,setSelectedPayment]=useState<any>(null)
+
+    // const [selectedPayment, setSelectedPayment] = useState<{
+    //                                                 amount?: number;
+    //                                                 [key: string]: any;
+    //                                                 } | null>(null);
   
     const {data:paymentData,isLoading:isPaymentLoading}=useGetSellerPaymentsQuery(filters)
     const allPayments=paymentData?.data?.payments || []
@@ -409,6 +413,197 @@ const page = () => {
         </div>
 
    
+
+     {
+        selectedPayment && (
+            <Dialog open={!!selectedPayment} onOpenChange={(open)=>!open && setSelectedPayment(null)}>
+
+                <DialogContent className='sm:max-w-[600px]'>
+
+                    <DialogHeader>
+                        <DialogTitle className='text-2xl font-bold text-purple-700'>Payment Details</DialogTitle>
+                    </DialogHeader>
+
+                    <div className='space-y-6'>
+
+                      {/* first */}
+
+                      <div className='bg-gradient-to-r from-purple-100 to-pink-100 p-4 rounded-lg '>
+                        <h3 className='font-semibold text-lg text-purple-800 mb-2'>Transaction Information</h3>
+
+                        {/* grid */}
+
+                        <div className='grid grid-cols-2 gap-2'>
+
+                            <div className='text-sm font-medium text-gray-500'>
+                                Amount :
+                            </div>
+
+                            <div className='text-sm font-medium text-gray-500'>
+                              Rs {selectedPayment?.amount}
+                            </div>
+
+                            <div className='text-sm font-medium text-gray-500'>
+                                Payment Method :
+                            </div>
+
+                            <div className='text-sm font-medium text-gray-500'>
+                                {selectedPayment?.paymentMethod}
+                            </div>
+
+                           <div className='text-sm font-medium text-gray-500'>
+                                Status :
+                            </div>
+
+                            <div className='text-sm'>
+                                <span 
+                                className=
+                                {`px-2 py-1 rounded-full text-xs font-semibold 
+                                  ${selectedPayment?.status==="complete" ? "bg-green-100 text-green-800"
+                                   : selectedPayment?.status==="pending" ? "bg-yellow-100 text-yellow-800"
+                                   : "bg-red-100 text-red-800"
+                                   }
+                                `}
+                                >
+                                  {selectedPayment?.status?.charAt(0)?.toUpperCase()+selectedPayment?.status?.slice(1)}
+                                </span>
+                            </div>
+
+                            <div className='text-sm font-medium text-gray-500'>
+                                Date :
+                            </div>
+
+                            <div className='text-sm font-medium text-gray-500'>
+                                formatDate(selectedPayment?.createdAt)
+                            </div>
+
+                            <div className='text-sm font-medium text-gray-500'>
+                                Processed By :
+                            </div>
+
+                            <div className='text-sm font-medium text-gray-500'>
+                                {selectedPayment?.processedBy?.name}
+                            </div>
+
+                        </div>
+                        {/* grid ends */}
+
+                      </div>
+
+                      {/* second */}
+
+                      <div className='bg-gradient-to-r from-blue-100 to-cyan-100 p-4 rounded-lg '>
+
+                        <h3 className='font-semibold text-lg text-purple-800 mb-2'>Seller Information</h3>
+
+                        {/* grid */}
+
+                        <div className='grid grid-cols-2 gap-2'>
+
+                            <div className='text-sm font-medium text-gray-500'>
+                                Name :
+                            </div>
+
+                            <div className='text-sm font-medium text-gray-500'>
+                               {selectedPayment?.seller?.name}
+                            </div>
+
+                            <div className='text-sm font-medium text-gray-500'>
+                                Email :
+                            </div>
+
+                            <div className='text-sm font-medium text-gray-500'>
+                                {selectedPayment?.seller?.email}
+                            </div>
+
+                           <div className='text-sm font-medium text-gray-500'>
+                                Phone :
+                            </div>
+
+                            <div className='text-sm font-medium text-gray-500'>
+                             {selectedPayment?.seller?.phoneNumber || "Not Provided"}
+                            </div>
+
+                            <div className='text-sm font-medium text-gray-500'>
+                                Payment Method :
+                            </div>
+
+                            <div className='text-sm font-medium text-gray-500'>
+                                {selectedPayment?.seller?.paymentMode || "Not specified"}
+                            </div>
+
+
+                        </div>
+                        {/* grid ends */}
+
+                      </div>
+
+                      {/* second */}
+
+                      {/* last */}
+
+                    <div className='bg-gradient-to-r from-green-100 to-teal-100 p-4 rounded-lg '>
+
+                        <h3 className='font-semibold text-lg text-blue-800 mb-2'>Product & Order Information</h3>
+
+                        {/* grid */}
+
+                        <div className='grid grid-cols-2 gap-2'>
+
+                            <div className='text-sm font-medium text-gray-500'>
+                                Product :
+                            </div>
+
+                            <div className='text-sm font-medium text-gray-500'>
+                               {selectedPayment?.product?.subject}
+                            </div>
+
+                            <div className='text-sm font-medium text-gray-500'>
+                                Price :
+                            </div>
+
+                            <div className='text-sm font-medium text-gray-500'>
+                                Rs{selectedPayment?.product?.finalPrice}
+                            </div>
+
+                           <div className='text-sm font-medium text-gray-500'>
+                                Order Id :
+                            </div>
+
+                            <div className='text-sm font-medium text-gray-500'>
+                             {selectedPayment?.order?._id?.slice(-6) || "Not Provided"}
+                            </div>
+
+                         
+
+
+                        </div>
+                        {/* grid ends */}
+
+                        {/* notes */}
+                        {selectedPayment?.notes && (
+                            <div className='bg-gradient-to-r from-yellow-100 to-orange-100 p-4 rounded-lg'>
+                                <h3 className='font-semibold text-lg text-yellow-600'>Notes</h3>
+                                <p className='text-sm'>{selectedPayment?.notes}</p>
+                            </div>
+                        )}
+                     
+                        {/* notes */}
+
+
+
+                    </div>
+
+
+                      {/* last */}
+
+                    </div>
+
+                </DialogContent>
+
+            </Dialog>
+        )
+     }
 
 
       
