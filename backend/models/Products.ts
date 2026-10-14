@@ -22,7 +22,7 @@ export interface IProduct extends Document {
       ifscCode: string;
       bankName: string;
     };
-  };
+  }
 }
 
 const productSchema = new Schema<IProduct>(

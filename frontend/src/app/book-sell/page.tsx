@@ -25,17 +25,21 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 const page = () => {
 
-  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
+  const [uploadedImages, setUploadedImages] = useState<string[]>([])
   const [addProducts, { isLoading }] = useAddProductsMutation();
   const router = useRouter();
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user.user);
 
-  const { register,handleSubmit, watch,setValue,control,reset, formState: { errors } } = useForm<BookDetails>({
+  const { register, handleSubmit, watch, setValue, control, reset, formState: { errors } } = useForm<BookDetails>({
     defaultValues: {
       images: [],
     }
   });
+
+  // useForm() returns an object containing functions and state to manage a form.
+  // const user = { name: "Rahul", address: { city: "Kolkata", pin: 700001 } }
+  // const { address: { city } } = user  nested destructuring.
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -53,8 +57,6 @@ const page = () => {
     }
   };
 
-
-  
     useEffect(()=>{
     if(user && user.role!=="user"){
       router.push("/admin")
@@ -123,24 +125,21 @@ const page = () => {
   }
 
   return (
-    <div className="min-h-screen bg-linear-to-b from-blue-50 to-white py-12 ">
+    <div className="min-h-screen bg-linear-to-b from-blue-50 to-white py-6 px-1 ">
+      {/* min-height : can't be smaller than this & container : when < 640 then 100% width , ≥ 640px then 640 and ≥ 768px the 768 */}
+      {/* container is designed to limit the maximum width at bp = 640, 768 etc */}
+      {/* If you use container without mx-auto, the container generally stays aligned to the left 
+      when its width is smaller than the available screen width. */}
 
-      <div className="container mx-auto px-4 max-w-4xl">
+      <div className="container mx-auto  max-w-4xl">
 
         {/* heading starts  */}
 
-        <div className="mb-10 text-center">
+        <div className="mb-6 text-center">
 
-          <h1 className=" text-4xl font-bold mb-4 text-blue-600/80">
+          <h1 className=" text-3xl font-bold text-blue-600/80">
             Sell your used Books!
           </h1>
-
-          <p className="text-xl text-gray-600 mb-4">
-            Submit a free classified ad to sell your used books for cash in
-            India
-          </p>
-
-       
 
         </div>
 
@@ -148,62 +147,55 @@ const page = () => {
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
 
-          {/* card 1 */}
-          <Card className="shadow-lg border-t-4 border-t-blue-500 ">
-            <CardHeader className="bg-linear-to-r from-blue-50 to-indigo-50">
-              <CardTitle className="text-2xl text-blue-700 items-center">
+          {/* Book details */}
+
+          <Card className="shadow-lg border-t-5 border-t-blue-500 pt-0 pb-2 ">
+
+            <CardHeader className="bg-linear-to-r from-blue-50 to-indigo-50 ">
+              <CardTitle className="text-2xl text-blue-700 flex items-center">
                 <Book className="mr-2 h-6 w-6" />
                 Book Details
               </CardTitle>
             </CardHeader>
 
-            <CardContent className="space-y-6 pt-6">
-              {/* title */}
+            <CardContent className="space-y-6 pt-4">
+          
+              {/* Title */}
               <div className="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-4">
-                <Label
-                  htmlFor="title"
-                  className="md:w-1/4 font-medium text-gray-700   "
-                >
-                  Title
-                </Label>
-                <div className="md:w-3/4 ">
-                  <Input
-                    {...register("title", { required: "Title is required" })}
-                    placeholder="Title "
-                    type="text"
-                  />
 
-                  {errors.title && (
-                    <p className="text-red-500 text-sm">
-                      {errors.title.message}
-                    </p>
-                  )}
+                <Label htmlFor="title" className="md:w-1/4 font-medium text-gray-700">Title</Label>
+
+                <div className="md:w-3/4 ">
+                {/* md:w-3/4 = 75% of the parent's available width , 25*4=100 */}
+                  <Input {...register("title", { required: "Title is required." })} placeholder="Title" type="text"/>
+
+                  {errors.title && ( <p className="text-red-500 text-sm mt-1">{errors?.title?.message}</p>)}
                 </div>
+                
               </div>
 
               {/* Category */}
               <div className="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-4">
-                <Label
-                  htmlFor="category"
-                  className="md:w-1/4 font-medium text-gray-700   "
-                >
-                  Category
-                </Label>
+
+                <Label htmlFor="category" className="md:w-1/4 font-medium text-gray-700">Category</Label>
+
                 <div className="md:w-3/4">
+                  {/* Controller as a bridge between React Hook Form and your custom Select. */}
                   <Controller
                     name="category"
-                    control={control}
-                    rules={{ required: "Book Type is required" }}
-                    render={({ field }) => (
+                    control={control} // gives Controller access to the form management system created by useForm().
+                    rules={{ required: "Book Type is required." }}
+                    // field is an object provided by React Hook Form through Controller. it has properties and functions needed to connect your Select to the form.
+                    render={({ field }) => ( // tells Controller what UI to display and how to connect it to React Hook Form.
                       <Select
                         onValueChange={field.onChange}
                         value={field.value}
                       >
                         <SelectTrigger>
-                          <SelectValue>Please select book type</SelectValue>
+                          <SelectValue placeholder="Please select book type" />
                         </SelectTrigger>
                         <SelectContent>
-                          {filters.category.map((category) => (
+                          {filters?.category?.map((category) => (
                             <SelectItem key={category} value={category}>
                               {category}
                             </SelectItem>
@@ -212,58 +204,53 @@ const page = () => {
                       </Select>
                     )}
                   />
-                  {errors.category && (
-                    <p className="text-red-500 text-sm mt-1 ">
-                      {errors.category.message}
-                    </p>
-                  )}
+
+                  {errors.category && ( <p className="text-red-500 text-sm mt-1"> {errors?.category?.message}</p>)}
+
                 </div>
+
               </div>
 
               {/* condition */}
-
               <div className="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-4">
                 <Label
                   htmlFor="condition"
                   className="md:w-1/4 font-medium text-gray-700   "
-                >
-                  Book Condition
-                </Label>
+                > Book Condition </Label>
+
                 <div className="md:w-3/4 ">
+
                   <Controller
                     name="condition"
                     control={control}
                     rules={{ required: "Book condition is required" }}
                     render={({ field }) => (
+
                       <RadioGroup
                         onValueChange={field.onChange}
                         value={field.value}
                         className="flex space-x-4 "
                       >
-                        {filters.condition.map((condition) => (
+                        {filters?.condition?.map((condition) => (
                           <div
                             key={condition}
                             className="flex items-center space-x-2"
                           >
-                            <RadioGroupItem
-                              value={condition.toLocaleLowerCase()}
-                              id={condition.toLocaleLowerCase()}
-                            />
+                            <RadioGroupItem value={condition.toLocaleLowerCase()} id={condition.toLocaleLowerCase()} />
 
-                            <Label htmlFor={condition.toLocaleLowerCase()}>
-                              {condition}
-                            </Label>
+                            <Label htmlFor={condition.toLocaleLowerCase()}>{condition}</Label>
+
                           </div>
                         ))}
                       </RadioGroup>
+
                     )}
                   />
-                  {errors.condition && (
-                    <p className="text-red-500 text-sm mt-1 ">
-                      {errors.condition.message}
-                    </p>
-                  )}
+
+                  {errors.condition && ( <p className="text-red-500 text-sm mt-1 "> {errors.condition.message}</p>)}
+
                 </div>
+
               </div>
 
               {/* class type */}
@@ -297,44 +284,28 @@ const page = () => {
                       </Select>
                     )}
                   />
-                  {errors.classType && (
-                    <p className="text-red-500 text-sm mt-1 ">
-                      {errors.classType.message}
-                    </p>
-                  )}
+                  {errors.classType && ( <p className="text-red-500 text-sm mt-1 ">{errors.classType.message}</p>)}
                 </div>
               </div>
 
               {/* subject */}
-
               <div className="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-4">
                 <Label
                   htmlFor="subject"
                   className="md:w-1/4 font-medium text-gray-700   "
                 >
-                  Book Subject
-                </Label>
+                  Book Subject </Label>
                 <div className="md:w-3/4 ">
-                  <Input
-                    {...register("subject", {
-                      required: "Subject is required",
-                    })}
-                    placeholder="Subject "
-                    type="text"
-                  />
+                  <Input {...register("subject", { required: "Subject is required"})} placeholder="Subject " type="text"/>
 
-                  {errors.subject && (
-                    <p className="text-red-500 text-sm">
-                      {errors.subject.message}
-                    </p>
-                  )}
+                  {errors.subject && ( <p className="text-red-500 text-sm">{errors.subject.message}</p>)}
                 </div>
               </div>
+
               {/* photo */}
               <div className="space-y-2">
-                <Label className="block mb-2 font-medium text-gray-700">
-                  Upload Photos
-                </Label>
+                <Label className="block mb-2 font-medium text-gray-700">Upload Photos</Label>
+
                 <div className="border-2 border-dashed border-blue-300 rounded-lg p-4 bg-blue-50">
                   <div className="flex flex-col items-center gap-2">
                     <Camera className="h-8 w-8 text-blue-500" />
@@ -377,11 +348,14 @@ const page = () => {
                     </div>
                   )}
                 </div>
+                
               </div>
+
             </CardContent>
+
           </Card>
 
-          {/* card 1 ends */}
+          {/* Book details ends*/}
 
           {/* optional details card*/}
 
@@ -811,7 +785,7 @@ const page = () => {
 
           {/* privacy policy etc starts */}
           <p className="text-sm mt-2 text-center text-gray-600">
-            By Clicking 'Post your book' , you agree to our{" "}
+            By Clicking 'Post your Book' , you agree to our{" "}
             <Link
               href={"/terms-of-use"}
               className="text-blue-500 hover:underline"
